@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\予備PC\OneDrive\DirectX12Engine\Libs\assimp-5.0.0\contrib\irrXML\irrXML.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\予備PC\OneDrive\DirectX12Engine\Libs\assimp-5.0.0\contrib\irrXML\CXMLReaderImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\予備PC\OneDrive\DirectX12Engine\Libs\assimp-5.0.0\contrib\irrXML\heapsort.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\予備PC\OneDrive\DirectX12Engine\Libs\assimp-5.0.0\contrib\irrXML\irrArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\予備PC\OneDrive\DirectX12Engine\Libs\assimp-5.0.0\contrib\irrXML\irrString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\予備PC\OneDrive\DirectX12Engine\Libs\assimp-5.0.0\contrib\irrXML\irrTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\予備PC\OneDrive\DirectX12Engine\Libs\assimp-5.0.0\contrib\irrXML\irrXML.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\予備PC\OneDrive\DirectX12Engine\Libs\assimp-5.0.0\contrib\irrXML\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{7CA03F56-DD0E-38A4-A130-E942AB317BD1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{23FE992B-8B6D-3D77-A4CE-DAFF30F47117}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
