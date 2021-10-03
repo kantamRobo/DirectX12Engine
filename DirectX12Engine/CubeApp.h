@@ -2,7 +2,8 @@
 
 #include "AppBase.h"
 #include <DirectXMath.h>
-
+#include "Model.h"
+class Camera;
 class CubeApp : public AppBase
 {
 public:
@@ -12,12 +13,7 @@ public:
 	virtual void Cleanup() override;
 	virtual void MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& command) override;
 
-	struct Vertex
-	{
-		DirectX::XMFLOAT3 Pos;
-		DirectX::XMFLOAT4 Color;
-		DirectX::XMFLOAT2 UV;
-	};
+	
 
 	struct ShaderParameters
 	{
@@ -42,6 +38,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSampler;
 	UINT  m_samplerDescriptorSize;
 
+	Model model;
+	std::shared_ptr<Camera> camera;
 	Microsoft::WRL::ComPtr<ID3D12Resource1> m_vertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D12Resource1> m_indexBuffer;
 	Microsoft::WRL::ComPtr<ID3D12Resource1> m_texture;

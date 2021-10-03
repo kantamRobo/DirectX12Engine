@@ -1,8 +1,9 @@
+#define  NOMINMAX
 #include <stdexcept>
 #include "CubeApp.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "include/stb_image.h"
-
+#include "Camera.h"
 void CubeApp::Prepare()
 {
 	const float k = 1.0f;
@@ -54,12 +55,12 @@ void CubeApp::Prepare()
 	  16,17,18, 18,19,16,
 	  20,21,22, 22,23,20,
 	};
-
+	
 	// 頂点バッファとインデックスバッファの生成.
 	m_vertexBuffer = CreateBuffer(sizeof(triangleVertices), triangleVertices);
 	m_indexBuffer = CreateBuffer(sizeof(indices), indices);
 	m_indexCount = _countof(indices);
-
+	
 	// 各バッファのビューを生成.
 	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
 	m_vertexBufferView.SizeInBytes = sizeof(triangleVertices);
@@ -67,7 +68,19 @@ void CubeApp::Prepare()
 	m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
 	m_indexBufferView.SizeInBytes = sizeof(indices);
 	m_indexBufferView.Format = DXGI_FORMAT_R32_UINT;
-
+	
+	camera = std::make_shared<Camera>(m_viewport, m_scissorRect);
+	/*
+	model.Init("Model/nanosuit.obj");
+	m_vertexBuffer = CreateBuffer(model.vertices.size(),model.vertices.data());
+	m_indexBuffer = CreateBuffer(model.Indices.size(), model.Indices.data());
+	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+	m_vertexBufferView.SizeInBytes = model.vertices.size();
+	m_vertexBufferView.StrideInBytes = sizeof(Vertex);
+	m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
+	m_indexBufferView.SizeInBytes = model.Indices.size();
+	m_indexBufferView.Format = DXGI_FORMAT_R32_UINT;
+	*/
 	// シェーダーをコンパイル.
 	HRESULT hr;
 	Microsoft::WRL::ComPtr<ID3DBlob> errBlob;
@@ -219,7 +232,7 @@ void CubeApp::Cleanup()
 void CubeApp::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& command)
 {
 	using namespace DirectX;
-
+	/*
 	// 各行列のセット.
 	ShaderParameters shaderParams;
 	XMStoreFloat4x4(&shaderParams.mtxWorld, XMMatrixRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), XMConvertToRadians(45.0f)));
@@ -231,17 +244,18 @@ void CubeApp::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& com
 	auto mtxProj = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0f), m_viewport.Width / m_viewport.Height, 0.1f, 100.0f);
 	XMStoreFloat4x4(&shaderParams.mtxView, XMMatrixTranspose(mtxView));
 	XMStoreFloat4x4(&shaderParams.mtxProj, XMMatrixTranspose(mtxProj));
-
+	*/
 	// 定数バッファの更新.
 	auto& constantBuffer = m_constantBuffers[m_frameIndex];
 	{
 		void* p;
 		CD3DX12_RANGE range(0, 0);
 		constantBuffer->Map(0, &range, &p);
-		memcpy(p, &shaderParams, sizeof(shaderParams));
+		//memcpy(p, &shaderParams, sizeof(shaderParams));
+		memcpy(p, &camera->shaderParams, sizeof(camera->shaderParams));
 		constantBuffer->Unmap(0, nullptr);
 	}
-
+	//↑CopyToVRAM
 	// パイプラインステートのセット
 	command->SetPipelineState(m_pipeline.Get());
 	// ルートシグネチャのセット
