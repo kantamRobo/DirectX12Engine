@@ -1,9 +1,10 @@
 #include "Model.h"
+#include <atlstr.h>
 
 void Model::Init(const std::string pFile)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(pFile,
+	m_pScene = importer.ReadFile(pFile,
 		aiProcess_CalcTangentSpace |
 		aiProcess_JoinIdenticalVertices |
 		aiProcess_Triangulate |
@@ -21,7 +22,7 @@ void Model::Init(const std::string pFile)
 		aiProcess_OptimizeGraph);
 
 
-	ProcessAssimpMesh(scene);
+	ProcessAssimpMesh(m_pScene);
 }
 
 // for: NumChildren
@@ -37,16 +38,16 @@ void Model::ProcessAssimpNode(aiNode* node ,const aiScene* scene)
 
 
 void Model::ProcessAssimpMesh(
-	
-	
-	const aiScene* pScene
-	
-)
-{	
 
-	
+
+	const aiScene* pScene
+
+)
+{
+
+
 	meshes.resize(pScene->mNumMeshes);
-	
+	modelmat = DirectX::XMMatrixTranspose(convertAImatrix4x4toXMMATRIX(pScene->mRootNode->mTransformation));
 
 	for (unsigned int meshIndex = 0; meshIndex < pScene->mNumMeshes;
 		meshIndex++) {
@@ -108,6 +109,66 @@ void Model::ProcessAssimpMesh(
 
 
 
-
 		}
+	}
+	UINT Nummesh = pScene->mNumMeshes;
+	const aiMesh* submesh = nullptr;
+	aiBone* pBone = nullptr;
+	UINT nBoneIndex = 0;
+	UINT NumBones = 0;
+	for (UINT i = 0; i < Nummesh; i++)
+	{
+		submesh = pScene->mMeshes[i];
+
+		for (UINT j = 0; j < submesh->mNumBones; j++)
+		{
+			nBoneIndex = 0;
+			pBone = submesh->mBones[j];
+
+			nBoneIndex = NumBones++;
+
+			//XMMATRIX
+			bones[NumBones].boneoffsetmatrix = DirectX::XMMatrixTranspose(pBone->mOffsetMatrix);
+			//aiMatrix4x4から、XMMATRIXへの変換関数を作成しておく
+		}
+
+		for (UINT k = 0; k < pBone->mNumWeights; k++)
+		{
+			mesh.mBone.VertexID[k] = pBone->mWeights[k].mVertexId;
+			mesh.mBone.Weights.weight[k] = pBone->mWeights[k].mWeight;
+			
+		}
+	}
+
+}
+
+	void Model::ProcessBoneNode(const aiAnimation* p_animation,const aiScene* pScene, const aiNode* node,
+	const DirectX::XMMATRIX& ParentNodeTransform)
+	{
+		DirectX::XMMATRIX NodeTransformation = DirectX::XMMatrixIdentity();
+		convertAImatrix4x4toXMMATRIX(NodeTransformation, node->mTransformation);
+
+		CStringA strNodeName(node->mName.data);
+		const aiNodeAnim* pNodeAnim =SearchNodeAnim(p_animation, strNodeName);
+		//名前がstrNodeNameと一致するアニメーションが、p_Animationのチャンネルの中から存在していたら
+		//それをpNodeAnimの内容とする。
+          
+
+		if (pNodeAnim)
+		{
+			//pnodeanimのデータを利用し、
+			//スケーリング、回転、平行移動の計算を行う
+			//計算した上記三つの結果を、NodeTransformationに代入する。
+			NodeTransformation = calclatedScaling * calclatedRotation * calclatedTranslation;
+		}
+		UINT nBoneIndex = 0;
+		//親ノード空間へと座標変換
+		DirectX::XMMATRIX GlobalTransformation = NodeTransformation * ParentNodeTransform;
+		//GPUに渡すボーン行列に座標変換
+		bones[nBoneIndex].transformmatrixforGPU = bones[nBoneIndex].boneoffsetmatrix * GlobalTransformation *
+			modelmat;
+		for (UINT i = 0; i < node->mNumChildren; i++) {
+			ProcessBoneNode(p_animation, pScene, node->mChildren[i], ParentNodeTransform);
+		}
+		
 	}

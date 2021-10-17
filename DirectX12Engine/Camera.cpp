@@ -16,13 +16,22 @@ Camera::Camera(CD3DX12_VIEWPORT&  in_viewport, CD3DX12_RECT& in_scissorRect)
 void Camera::Update()
 {
 	
+	SetViewProj();
 }
 
 
 void Camera::SetViewProj()
 {
-	// 各行列のセット.
 	
+	x += 0.01f;
+	if (x <= 0)
+	{
+		x += 0.01f;
+	}
+	y += 0.001f;
+	// 各行列のセット.
+	m_position=DirectX::XMVectorSet(x,y,0,0);
+	//m_rotation = DirectX::XMVectorSet(x, 0, 0, 0);
 	DirectX::XMStoreFloat4x4(&shaderParams.mtxWorld, DirectX::XMMatrixRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), DirectX::XMConvertToRadians(45.0f)));
 	/*
 	auto mtxView = DirectX::XMMatrixLookAtLH(

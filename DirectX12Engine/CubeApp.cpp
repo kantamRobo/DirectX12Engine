@@ -245,6 +245,7 @@ void CubeApp::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& com
 	XMStoreFloat4x4(&shaderParams.mtxView, XMMatrixTranspose(mtxView));
 	XMStoreFloat4x4(&shaderParams.mtxProj, XMMatrixTranspose(mtxProj));
 	*/
+	camera->Update();
 	// 定数バッファの更新.
 	auto& constantBuffer = m_constantBuffers[m_frameIndex];
 	{

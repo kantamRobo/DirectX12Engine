@@ -21,7 +21,9 @@ public:
 	DirectX::XMVECTOR m_target;
 	DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	//ƒJƒƒ‰‚ğ“®‚©‚·
-
+	float x = 0;
+	float y = 0;
+	float z = 0;
 	void Move(const DirectX::XMVECTOR& move)
 	{
 		m_position = DirectX::XMVectorAdd(m_position, move);
