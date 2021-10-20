@@ -5,7 +5,7 @@
 namespace MathUtility
 {
 	
-	void ConvertToaiMatrix4x4toXMFLOAT4x4(const aiMatrix4x4& src, DirectX::XMFLOAT4X4& dst)
+	void ConvertToaiMatrix4x4toXMFLOAT4x4( const aiMatrix4x4& src, DirectX::XMFLOAT4X4& dst)
 	{
 		dst._11 = src.a1; dst._12 = src.a2; dst._13 = src.a3; dst._14 = src.a4;
 		dst._21 = src.b1; dst._22 = src.b2; dst._23 = src.b3; dst._24 = src.b4;
@@ -15,5 +15,38 @@ namespace MathUtility
 
 
 	 }
+
+	void SetMatrixZero(DirectX::XMMATRIX& dst)
+	{
+		dst = DirectX::XMMatrixSet(0, 0, 0, 0
+			, 0, 0, 0, 0
+			, 0, 0, 0, 0
+			, 0, 0, 0, 0);
+	}
+
+	void AddXMMATRIX(DirectX::XMMATRIX& dst, const DirectX::XMMATRIX& rhs)
+	{
+		dst.r[0].m128_f32[0] = dst.r[0].m128_f32[0] + rhs.r[0].m128_f32[0];
+		dst.r[0].m128_f32[1] = dst.r[0].m128_f32[1] + rhs.r[0].m128_f32[1];
+		dst.r[0].m128_f32[2] = dst.r[0].m128_f32[2] + rhs.r[0].m128_f32[2];
+		dst.r[0].m128_f32[3] = dst.r[0].m128_f32[3] + rhs.r[0].m128_f32[3];
+
+		dst.r[1].m128_f32[0] = dst.r[1].m128_f32[0] + rhs.r[1].m128_f32[0];
+		dst.r[1].m128_f32[1] = dst.r[1].m128_f32[1] + rhs.r[1].m128_f32[1];
+		dst.r[1].m128_f32[2] = dst.r[1].m128_f32[2] + rhs.r[1].m128_f32[2];
+		dst.r[1].m128_f32[3] = dst.r[1].m128_f32[3] + rhs.r[1].m128_f32[3];
+	
+		dst.r[2].m128_f32[0] = dst.r[2].m128_f32[0] + rhs.r[2].m128_f32[0];
+		dst.r[2].m128_f32[1] = dst.r[2].m128_f32[1] + rhs.r[2].m128_f32[1];
+		dst.r[2].m128_f32[2] = dst.r[2].m128_f32[2] + rhs.r[2].m128_f32[2];
+		dst.r[2].m128_f32[3] = dst.r[2].m128_f32[3] + rhs.r[2].m128_f32[3];
+	
+		dst.r[3].m128_f32[0] = dst.r[3].m128_f32[0] + rhs.r[3].m128_f32[0];
+		dst.r[3].m128_f32[1] = dst.r[3].m128_f32[1] + rhs.r[3].m128_f32[1];
+		dst.r[3].m128_f32[2] = dst.r[3].m128_f32[2] + rhs.r[3].m128_f32[2];
+		dst.r[3].m128_f32[3] = dst.r[3].m128_f32[3] + rhs.r[3].m128_f32[3];
+	}
+
+
 
 }

@@ -15,16 +15,17 @@ public:
 	std::vector<Vertex>vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Bone> bones;
-	DirectX::XMMATRIX modelmat;
+	DirectX::XMFLOAT4X4 modelmat;
 	void Init(const std::string pFile);
-	void ProcessBoneNode(const aiAnimation* p_animation, const aiScene* pScene, const aiNode* node, const DirectX::XMMATRIX& ParentNodeTransform);
+	
+	void ProcessBoneNode(const aiAnimation* p_animation, const aiScene* pScene, const aiNode* node, FLOAT AnimationTime, const DirectX::XMMATRIX& ParentNodeTransform);
 	const aiScene* m_pScene;
 private:
 	//void ProcessAssimpNode();
 
 	
 	
-	void ProcessAssimpMesh(const aiScene* pScene);
+	void ProcessAssimpMesh(const aiMesh* p_mesh);
 	
 	
 

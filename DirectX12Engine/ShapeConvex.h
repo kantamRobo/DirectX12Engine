@@ -3,8 +3,9 @@
 //
 #pragma once
 #include "Shape.h"
+#include "MathUtility.h"
 
-
+using namespace MathUtility;
 int FindPointFurrthestInDir(const DirectX::XMVECTOR* pts, const int num, const DirectX::XMVECTOR& dir)
 {
 	int maxIdx = 0;
@@ -154,7 +155,7 @@ void ExpandConvexHull(std::vector<DirectX::XMVECTOR>& hullpoints, std::vector<tr
 		RemoveInternalPoints(hullpoints, hullTris, externalVerts);
 	}
 
-	removeUnreferencedVerts(hullpoints, hullTris);
+	RemoveUnreferencedVerts(hullpoints, hullTris);
 }
 void RemoveInternalPoints(const std::vector<DirectX::XMVECTOR>& hullPoints
 	, const std::vector<tri_t>& hullTris, std::vector<DirectX::XMVECTOR>& checkPts)
@@ -200,6 +201,295 @@ struct edge_t {
 	}
 };
 
+bool IsEdgeUnique(const std::vector<tri_t>& tris, const std::vector<int>& facingTris,
+	const int ignoreTri, const edge_t& edge)
+{
+	for (int i = 0; i < facingTris.size(); i++)
+	{
+		const int triIdx = facingTris[i];
+		if (ignoreTri == triIdx)
+		{
+			continue;
+		}
+
+		const tri_t& tri = tris[triIdx];
+
+		edge_t edges[3];
+		edges[0].a = tri.a;
+		edges[0].b = tri.b;
+
+		edges[1].a = tri.b;
+		edges[1].b = tri.c;
+
+		edges[2].a = tri.c;
+		edges[2].b = tri.a;
+
+		for (int e = 0; e < 3; e++)
+		{
+			if (edge == edges[e])
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+}
+
+void AddPoint(std::vector<DirectX::XMVECTOR>& hullPoints, std::vector<tri_t>& hullTris
+	, const DirectX::XMVECTOR pt)
+{
+
+	//この点に面する全ての三角形を見つける
+
+	std::vector<int> facingTris;
+	for (int i = static_cast<int>(hullTris.size() - 1); i >= 0; i--) {
+		const tri_t& tri = hullTris[i];
+		
+		const DirectX::XMVECTOR& a = hullPoints[tri.a];
+		const DirectX::XMVECTOR& b = hullPoints[tri.b];
+		const DirectX::XMVECTOR& c = hullPoints[tri.c];
+
+		const float dist = DistanceFromTrinangle(a, b, c, pt);
+
+		if (dist > 0.0f)
+		{
+			facingTris.push_back(i);
+		}
+	}
+
+	//三角形に特有の辺を見つける。これらは新しい三角形を形成する
+	std::vector<edge_t> uniqueEdges;
+	for (int i = 0; i < facingTris.size(); i++)
+	{
+		const int triIdx = facingTris[i];
+		const tri_t& tri = hullTris[triIdx];
+
+		edge_t edges[3];
+		edges[0].a = tri.a;
+		edges[0].b = tri.b;
+
+		edges[1].a = tri.b;
+		edges[1].b = tri.c;
+
+		edges[2].a = tri.c;
+		edges[2].b = tri.a;
+		
+		for (int e = 0; e < 3; e++)
+		{
+			if (IsEdgeUnique(hullTris, facingTris, triIdx, edges[e]))
+			{
+				uniqueEdges.push_back(edges[e]);
+			}
+		}
+
+	}
+
+	//そして、古い三角面を消す
+	for (int i = 0; i < facingTris.size(); i++)
+	{
+		hullTris.erase(hullTris.begin() + facingTris[i]);
+	}
+
+	//そして新しい点を加える。
+	hullPoints.push_back(pt);
+	const int newPtIdx = (int)hullPoints.size() - 1;
+
+	//そしてそれぞれの辺に対して三角形を加える
+
+	for (int i = 0; i < uniqueEdges.size(); i++)
+	{
+		const edge_t& edge = uniqueEdges[i];
+
+		tri_t tri;
+
+		tri.a = edge.a;
+		tri.b = edge.b;
+		tri.c = newPtIdx;
+
+		hullTris.push_back(tri);
+	}
+}
+
+void RemoveUnreferencedVerts(std::vector<DirectX::XMVECTOR>& hullPoints,
+	std::vector<tri_t>& hullTris)
+{
+	for (int i = 0; i < hullPoints.size(); i++)
+	{
+		bool isUsed = false;
+		for (int j = 0; j < hullTris.size(); j++)
+		{
+			const tri_t& tri = hullTris[j];
+
+			if (tri.a == i || tri.b == i || tri.c == i)
+			{
+				isUsed = true;
+				break;
+			}
+		}
+
+		if (isUsed)
+		{
+			continue;
+		}
+
+		for (int j = 0; j < hullTris.size(); j++)
+		{
+			tri_t& tri = hullTris[j];
+			if (tri.a > i)
+			{
+				tri.a--;
+			}
+			if (tri.b > i)
+			{
+				tri.b--;
+			}
+			if (tri.c > i)
+			{
+				tri.c--;
+			}
+		}
+
+		hullPoints.erase(hullPoints.begin() + i);
+
+		i--;
+	}
+}
+
+
+void BuildConvexHull(const std::vector<DirectX::XMVECTOR>& verts, std::vector<DirectX::XMVECTOR>& hullPts, std::vector<tri_t>& hullTris)
+{
+	if (verts.size() < 4)
+	{
+		return;
+	}
+
+	//四面体を作成する。
+	BuildTetrahedron(verts.data(), (int)verts.size(), hullPts, hullTris);
+
+	ExpandConvexHull(hullPts, hullTris, verts);
+
+}
+
+bool IsExternal(const std::vector<DirectX::XMVECTOR>& pts, const std::vector<tri_t>& tris, const DirectX::XMVECTOR& pt)
+{
+	bool IsExternal = false;
+
+	for (int t = 0; t < tris.size(); t++)
+	{
+		const tri_t& tri = tris[t];
+		const DirectX::XMVECTOR& a = pts[tri.a];
+		const DirectX::XMVECTOR& b = pts[tri.b];
+		const DirectX::XMVECTOR& c = pts[tri.c];
+
+		//点が三角形の外にあるなら、external判定が真
+		float dist = DistanceFromTrinangle(a, b, c, pt);
+		if (dist > 0.0f){
+			IsExternal = true;
+			break;
+		}
+	}
+
+	return IsExternal;
+}
+
+DirectX::XMVECTOR CalculateCenterOFMass(const std::vector<DirectX::XMVECTOR>& pts, const std::vector<tri_t>& tris)
+{
+	const int numSamples = 100;
+
+	Bounds bounds;
+	bounds.Expand(pts.data(), pts.size());
+
+	DirectX::XMVECTOR cm=DirectX::XMVectorSet(0.0f, 0.0f,0.0f, 0.0f);
+
+	const float dx = bounds.WidthX() / static_cast<float>(numSamples);
+	const float dy = bounds.WidthY() / static_cast<float>(numSamples);
+	const float dz = bounds.WidthZ() / static_cast<float>(numSamples);
+
+	int sampleCount = 0;
+	for (float x = bounds.mins.m128_f32[0]; x < bounds.maxs.m128_f32[0]; x += dx)
+	{
+		for (float y = bounds.mins.m128_f32[1]; y < bounds.maxs.m128_f32[1]; y += dy)
+		{
+			for (float z = bounds.mins.m128_f32[2]; x < bounds.maxs.m128_f32[2]; z += dz)
+			{
+				DirectX::XMVECTOR pt = DirectX::XMVectorSet(x, y, z, 0);
+
+				if (IsExternal(pts, tris, pt))
+				{
+					continue;
+				}
+				cm = DirectX::XMVectorAdd( cm,pt);
+				sampleCount++;
+			}
+		}
+	}
+
+	cm = DirectX::XMVectorDivide(cm, DirectX::XMVectorSet(sampleCount, sampleCount, sampleCount, 0));
+
+	return cm;
+}
+//2021/10/19
+DirectX::XMMATRIX CalculateInetiaTensor(const std::vector<DirectX::XMVECTOR>& pts, const std::vector<tri_t>& tris, const DirectX::XMVECTOR cm)
+{
+	const int numSamples = 100;
+	
+	Bounds bounds;
+	bounds.Expand(pts.data(), static_cast<int>(pts.size()));
+
+	DirectX::XMMATRIX tensor;
+	SetMatrixZero(tensor);
+
+	const float dx = bounds.WidthX() / static_cast<float>(numSamples);
+	const float dy = bounds.WidthY() / static_cast<float>(numSamples);
+	const float dz = bounds.WidthZ() / static_cast<float>(numSamples);
+	int SampleCount = 0;
+	for (float x = bounds.mins.m128_f32[0]; x < bounds.maxs.m128_f32[0]; x += dx)
+	{
+		for (float y = bounds.mins.m128_f32[1]; y < bounds.maxs.m128_f32[1]; y += dy)
+		{
+			for (float z = bounds.mins.m128_f32[2]; x < bounds.maxs.m128_f32[2]; z += dz)
+			{
+				DirectX::XMVECTOR pt = DirectX::XMVectorSet(x, y, z);
+
+				if (IsExternal(pts, tris, pt))
+				{
+					continue;
+				}
+				//重心に関係のある点を取得する
+				pt = DirectX::XMVectorSubtract(pt, cm);
+
+				DirectX::XMMATRIX rhs = DirectX::XMMatrixSet(
+					pt.m128_f32[1] * pt.m128_f32[1] + pt.m128_f32[2] * pt.m128_f32[2],//11
+					0,//12
+					0,//13
+					0,//14
+					0,//21
+					pt.m128_f32[2] * pt.m128_f32[2] + pt.m128_f32[0] * pt.m128_f32[0],//22
+					0,//23
+					0,//24
+					0,//31
+					0,//32
+					pt.m128_f32[0] * pt.m128_f32[0] + pt.m128_f32[1] * pt.m128_f32[1],//33
+					0,//34
+					0//41
+					,0//42
+					,0//43
+					,0);//44
+					AddXMMATRIX(tensor, rhs);
+					SampleCount++;
+			}
+		}
+	}
+	tensor = DirectX::XMMatrixMultiply(tensor
+		,DirectX::XMMatrixScaling(1 / 
+			static_cast<float>(SampleCount),
+			1 / static_cast<float>(SampleCount),
+			1 / static_cast<float>(SampleCount)));
+
+	return tensor;
+}
+
 /*
 ====================================================
 ShapeConvex
@@ -228,6 +518,32 @@ public:
 	Bounds m_bounds;
 	DirectX::XMMATRIX m_inertiaTensor;
 };
+
+void ShapeConvex::Build(const DirectX::XMVECTOR* pts, const int num)
+{
+	m_points.clear();
+	m_points.reserve(num);
+
+	for (int i = 0; i < num; i++)
+	{
+		m_points.push_back(pts[i]);
+	}
+
+	//凸包に拡張する
+	std::vector<DirectX::XMVECTOR> hullPoints;
+	std::vector<tri_t> hullTriangles;
+	BuildConvexHull(m_points, hullPoints, hullTriangles);
+
+	m_points = hullPoints;
+
+	//バウンドを拡張する
+	m_bounds.Clear();
+	m_bounds.Expand(m_points.data(), m_points.size());
+	DirectX::XMVECTOR temp_m_centerOfMass = DirectX::XMLoadFloat3(&m_centerOfMass);
+	temp_m_centerOfMass = CalculateCenterOFMass(hullPoints, hullTriangles);
+	DirectX::XMStoreFloat3(&m_centerOfMass, temp_m_centerOfMass);
+	m_inertiaTensor = CalculateInetiaTensor(hullPoints, hullTriangles, DirectX::XMLoadFloat3(&m_centerOfMass));;
+}
 
 Bounds ShapeConvex::GetBounds(const DirectX::XMVECTOR& pos, const DirectX::XMVECTOR& orient) const
 {
