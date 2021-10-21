@@ -54,7 +54,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 	try
 	{
 		theApp.Initialize(hwnd);
-
+		//MainEngine.Initialize(hwnd);
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&theApp));
 		ShowWindow(hwnd, nCmdShow);
 

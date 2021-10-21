@@ -47,6 +47,9 @@ namespace MathUtility
 		dst.r[3].m128_f32[3] = dst.r[3].m128_f32[3] + rhs.r[3].m128_f32[3];
 	}
 
-
+	void SetVectorZero(DirectX::XMVECTOR& dst)
+	{
+		dst = DirectX::XMVectorSet(0, 0, 0, 0);
+	}
 
 }
