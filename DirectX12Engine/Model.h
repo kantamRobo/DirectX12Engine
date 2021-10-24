@@ -7,6 +7,7 @@
 #include <vector>
 #include <windows.h>
 #include <memory>
+#include <cassert>
 class Model
 {
 
@@ -39,5 +40,7 @@ struct Bone
 	std::vector<Bone> children;
 	std::shared_ptr<Bone> parent;
 	DirectX::XMMATRIX transformmatrixforGPU;
+	DirectX::XMMATRIX boneoffsetmatrix;
 };
+
 

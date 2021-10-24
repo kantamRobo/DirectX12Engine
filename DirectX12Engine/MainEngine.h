@@ -1,12 +1,18 @@
 #pragma once
 #include <d3d12.h>
 #include <memory>
-class RenderEngine;
+class ModelRenderer;
+class ModelRendererWorker;
+class DX12EngineCore;
 class MainEngine
 {
 public:
+	
+	
+	void Init(HWND hwnd);
 	void Tick();
-
-	std::unique_ptr<RenderEngine> m_renderengine;
+	std::shared_ptr<DX12EngineCore> m_core;
+	std::shared_ptr<ModelRenderer>m_renderer;
+	std::shared_ptr<ModelRendererWorker>m_rendererworker;
 };
 

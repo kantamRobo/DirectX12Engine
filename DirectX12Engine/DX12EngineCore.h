@@ -2,11 +2,15 @@
 #include <d3dx12.h>
 #include <dxgi1_6.h>
 #include <wrl.h>
+
+
 class DX12EngineCore
 {
+public:
 	DX12EngineCore(HWND hwnd);
 	void CreateFrameFences();
 	void PrepareRenderTargetView();
+
 
 	const UINT GpuWaitTimeout = (10 * 1000);  // 10s
 	const UINT FrameBufferCount = 2;

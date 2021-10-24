@@ -1,4 +1,5 @@
 #include "ModelRendererWorker.h"
+#include <stdexcept>
 
 
 
@@ -11,17 +12,18 @@ D3D12_COMMAND_QUEUE_DESC queueDesc{
 };
 
 
-ModelRendererWorker::ModelRenderWorker()
+ModelRendererWorker::ModelRendererWorker(ID3D12Device* p_device,UINT FrameBufferCount)
 {
-	CreateCommandAllocators();
-	CreateCommandQueue();
-	CreateCommandLists();
+	CreateCommandAllocators(p_device,FrameBufferCount);
+	CreateCommandQueue(p_device);
+	CreateCommandLists(p_device);
 	m_commandList->Close();
 }
 
-HRESULT ModelRendererWorker::CreateCommandQueue()
+HRESULT ModelRendererWorker::CreateCommandQueue(ID3D12Device* p_device)
 {
-	hr = m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue));
+	HRESULT hr;
+	hr = p_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue));
 	if (FAILED(hr))
 	{
 		throw std::runtime_error("CreateCommandQueue failed.");
@@ -31,13 +33,13 @@ HRESULT ModelRendererWorker::CreateCommandQueue()
 }
 
 
-void ModelRendererWorker::CreateCommandAllocators()
+void ModelRendererWorker::CreateCommandAllocators(ID3D12Device* p_device,UINT FrameBufferCount)
 {
 	HRESULT hr;
 	m_commandAllocators.resize(FrameBufferCount);
 	for (UINT i = 0; i < FrameBufferCount; ++i)
 	{
-		hr = m_device->CreateCommandAllocator(
+		hr = p_device->CreateCommandAllocator(
 			D3D12_COMMAND_LIST_TYPE_DIRECT,
 			IID_PPV_ARGS(&m_commandAllocators[i])
 		);
@@ -48,18 +50,19 @@ void ModelRendererWorker::CreateCommandAllocators()
 	}
 }
 
-void ModelRendererWorker::CreateCommandLists()
+void ModelRendererWorker::CreateCommandLists(ID3D12Device* p_device)
 {
+	HRESULT hr;
 	// コマンドリストの生成.
-	hr = m_device->CreateCommandList(
+	hr = p_device->CreateCommandList(
 		0,
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
 		m_commandAllocators[0].Get(),
 		nullptr,
 		IID_PPV_ARGS(&m_commandList)
 	);
-	
+
 
 }
-m_viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, float(width), float(height));
-m_scissorRect = CD3DX12_RECT(0, 0, LONG(width)
+
+

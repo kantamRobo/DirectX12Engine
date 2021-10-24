@@ -57,9 +57,6 @@
     <ClCompile Include="Animator.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Bounds.cpp">
-      <Filter>ヘッダー ファイル\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="DX12EngineCore.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -104,21 +101,6 @@
     <ClInclude Include="Animator.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>ヘッダー ファイル\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Shape.h">
-      <Filter>ヘッダー ファイル\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Body.h">
-      <Filter>ヘッダー ファイル\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Bounds.h">
-      <Filter>ヘッダー ファイル\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="ShapeConvex.h">
-      <Filter>ヘッダー ファイル\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="DX12EngineCore.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -129,9 +111,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="ModelRendererWorker.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="MinkowskiSums.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Commands.h">

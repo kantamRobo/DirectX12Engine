@@ -1,7 +1,8 @@
+
 #include "Model.h"
 #include <atlstr.h>
 #include "MathUtility.h"
-#include <assert.h>
+
 using namespace MathUtility;
 void Model::Init(const std::string pFile)
 {
@@ -325,8 +326,8 @@ void Model::ProcessBoneNode(const aiAnimation* p_animation, const aiScene* pScen
 		//親ノード空間へと座標変換
 		DirectX::XMMATRIX GlobalTransformation =DirectX::XMMatrixMultiply(NodeTransformationXM, ParentNodeTransform);
 		//GPUに渡すボーン行列に座標変換
-		bones[nBoneIndex].transformmatrixforGPU = bones[nBoneIndex].boneoffsetmatrix * GlobalTransformation *
-			modelmat;
+		bones[nBoneIndex].transformmatrixforGPU = bones[nBoneIndex].boneoffsetmatrix * GlobalTransformation*
+			DirectX::XMLoadFloat4x4(&modelmat);
 		for (UINT i = 0; i < node->mNumChildren; i++) {
 			ProcessBoneNode(p_animation, pScene, node->mChildren[i], AnimationTime, GlobalTransformation);
 		}
@@ -361,4 +362,17 @@ __inline const DirectX::XMVECTOR& VectorEqual(DirectX::XMVECTOR& vDX, const aiVe
 {
 	vDX = DirectX::XMVectorSet(vAI.x, vAI.y, vAI.z, 0);
 	return vDX;
+}
+
+aiNodeAnim* SearchNodeAnim(const aiAnimation* pAnimation, const CStringA strNodeName)
+{
+	for (UINT i = 0; i < pAnimation->mNumChannels; i++)
+	{
+		if (CStringA(pAnimation->mChannels[i]->mNodeName.data) == strNodeName)
+		{
+			return pAnimation->mChannels[i];
+		}
+	}
+
+	return nullptr;
 }

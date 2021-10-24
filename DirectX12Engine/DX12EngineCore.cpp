@@ -135,6 +135,7 @@ DX12EngineCore::DX12EngineCore(HWND hwnd)
 		*/
 		m_viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, float(width), float(height));
 		m_scissorRect = CD3DX12_RECT(0, 0, LONG(width), LONG(height));
+		m_fenceWaitEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 		
 	}
 }

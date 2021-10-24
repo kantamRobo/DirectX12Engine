@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
-    <ClCompile Include="Bounds.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CubeApp.cpp" />
     <ClCompile Include="Descriptor.cpp" />
@@ -35,8 +34,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator.h" />
-    <ClInclude Include="Body.h" />
-    <ClInclude Include="Bounds.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Commands.h" />
     <ClInclude Include="CubeApp.h" />
@@ -46,14 +43,10 @@
     <ClInclude Include="Appbase.h" />
     <ClInclude Include="MathUtility.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MinkowskiSums.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelRenderer.h" />
     <ClInclude Include="ModelRendererWorker.h" />
     <ClInclude Include="PipelineObjectContainer.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="Shape.h" />
-    <ClInclude Include="ShapeConvex.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
