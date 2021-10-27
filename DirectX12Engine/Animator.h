@@ -10,7 +10,8 @@ class Animator
 		m_model = in_model;
 	}
 	Model m_model;
-	void CalculateBoneAnimation(const aiScene* pScene, const aiNode* pNode);
+	
+	void CalculateBoneAnimation(const aiScene* pScene, float fTimeInSeconds, const aiNode* pNode);
 };
 
 struct animationNode

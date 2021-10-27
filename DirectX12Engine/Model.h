@@ -18,7 +18,7 @@ public:
 	std::vector<Bone> bones;
 	DirectX::XMFLOAT4X4 modelmat;
 	void Init(const std::string pFile);
-	
+	UINT mcurrentAnimIndex;
 	void ProcessBoneNode(const aiAnimation* p_animation, const aiScene* pScene, const aiNode* node, FLOAT AnimationTime, const DirectX::XMMATRIX& ParentNodeTransform);
 	const aiScene* m_pScene;
 private:
