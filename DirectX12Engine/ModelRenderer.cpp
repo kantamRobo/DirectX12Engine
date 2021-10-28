@@ -12,8 +12,9 @@ ModelRenderer::ModelRenderer(IDXGISwapChain3* swapchain,
 	const GraphicPipeLineObjectContainer& pipelineobjContainer,
 	std::vector<UINT64> m_frameFenceValues)
 {
-
+	m_model = std::make_shared<Model>();
 }
+
 
 
 
@@ -95,7 +96,7 @@ void ModelRenderer::WaitPreviousFrame(ID3D12CommandQueue* queue,const std::vecto
 }
 
 
-void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& command,Camera* camera)
+void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& command, std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> m_constantBuffers,Camera* camera)
 {
 	
 	/*
@@ -141,13 +142,13 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 	command->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
 	
-	command->IASetVertexBuffers(0, 1, &m_vertexBufferView);
-	command->IASetIndexBuffer(&m_indexBufferView);
+	command->IASetVertexBuffers(0, 1, &m_model->m_vertexBufferView);
+	command->IASetIndexBuffer(&m_model->m_indexBufferView);
 
 	command->SetGraphicsRootDescriptorTable(0, m_cbViews[m_frameIndex]);
 	command->SetGraphicsRootDescriptorTable(1, m_srv);
 	command->SetGraphicsRootDescriptorTable(2, m_sampler);
 
 	// •`‰æ–½—ß‚Ì”­s
-	command->DrawIndexedInstanced(m_indexCount, 1, 0, 0, 0);
+	command->DrawIndexedInstanced(m_model->m_indexCount, 1, 0, 0, 0);
 }

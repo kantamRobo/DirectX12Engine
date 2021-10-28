@@ -4,6 +4,8 @@
 #include "Commands.h"
 #include "Descriptor.h"
 #include "PipelineObjectContainer.h"
+#include "Model.h"
+#include "Camera.h"
 class ModelRenderer
 {
 public:
@@ -60,11 +62,14 @@ public:
 	void Render();
 	const std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> constantBuffers;
 	void WaitPreviousFrame(ID3D12CommandQueue* queue, const std::vector<Microsoft::WRL::ComPtr<ID3D12Fence1>> m_frameFences, std::vector<UINT64> m_frameFenceValues);
-	void MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& command, std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> m_constantBuffers;);
 	
+	void MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& command, std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> m_constantBuffers, Camera* camera);
 	Microsoft::WRL::ComPtr<IDXGISwapChain3> m_swapchain;
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>m_renderTargets;
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Fence1>> m_frameFences;
+
+
+	
 	
 	std::vector<UINT64> m_frameFenceValues;
 	Commands m_commands;
@@ -81,5 +86,15 @@ public:
 
 	CD3DX12_VIEWPORT  m_viewport;
 	CD3DX12_RECT m_scissorRect;
+	std::shared_ptr<Model> m_model;
+
+
+	D3D12_GPU_DESCRIPTOR_HANDLE m_sampler;
+	D3D12_GPU_DESCRIPTOR_HANDLE m_srv;
+	std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> m_cbViews;
+
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSrvCbv;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSampler;
+	UINT  m_samplerDescriptorSize;
 };
 

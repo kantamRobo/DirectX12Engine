@@ -2,6 +2,12 @@
 #include "Model.h"
 #include <atlstr.h>
 #include "MathUtility.h"
+#include <stdexcept>
+#include <experimental/coroutine>
+#include <experimental/filesystem>
+#include <iosfwd>
+#include <dxcapi.h>
+
 
 using namespace MathUtility;
 void Model::Init(const std::string pFile)
@@ -138,6 +144,364 @@ void Model::ProcessAssimpMesh(const aiMesh* p_mesh)
 	*/
 }
 
+void Model::CreateVertexIndexBuffer(ID3D12Device* p_device) {
+	// 頂点バッファとインデックスバッファの生成.
+	m_vertexBuffer = CreateBuffer(p_device,vertices.size(), vertices.data());
+	m_indexBuffer = CreateBuffer(p_device,indices.size(), indices.data());
+	m_indexCount = indices.size();
+
+	// 各バッファのビューを生成.
+	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+	m_vertexBufferView.SizeInBytes = vertices.size();
+	m_vertexBufferView.StrideInBytes = sizeof(Vertex);
+	m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
+	m_indexBufferView.SizeInBytes = indices.size();
+	m_indexBufferView.Format = DXGI_FORMAT_R32_UINT;
+}
+
+
+
+void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands) {
+	// シェーダーをコンパイル.
+	HRESULT hr;
+	Microsoft::WRL::ComPtr<ID3DBlob> errBlob;
+	hr = CompileShaderFromFile(L"simpleTexVS.hlsl", L"vs_6_0", m_vs, errBlob);
+	if (FAILED(hr))
+	{
+		OutputDebugStringA((const char*)errBlob->GetBufferPointer());
+	}
+	hr = CompileShaderFromFile(L"simpleTexPS.hlsl", L"ps_6_0", m_ps, errBlob);
+	if (FAILED(hr))
+	{
+		OutputDebugStringA((const char*)errBlob->GetBufferPointer());
+	}
+
+	CD3DX12_DESCRIPTOR_RANGE cbv, srv, sampler;
+	cbv.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0); // b0 レジスタ
+	srv.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
+	sampler.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 0); // s0 レジスタ
+
+	CD3DX12_ROOT_PARAMETER rootParams[3];
+	rootParams[0].InitAsDescriptorTable(1, &cbv, D3D12_SHADER_VISIBILITY_VERTEX);
+	rootParams[1].InitAsDescriptorTable(1, &srv, D3D12_SHADER_VISIBILITY_PIXEL);
+	rootParams[2].InitAsDescriptorTable(1, &sampler, D3D12_SHADER_VISIBILITY_PIXEL);
+
+	// ルートシグネチャの構築
+	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc{};
+	rootSigDesc.Init(
+		_countof(rootParams), rootParams,   //pParameters
+		0, nullptr,   //pStaticSamplers
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT
+	);
+	Microsoft::WRL::ComPtr<ID3DBlob> signature;
+	hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &signature, &errBlob);
+	if (FAILED(hr))
+	{
+		throw std::runtime_error("D3D12SerializeRootSignature faild.");
+	}
+	// RootSignature の生成
+	hr = p_device->CreateRootSignature(
+		0,
+		signature->GetBufferPointer(), signature->GetBufferSize(),
+		IID_PPV_ARGS(&m_rootSignature)
+	);
+	if (FAILED(hr))
+	{
+		throw std::runtime_error("CrateRootSignature failed.");
+	}
+
+	// インプットレイアウト
+	D3D12_INPUT_ELEMENT_DESC inputElementDesc[] = {
+	  { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, offsetof(Vertex, Pos), D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA},
+	  { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT,0, offsetof(Vertex,Color), D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA},
+	  { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(Vertex,UV), D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA}
+	};
+
+	// パイプラインステートオブジェクトの生成.
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc{};
+	// シェーダーのセット
+	psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vs.Get());
+	psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_ps.Get());
+	// ブレンドステート設定
+	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	// ラスタライザーステート
+	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	// 出力先は1ターゲット
+	psoDesc.NumRenderTargets = 1;
+	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	// デプスバッファのフォーマットを設定
+	psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+	psoDesc.InputLayout = { inputElementDesc, _countof(inputElementDesc) };
+
+	// ルートシグネチャのセット
+	psoDesc.pRootSignature = m_rootSignature.Get();
+	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	// マルチサンプル設定
+	psoDesc.SampleDesc = { 1,0 };
+	psoDesc.SampleMask = UINT_MAX; // これを忘れると絵が出ない＆警告も出ないので注意.
+
+	hr = p_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipeline));
+	if (FAILED(hr))
+	{
+		throw std::runtime_error("CreateGraphicsPipelineState failed");
+	}
+
+	PrepareDescriptorHeapForCubeApp(p_device);
+
+	// 定数バッファ/定数バッファビューの生成
+	m_constantBuffers.resize(FrameBufferCount);
+	m_cbViews.resize(FrameBufferCount);
+	for (UINT i = 0; i < FrameBufferCount; ++i)
+	{
+		UINT bufferSize = sizeof(ShaderParameters) + 255 & ~255;
+		m_constantBuffers[i] = CreateBuffer(p_device,bufferSize, nullptr);
+
+		D3D12_CONSTANT_BUFFER_VIEW_DESC cbDesc{};
+		cbDesc.BufferLocation = m_constantBuffers[i]->GetGPUVirtualAddress();
+		cbDesc.SizeInBytes = bufferSize;
+		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(m_heapSrvCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+		p_device->CreateConstantBufferView(&cbDesc, handleCBV);
+
+		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+	}
+
+	// テクスチャの生成
+	m_texture = CreateTexture("texture.tga",p_device,in_commands);
+
+	// サンプラーの生成
+	D3D12_SAMPLER_DESC samplerDesc{};
+	samplerDesc.Filter = D3D12_ENCODE_BASIC_FILTER(
+		D3D12_FILTER_TYPE_LINEAR, // min
+		D3D12_FILTER_TYPE_LINEAR, // mag
+		D3D12_FILTER_TYPE_LINEAR, // mip
+		D3D12_FILTER_REDUCTION_TYPE_STANDARD);
+	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.MaxLOD = FLT_MAX;
+	samplerDesc.MinLOD = -FLT_MAX;
+	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+
+	// サンプラー用ディスクリプタヒープの0番目を使用する
+	auto descriptorSampler = CD3DX12_CPU_DESCRIPTOR_HANDLE(m_heapSampler->GetCPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, m_samplerDescriptorSize);
+	p_device->CreateSampler(&samplerDesc, descriptorSampler);
+	m_sampler = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_heapSampler->GetGPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, m_samplerDescriptorSize);
+
+	// テクスチャからシェーダーリソースビューの準備.
+	auto srvHandle = CD3DX12_CPU_DESCRIPTOR_HANDLE(m_heapSrvCbv->GetCPUDescriptorHandleForHeapStart(), TextureSrvDescriptorBase, m_srvcbvDescriptorSize);
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	srvDesc.Texture2D.MipLevels = 1;
+	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	p_device->CreateShaderResourceView(m_texture.Get(), &srvDesc, srvHandle);
+	m_srv = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart(), TextureSrvDescriptorBase, m_srvcbvDescriptorSize);
+
+}
+Microsoft::WRL::ComPtr<ID3D12Resource1> Model::CreateBuffer(ID3D12Device* p_device,UINT bufferSize, const void* initialData)
+{
+	HRESULT hr;
+	Microsoft::WRL::ComPtr<ID3D12Resource1> buffer;
+	auto heaprop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	auto res = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
+	hr = p_device->CreateCommittedResource(
+		&heaprop,
+		D3D12_HEAP_FLAG_NONE,
+		&res,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&buffer)
+	);
+
+	// 初期データの指定があるときにはコピーする
+	if (SUCCEEDED(hr) && initialData != nullptr)
+	{
+		void* mapped;
+		CD3DX12_RANGE range(0, 0);
+		hr = buffer->Map(0, &range, &mapped);
+		if (SUCCEEDED(hr))
+		{
+			memcpy(mapped, initialData, bufferSize);
+			buffer->Unmap(0, nullptr);
+		}
+	}
+
+	return buffer;
+}
+
+void Model::PrepareDescriptorHeapForCubeApp(ID3D12Device* p_device)
+{
+	// CBV/SRV のディスクリプタヒープ
+	//  0:シェーダーリソースビュー
+	//  1,2 : 定数バッファビュー (FrameBufferCount数分使用)
+	UINT count = FrameBufferCount + 1;
+	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc{
+	  D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+	  count,
+	  D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
+	  0
+	};
+	p_device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_heapSrvCbv));
+	m_srvcbvDescriptorSize = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	// ダイナミックサンプラーのディスクリプタヒープ
+	D3D12_DESCRIPTOR_HEAP_DESC samplerHeapDesc{
+	  D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER,
+	  1,
+	  D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
+	  0
+	};
+	p_device->CreateDescriptorHeap(&samplerHeapDesc, IID_PPV_ARGS(&m_heapSampler));
+	m_samplerDescriptorSize = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
+}
+
+// 手動で生成版
+Microsoft::WRL::ComPtr<ID3D12Resource1> Model::CreateTexture(const std::string& fileName,ID3D12Device* p_device,const Commands& in_commands)
+{
+	Microsoft::WRL::ComPtr<ID3D12Resource1> texture;
+	int texWidth = 0, texHeight = 0, channels = 0;
+	auto* pImage = stbi_load(fileName.c_str(), &texWidth, &texHeight, &channels, 0);
+
+	// サイズ・フォーマットからテクスチャリソースのDesc準備
+	auto texDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		texWidth, texHeight,
+		1,  // 配列サイズ
+		1   // ミップマップ数
+	);
+	auto heaprop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	// テクスチャ生成
+	p_device->CreateCommittedResource(
+		&heaprop,
+		D3D12_HEAP_FLAG_NONE,
+		&texDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(&texture)
+	);
+
+	// ステージングバッファ準備
+	D3D12_PLACED_SUBRESOURCE_FOOTPRINT layouts;
+	UINT numRows;
+	UINT64 rowSizeBytes, totalBytes;
+	p_device->GetCopyableFootprints(&texDesc, 0, 1, 0, &layouts, &numRows, &rowSizeBytes, &totalBytes);
+	Microsoft::WRL::ComPtr<ID3D12Resource1> stagingBuffer = CreateBuffer(totalBytes, nullptr);
+
+	// ステージングバッファに画像をコピー
+	{
+		const UINT imagePitch = texWidth * sizeof(uint32_t);
+		void* pBuf;
+		CD3DX12_RANGE range(0, 0);
+		stagingBuffer->Map(0, &range, &pBuf);
+		for (UINT h = 0; h < numRows; ++h)
+		{
+			auto dst = static_cast<char*>(pBuf) + h * rowSizeBytes;
+			auto src = pImage + h * imagePitch;
+			memcpy(dst, src, imagePitch);
+		}
+	}
+
+	// コマンド準備.
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> command;
+	p_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, [m_frameIndex].Get(), nullptr, IID_PPV_ARGS(&command));
+	Microsoft::WRL::ComPtr<ID3D12Fence1> fence;
+	p_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+
+	// 転送コマンド
+	D3D12_TEXTURE_COPY_LOCATION src{}, dst{};
+	dst.pResource = texture.Get();
+	dst.SubresourceIndex = 0;
+	dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+
+	src.pResource = stagingBuffer.Get();
+	src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+	src.PlacedFootprint = layouts;
+	command->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
+
+	// コピー後にはテクスチャとしてのステートへ.
+	auto barrierTex = CD3DX12_RESOURCE_BARRIER::Transition(
+		texture.Get(),
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+	);
+	command->ResourceBarrier(1, &barrierTex);
+
+	command->Close();
+
+	// コマンドの実行
+	ID3D12CommandList* cmds[] = { command.Get() };
+	
+		in_commands.queue->ExecuteCommandLists(1, cmds);
+	// 完了したらシグナルを立てる.
+	const UINT64 expected = 1;
+	in_commands.queue->Signal(fence.Get(), expected);
+
+	// テクスチャの処理が完了するまで待つ.
+	while (expected != fence->GetCompletedValue())
+	{
+		Sleep(1);
+	}
+
+	stbi_image_free(pImage);
+	return texture;
+}
+
+
+HRESULT Model::CompileShaderFromFile(
+	const std::wstring& fileName, const std::wstring& profile, Microsoft::WRL::ComPtr<ID3DBlob>& shaderBlob, Microsoft::WRL::ComPtr<ID3DBlob>& errorBlob)
+{
+	using namespace std::experimental::filesystem;
+
+	path filePath(fileName);
+	std::ifstream infile(filePath);
+	std::vector<char> srcData;
+	if (!infile)
+		throw std::runtime_error("shader not found");
+	srcData.resize(uint32_t(infile.seekg(0, infile.end).tellg()));
+	infile.seekg(0, infile.beg).read(srcData.data(), srcData.size());
+
+	// DXC によるコンパイル処理
+	Microsoft::WRL::ComPtr<IDxcLibrary> library;
+	Microsoft::WRL::ComPtr<IDxcCompiler> compiler;
+	Microsoft::WRL::ComPtr<IDxcBlobEncoding> source;
+	Microsoft::WRL::ComPtr<IDxcOperationResult> dxcResult;
+
+	DxcCreateInstance(CLSID_DxcLibrary, IID_PPV_ARGS(&library));
+	library->CreateBlobWithEncodingFromPinned(srcData.data(), UINT(srcData.size()), CP_ACP, &source);
+	DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&compiler));
+
+	LPCWSTR compilerFlags[] = {
+  #if _DEBUG
+	  L"/Zi", L"/O0",
+  #else
+	  L"/O2" // リリースビルドでは最適化
+  #endif
+	};
+	compiler->Compile(source.Get(), filePath.wstring().c_str(),
+		L"main", profile.c_str(),
+		compilerFlags, _countof(compilerFlags),
+		nullptr, 0, // Defines
+		nullptr,
+		&dxcResult);
+
+	HRESULT hr;
+	dxcResult->GetStatus(&hr);
+	if (SUCCEEDED(hr))
+	{
+		dxcResult->GetResult(
+			reinterpret_cast<IDxcBlob**>(shaderBlob.GetAddressOf())
+		);
+	}
+	else
+	{
+		dxcResult->GetErrorBuffer(
+			reinterpret_cast<IDxcBlobEncoding**>(errorBlob.GetAddressOf())
+		);
+	}
+	return hr;
+}
 bool FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim, UINT& nposIndex)
 {
 	nposIndex = 0;
