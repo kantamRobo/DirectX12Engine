@@ -6,11 +6,16 @@
 #include "PipelineObjectContainer.h"
 #include "Model.h"
 #include "Camera.h"
+class DX12EngineCore;
 class ModelRenderer
 {
 public:
 	ModelRenderer() {};
-	ModelRenderer(IDXGISwapChain3* swapchain, std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>renderTargets, const UINT& rtvDescriptorSize, const std::vector<Microsoft::WRL::ComPtr<ID3D12Fence1>> m_frameFences, const DescriptorHeapsContainer& DSV_RTV, const Commands& commands, const GraphicPipeLineObjectContainer& pipelineobjContainer, std::vector<UINT64> m_frameFenceValues);
+
+	
+	
+	
+	ModelRenderer(const std::shared_ptr<DX12EngineCore> core,const DescriptorHeapsContainer& DSV_RTV, const Commands& commands, const std::shared_ptr<Model> in_model);
 	UINT rtvDescriptorSize;
 	
 	
@@ -59,11 +64,11 @@ public:
 	void SetGraphicPipeLineStateContainer(const GraphicPipeLineObjectContainer& pipelineobjContainer);
 
 	
-	void Render();
-	const std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> constantBuffers;
-	void WaitPreviousFrame(ID3D12CommandQueue* queue, const std::vector<Microsoft::WRL::ComPtr<ID3D12Fence1>> m_frameFences, std::vector<UINT64> m_frameFenceValues);
 	
-	void MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& command, std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> m_constantBuffers, Camera* camera);
+	void Render(std::shared_ptr<Camera> camera);
+	void WaitPreviousFrame();
+	void MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& command, std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> m_constantBuffers, std::shared_ptr<Camera> camera);
+	std::shared_ptr<DX12EngineCore> m_core;
 	Microsoft::WRL::ComPtr<IDXGISwapChain3> m_swapchain;
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>m_renderTargets;
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Fence1>> m_frameFences;
@@ -74,7 +79,7 @@ public:
 	std::vector<UINT64> m_frameFenceValues;
 	Commands m_commands;
 	DescriptorHeapsContainer m_DSV_RTV;
-	GraphicPipeLineObjectContainer pipelineobjContainer;
+	
 	
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSrvCbv;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSampler;

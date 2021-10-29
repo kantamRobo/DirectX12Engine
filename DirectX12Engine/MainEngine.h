@@ -14,5 +14,6 @@ public:
 	std::shared_ptr<DX12EngineCore> m_core;
 	std::shared_ptr<ModelRenderer>m_renderer;
 	std::shared_ptr<ModelRendererWorker>m_rendererworker;
+	
 };
 

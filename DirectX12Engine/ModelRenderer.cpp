@@ -1,27 +1,30 @@
 #include "ModelRenderer.h"
-
+#include "DX12EngineCore.h"
 //コアクラスでスワップチェーン、レンダーターゲットビュー、デプスステンシルビュー,フェンス
 // ワーカークラスでパイプラインオブジェクト（シェーダー、ルートシグネチャ、PSO）を作り、
 //作成したこれらを、エンジンの初期化クラスでこのクラスのコンストラクタに渡して初期化する)
-ModelRenderer::ModelRenderer(IDXGISwapChain3* swapchain,
-	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>>renderTargets,
-	const UINT& rtvDescriptorSize,
-	const std::vector<Microsoft::WRL::ComPtr<ID3D12Fence1>> m_frameFences,
-	const DescriptorHeapsContainer& DSV_RTV,
+ModelRenderer::ModelRenderer(const std::shared_ptr<DX12EngineCore> core, 
+	const DescriptorHeapsContainer& DSV_RTV, 
 	const Commands& commands,
-	const GraphicPipeLineObjectContainer& pipelineobjContainer,
-	std::vector<UINT64> m_frameFenceValues)
+	const std::shared_ptr<Model> in_model)
 {
-	m_model = std::make_shared<Model>();
+	m_core = core;
+	m_model = in_model;
+	m_DSV_RTV = DSV_RTV;
+	m_commands = commands;
+
+	
+
 }
 
 
 
 
-void ModelRenderer::Render(
+void ModelRenderer::Render(std::shared_ptr<Camera>
+	 camera
 )
 {
-	m_frameIndex = m_swapchain->GetCurrentBackBufferIndex();
+	m_frameIndex = m_core->m_swapchain->GetCurrentBackBufferIndex();
 
 	m_commands.allocators[m_frameIndex]->Reset();
 	m_commands.list->Reset(
@@ -54,7 +57,7 @@ void ModelRenderer::Render(
 	// 描画先をセット
 	m_commands.list->OMSetRenderTargets(1, &rtv, FALSE, &dsv);
 
-	MakeCommand(m_commands.list.Get(),constantBuffers);
+	MakeCommand(m_commands.list,m_model->m_constantBuffers,camera);
 
 	// レンダーターゲットからスワップチェイン表示可能へ
 	auto barrierToPresent = CD3DX12_RESOURCE_BARRIER::Transition(
@@ -69,18 +72,18 @@ void ModelRenderer::Render(
 	ID3D12CommandList* lists[] = { m_commands.list.Get() };
 	m_commands.queue->ExecuteCommandLists(1, lists);
 
-	m_swapchain->Present(1, 0);
+	m_core->m_swapchain->Present(1, 0);
 
-	WaitPreviousFrame(m_commands.queue.Get(),m_frameFences,m_frameFenceValues);
+	WaitPreviousFrame();
 }
 
 
-void ModelRenderer::WaitPreviousFrame(ID3D12CommandQueue* queue,const std::vector<Microsoft::WRL::ComPtr<ID3D12Fence1>> m_frameFences, std::vector<UINT64> m_frameFenceValues)
+void ModelRenderer::WaitPreviousFrame()
 {
 	// 現在のフェンスに GPU が到達後設定される値をセット.
 	auto& fence = m_frameFences[m_frameIndex];
 	const auto currentValue = ++m_frameFenceValues[m_frameIndex];
-	queue->Signal(fence.Get(), currentValue);
+	m_commands.queue->Signal(fence.Get(), currentValue);
 
 	// 次処理するコマンド（アロケータ－）のものは実行完了済みかを、
 	// 対になっているフェンスで確認する.
@@ -96,7 +99,7 @@ void ModelRenderer::WaitPreviousFrame(ID3D12CommandQueue* queue,const std::vecto
 }
 
 
-void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& command, std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> m_constantBuffers,Camera* camera)
+void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& command, std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> m_constantBuffers,std::shared_ptr<Camera> camera)
 {
 	
 	/*
@@ -114,7 +117,7 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 	*/
 	camera->Update();
 	// 定数バッファの更新.
-	auto& constantBuffer = constantBuffers[m_frameIndex];
+	auto& constantBuffer = m_model->m_constantBuffers[m_frameIndex];
 	{
 		void* p;
 		CD3DX12_RANGE range(0, 0);
@@ -125,16 +128,16 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 	}
 	//↑CopyToVRAM
 	// パイプラインステートのセット
-	command->SetPipelineState(pipelineobjContainer.m_pipeline.Get());
+	command->SetPipelineState(m_model->m_pipeline.Get());
 	// ルートシグネチャのセット
-	command->SetGraphicsRootSignature(pipelineobjContainer.m_rootSignature.Get());
+	command->SetGraphicsRootSignature(m_model->m_rootSignature.Get());
 	// ビューポートとシザーのセット
 	command->RSSetViewports(1, &m_viewport);
 	command->RSSetScissorRects(1, &m_scissorRect);
 
 	// ディスクリプタヒープをセット.
 	ID3D12DescriptorHeap* heaps[] = {
-	  m_heapSrvCbv.Get(), m_heapSampler.Get()
+	 m_model->m_heapSrvCbv.Get(),  m_model->m_heapSampler.Get()
 	};
 	command->SetDescriptorHeaps(_countof(heaps), heaps);
 
