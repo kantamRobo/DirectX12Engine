@@ -1,15 +1,17 @@
 #include "ModelRenderer.h"
 #include "DX12EngineCore.h"
+
 //コアクラスでスワップチェーン、レンダーターゲットビュー、デプスステンシルビュー,フェンス
 // ワーカークラスでパイプラインオブジェクト（シェーダー、ルートシグネチャ、PSO）を作り、
 //作成したこれらを、エンジンの初期化クラスでこのクラスのコンストラクタに渡して初期化する)
 ModelRenderer::ModelRenderer(const std::shared_ptr<DX12EngineCore> core, 
 	const DescriptorHeapsContainer& DSV_RTV, 
 	const Commands& commands,
-	const std::shared_ptr<Model> in_model)
+	std::shared_ptr<Model> in_model)
 {
 	m_core = core;
 	m_model = in_model;
+	m_frameIndex = core->m_swapchain->GetCurrentBackBufferIndex();
 	m_DSV_RTV = DSV_RTV;
 	m_commands = commands;
 

@@ -134,7 +134,7 @@
     <LinkIncremental>true</LinkIncremental>
     <PublicIncludeDirectories>
     </PublicIncludeDirectories>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\Libs\assimp-5.0.0\include;C:\Users\予備PC\OneDrive\DirectX12Engine\Libs\assimp-5.0.0\build\include\assimp;$(SolutionDir)\Libs\d3dx12</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\Libs\assimp-5.0.0\include;C:\Users\予備PC\OneDrive\DirectX12Engine\Libs\assimp-5.0.0\build\include\assimp;$(SolutionDir)\Libs\d3dx12;$(SolutionDir)\DirectXTex\DirectXTex</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -174,13 +174,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\予備PC\OneDrive\DirectX12Engine\DirectX12Engine\Imgui;$(ProjectDir)$include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)$Imgui;$(ProjectDir)$include;$(ProjectDir)$DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Libs\assimp-5.0.0\build\code\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Libs\assimp-5.0.0\build\code\Debug;$(ProjectDir)$\DirectXTex\DirectXTex\DirectXTex\Bin\Desktop_2019_Win10\ARM64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>assimp-vc142-mtd.lib;d3d12.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>

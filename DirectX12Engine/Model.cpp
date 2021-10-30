@@ -3,15 +3,22 @@
 #include <atlstr.h>
 #include "MathUtility.h"
 #include <stdexcept>
-#include <experimental/coroutine>
-#include <experimental/filesystem>
+#include <coroutine>
+#include <filesystem>
 #include <iosfwd>
 #include <dxcapi.h>
-
-
+#include <DirectXTex/DirectXTex.h>
+#include <DDSTextureLoader/DDSTextureLoader12.h>
+#include <WICTextureLoader/WICTextureLoader12.h>
+#include "DX12EngineCore.h"
 using namespace MathUtility;
-void Model::Init(const std::string pFile)
+using namespace  DirectX;
+
+Model::Model(ID3D12Device* p_device, const Commands& in_commands, std::string pFile, const std::shared_ptr<DX12EngineCore> in_core)
 {
+
+	m_frameIndex = in_core->m_swapchain->GetCurrentBackBufferIndex();
+
 	Assimp::Importer importer;
 	int flag = 0;
 	flag |= aiProcess_Triangulate;
@@ -35,7 +42,8 @@ void Model::Init(const std::string pFile)
 		const auto pMesh = m_pScene->mMeshes[i];
 		ProcessAssimpMesh(pMesh);
 	}
-
+	CreateVertexIndexBuffer(p_device);
+	Prepare(p_device, in_commands, m_frameIndex);
 }
 
 // for: NumChildren
@@ -161,7 +169,7 @@ void Model::CreateVertexIndexBuffer(ID3D12Device* p_device) {
 
 
 
-void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands) {
+void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_FrameIndex) {
 	// シェーダーをコンパイル.
 	HRESULT hr;
 	Microsoft::WRL::ComPtr<ID3DBlob> errBlob;
@@ -268,7 +276,7 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands) {
 	}
 
 	// テクスチャの生成
-	m_texture = CreateTexture("texture.tga",p_device,in_commands);
+	m_texture = CreateTexture("texture.tga",p_device,in_commands,m_frameIndex);
 
 	// サンプラーの生成
 	D3D12_SAMPLER_DESC samplerDesc{};
@@ -358,16 +366,23 @@ void Model::PrepareDescriptorHeapForCubeApp(ID3D12Device* p_device)
 }
 
 // 手動で生成版
-Microsoft::WRL::ComPtr<ID3D12Resource1> Model::CreateTexture(const std::string& fileName,ID3D12Device* p_device,const Commands& in_commands)
+Microsoft::WRL::ComPtr<ID3D12Resource1> Model::CreateTexture(const std::wstring& fileName,ID3D12Device* p_device,const Commands& in_commands,UINT in_frameIndex)
 {
-	Microsoft::WRL::ComPtr<ID3D12Resource1> texture;
-	int texWidth = 0, texHeight = 0, channels = 0;
-	auto* pImage = stbi_load(fileName.c_str(), &texWidth, &texHeight, &channels, 0);
+	TexMetadata  metadata = {};
+	ScratchImage  scratchImg = {};
 
+	
+	LoadFromWICFile(
+	fileName.c_str(), WIC_FLAGS_NONE,
+		&metadata, scratchImg);
+
+	auto img = scratchImg.GetImage(0, 0, 0);
+
+	Microsoft::WRL::ComPtr<ID3D12Resource1> texture;
 	// サイズ・フォーマットからテクスチャリソースのDesc準備
 	auto texDesc = CD3DX12_RESOURCE_DESC::Tex2D(
 		DXGI_FORMAT_R8G8B8A8_UNORM,
-		texWidth, texHeight,
+		metadata.width, metadata.height,
 		1,  // 配列サイズ
 		1   // ミップマップ数
 	);
@@ -382,42 +397,54 @@ Microsoft::WRL::ComPtr<ID3D12Resource1> Model::CreateTexture(const std::string& 
 		IID_PPV_ARGS(&texture)
 	);
 
-	// ステージングバッファ準備
-	D3D12_PLACED_SUBRESOURCE_FOOTPRINT layouts;
-	UINT numRows;
-	UINT64 rowSizeBytes, totalBytes;
-	p_device->GetCopyableFootprints(&texDesc, 0, 1, 0, &layouts, &numRows, &rowSizeBytes, &totalBytes);
-	Microsoft::WRL::ComPtr<ID3D12Resource1> stagingBuffer = CreateBuffer(totalBytes, nullptr);
+	Microsoft::WRL::ComPtr<ID3D12Resource1> textureUploadHeap = nullptr;
+	const UINT64 uploadBufferSize = GetRequiredIntermediateSize(texture.Get(), 0, 1);
 
-	// ステージングバッファに画像をコピー
-	{
-		const UINT imagePitch = texWidth * sizeof(uint32_t);
-		void* pBuf;
-		CD3DX12_RANGE range(0, 0);
-		stagingBuffer->Map(0, &range, &pBuf);
-		for (UINT h = 0; h < numRows; ++h)
-		{
-			auto dst = static_cast<char*>(pBuf) + h * rowSizeBytes;
-			auto src = pImage + h * imagePitch;
-			memcpy(dst, src, imagePitch);
-		}
-	}
+	//GPUアップロードバッファ(中間バッファ）を作成
+	p_device->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&textureUploadHeap));
+
+	uint8_t* mapforImg = nullptr;
+
+	auto result = textureUploadHeap->Map(0, nullptr, reinterpret_cast<void**>(&mapforImg));
+
+	std::copy_n(img->pixels, img->slicePitch, mapforImg);
+
+	textureUploadHeap->Unmap(0, nullptr);
+
+	D3D12_TEXTURE_COPY_LOCATION  src = {};
+
+	src.pResource = textureUploadHeap.Get();
+	src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+	src.PlacedFootprint.Offset = 0;
+	src.PlacedFootprint.Footprint.Width = metadata.width;
+	src.PlacedFootprint.Footprint.Height =  metadata.height;
+	src.PlacedFootprint.Footprint.Depth = metadata.depth;
+	src.PlacedFootprint.Footprint.RowPitch = img->rowPitch+D3D12_TEXTURE_DATA_PITCH_ALIGNMENT- img->rowPitch%
+		D3D12_TEXTURE_DATA_PITCH_ALIGNMENT;
+	src.PlacedFootprint.Footprint.Format = img->format;
+
+	D3D12_TEXTURE_COPY_LOCATION dst = {};
+
+	dst.pResource = textureUploadHeap.Get();
+	dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+	dst.SubresourceIndex = 0;
+
+
+
 
 	// コマンド準備.
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> command;
-	p_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, [m_frameIndex].Get(), nullptr, IID_PPV_ARGS(&command));
+	p_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, in_commands.allocators[in_frameIndex].Get(), nullptr, IID_PPV_ARGS(&command));
 	Microsoft::WRL::ComPtr<ID3D12Fence1> fence;
 	p_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 
-	// 転送コマンド
-	D3D12_TEXTURE_COPY_LOCATION src{}, dst{};
-	dst.pResource = texture.Get();
-	dst.SubresourceIndex = 0;
-	dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
-
-	src.pResource = stagingBuffer.Get();
-	src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
-	src.PlacedFootprint = layouts;
+	
 	command->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
 
 	// コピー後にはテクスチャとしてのステートへ.
@@ -444,7 +471,6 @@ Microsoft::WRL::ComPtr<ID3D12Resource1> Model::CreateTexture(const std::string& 
 		Sleep(1);
 	}
 
-	stbi_image_free(pImage);
 	return texture;
 }
 
@@ -452,7 +478,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource1> Model::CreateTexture(const std::string& 
 HRESULT Model::CompileShaderFromFile(
 	const std::wstring& fileName, const std::wstring& profile, Microsoft::WRL::ComPtr<ID3DBlob>& shaderBlob, Microsoft::WRL::ComPtr<ID3DBlob>& errorBlob)
 {
-	using namespace std::experimental::filesystem;
+	using namespace std::filesystem;
 
 	path filePath(fileName);
 	std::ifstream infile(filePath);
@@ -739,4 +765,58 @@ aiNodeAnim* SearchNodeAnim(const aiAnimation* pAnimation, const CStringA strNode
 	}
 
 	return nullptr;
+}
+
+//------------------------------------------------------------------------------------------------
+// Heap-allocating UpdateSubresources implementation
+inline UINT64 UpdateSubresources(
+	_In_ ID3D12GraphicsCommandList* pCmdList,
+	_In_ ID3D12Resource* pDestinationResource,
+	_In_ ID3D12Resource* pIntermediate,
+	UINT64 IntermediateOffset,
+	_In_range_(0, D3D12_REQ_SUBRESOURCES) UINT FirstSubresource,
+	_In_range_(0, D3D12_REQ_SUBRESOURCES - FirstSubresource) UINT NumSubresources,
+	_In_reads_(NumSubresources) const D3D12_SUBRESOURCE_DATA* pSrcData) noexcept
+{
+	UINT64 RequiredSize = 0;
+	UINT64 MemToAlloc = static_cast<UINT64>(sizeof(D3D12_PLACED_SUBRESOURCE_FOOTPRINT) + sizeof(UINT) + sizeof(UINT64)) * NumSubresources;
+	if (MemToAlloc > SIZE_MAX)
+	{
+		return 0;
+	}
+	void* pMem = HeapAlloc(GetProcessHeap(), 0, static_cast<SIZE_T>(MemToAlloc));
+	if (pMem == nullptr)
+	{
+		return 0;
+	}
+	auto pLayouts = static_cast<D3D12_PLACED_SUBRESOURCE_FOOTPRINT*>(pMem);
+	UINT64* pRowSizesInBytes = reinterpret_cast<UINT64*>(pLayouts + NumSubresources);
+	UINT* pNumRows = reinterpret_cast<UINT*>(pRowSizesInBytes + NumSubresources);
+
+	auto Desc = pDestinationResource->GetDesc();
+	ID3D12Device* pDevice = nullptr;
+	pDestinationResource->GetDevice(IID_ID3D12Device, reinterpret_cast<void**>(&pDevice));
+	pDevice->GetCopyableFootprints(&Desc, FirstSubresource, NumSubresources, IntermediateOffset, pLayouts, pNumRows, pRowSizesInBytes, &RequiredSize);
+	pDevice->Release();
+
+	UINT64 Result = UpdateSubresources(pCmdList, pDestinationResource, pIntermediate, FirstSubresource, NumSubresources, RequiredSize, pLayouts, pNumRows, pRowSizesInBytes, pSrcData);
+	HeapFree(GetProcessHeap(), 0, pMem);
+	return Result;
+}
+//------------------------------------------------------------------------------------------------
+// Returns required size of a buffer to be used for data upload
+inline UINT64 GetRequiredIntermediateSize(
+	_In_ ID3D12Resource* pDestinationResource,
+	_In_range_(0, D3D12_REQ_SUBRESOURCES) UINT FirstSubresource,
+	_In_range_(0, D3D12_REQ_SUBRESOURCES - FirstSubresource) UINT NumSubresources) noexcept
+{
+	auto Desc = pDestinationResource->GetDesc();
+	UINT64 RequiredSize = 0;
+
+	ID3D12Device* pDevice = nullptr;
+	pDestinationResource->GetDevice(IID_ID3D12Device, reinterpret_cast<void**>(&pDevice));
+	pDevice->GetCopyableFootprints(&Desc, FirstSubresource, NumSubresources, 0, nullptr, nullptr, nullptr, &RequiredSize);
+	pDevice->Release();
+
+	return RequiredSize;
 }

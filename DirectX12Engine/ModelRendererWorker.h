@@ -22,5 +22,6 @@ public:
 	Microsoft::WRL::ComPtr <ID3D12CommandQueue> m_commandQueue;
 
 	std::vector< Microsoft::WRL::ComPtr <ID3D12CommandAllocator>> m_commandAllocators;
+	
 };
 
