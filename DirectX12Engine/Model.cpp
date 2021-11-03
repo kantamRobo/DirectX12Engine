@@ -377,49 +377,38 @@ Microsoft::WRL::ComPtr<ID3D12Resource1> Model::CreateTexture(const std::wstring&
 		&metadata, scratchImg);
 
 	auto img = scratchImg.GetImage(0, 0, 0);
+	//アップロード用リソースの作成
+	D3D12_RESOURCE_DESC uploadHeap = CD3DX12_RESOURCE_DESC::Tex2D(
+		DXGI_FORMAT_R8G8B8A8_UNORM, img->slicePitch, 1);
+	D3D12_HEAP_PROPERTIES uploadHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	Microsoft::WRL::ComPtr<ID3D12Resource1> uploadbuff = nullptr;
+	
+	auto result = p_device->CreateCommittedResource(&uploadHeapProp
+		, D3D12_HEAP_FLAG_NONE,
+		&uploadHeap, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+		IID_PPV_ARGS(&uploadbuff));
+	//コピー先リソースの作成
+	D3D12_HEAP_PROPERTIES texheapprop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	D3D12_RESOURCE_DESC texresdesc = CD3DX12_RESOURCE_DESC::Tex2D(metadata.format,
+		metadata.width, metadata.height, metadata.arraySize, metadata.mipLevels
+		, static_cast<D3D12_RESOURCE_DIMENSION>(metadata.dimension));
+	Microsoft::WRL::ComPtr<ID3D12Resource1> texbuff = nullptr;
 
-	Microsoft::WRL::ComPtr<ID3D12Resource1> texture;
-	// サイズ・フォーマットからテクスチャリソースのDesc準備
-	auto texDesc = CD3DX12_RESOURCE_DESC::Tex2D(
-		DXGI_FORMAT_R8G8B8A8_UNORM,
-		metadata.width, metadata.height,
-		1,  // 配列サイズ
-		1   // ミップマップ数
-	);
-	auto heaprop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-	// テクスチャ生成
-	p_device->CreateCommittedResource(
-		&heaprop,
-		D3D12_HEAP_FLAG_NONE,
-		&texDesc,
-		D3D12_RESOURCE_STATE_COPY_DEST,
-		nullptr,
-		IID_PPV_ARGS(&texture)
-	);
+	result = p_device->CreateCommittedResource(&texheapprop, D3D12_HEAP_FLAG_NONE, &texresdesc,
+		D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&texbuff));
 
-	Microsoft::WRL::ComPtr<ID3D12Resource1> textureUploadHeap = nullptr;
-	const UINT64 uploadBufferSize = GetRequiredIntermediateSize(texture.Get(), 0, 1);
-
-	//GPUアップロードバッファ(中間バッファ）を作成
-	p_device->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize),
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&textureUploadHeap));
-
+	//アップロードリソースへマップ
 	uint8_t* mapforImg = nullptr;
-
-	auto result = textureUploadHeap->Map(0, nullptr, reinterpret_cast<void**>(&mapforImg));
+	result = uploadbuff->Map(0, nullptr, reinterpret_cast<void**>(&mapforImg));
 
 	std::copy_n(img->pixels, img->slicePitch, mapforImg);
+	//コピー
+	uploadbuff->Unmap(0, nullptr);
 
-	textureUploadHeap->Unmap(0, nullptr);
 
 	D3D12_TEXTURE_COPY_LOCATION  src = {};
 
-	src.pResource = textureUploadHeap.Get();
+	src.pResource = uploadbuff.Get();
 	src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
 	src.PlacedFootprint.Offset = 0;
 	src.PlacedFootprint.Footprint.Width = metadata.width;
@@ -431,7 +420,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource1> Model::CreateTexture(const std::wstring&
 
 	D3D12_TEXTURE_COPY_LOCATION dst = {};
 
-	dst.pResource = textureUploadHeap.Get();
+	dst.pResource = texbuff.Get();
 	dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
 	dst.SubresourceIndex = 0;
 
@@ -449,7 +438,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource1> Model::CreateTexture(const std::wstring&
 
 	// コピー後にはテクスチャとしてのステートへ.
 	auto barrierTex = CD3DX12_RESOURCE_BARRIER::Transition(
-		texture.Get(),
+		texbuff.Get(),
 		D3D12_RESOURCE_STATE_COPY_DEST,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 	);
@@ -471,7 +460,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource1> Model::CreateTexture(const std::wstring&
 		Sleep(1);
 	}
 
-	return texture;
+	return texbuff;
 }
 
 
