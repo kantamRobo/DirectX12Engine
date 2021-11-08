@@ -256,9 +256,11 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 		throw std::runtime_error("CreateGraphicsPipelineState failed");
 	}
 
-	PrepareDescriptorHeapForCubeApp(p_device);
+	//PrepareDescriptorHeapForCubeApp(p_device);
 	
 	// 定数バッファ/定数バッファビューの生成
+	/*
+
 	m_constantBuffers.resize(FrameBufferCount);
 	m_cbViews.resize(FrameBufferCount);
 	for (UINT i = 0; i < FrameBufferCount; ++i)
@@ -274,7 +276,7 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 
 		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(SRV_CBV.m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
 	}
-
+	*/
 	// テクスチャの生成
 	m_texture = CreateTexture(L"texture.tga",p_device,in_commands,m_frameIndex);
 

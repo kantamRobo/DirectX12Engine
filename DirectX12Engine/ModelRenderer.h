@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "DescriptorHeap.h"
 class DX12EngineCore;
+class ModelRendererWorker;
 class ModelRenderer
 {
 public:
@@ -16,7 +17,9 @@ public:
 	
 	
 	
-	ModelRenderer(const std::shared_ptr<DX12EngineCore> core,const DescriptorHeapsContainer& DSV_RTV, const Commands& commands, const std::shared_ptr<Model> in_model);
+	
+
+	ModelRenderer(const std::shared_ptr<DX12EngineCore> core, const DescriptorHeapsContainer& DSV_RTV, const Commands& commands, std::shared_ptr<Model> in_model, const std::shared_ptr<ModelRendererWorker> in_modelRendererWorker, const DescriptorHeap& CBV_SRV);
 	UINT rtvDescriptorSize;
 	
 	
@@ -80,7 +83,7 @@ public:
 	std::vector<UINT64> m_frameFenceValues;
 	Commands m_commands;
 	DescriptorHeapsContainer m_DSV_RTV;
-	
+	DescriptorHeap m_CBV_SRV;
 	
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSrvCbv;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSampler;
@@ -93,7 +96,7 @@ public:
 	CD3DX12_VIEWPORT  m_viewport;
 	CD3DX12_RECT m_scissorRect;
 	std::shared_ptr<Model> m_model;
-
+	std::shared_ptr<ModelRendererWorker> m_Rendererworker;
 
 	D3D12_GPU_DESCRIPTOR_HANDLE m_sampler;
 	D3D12_GPU_DESCRIPTOR_HANDLE m_srv;

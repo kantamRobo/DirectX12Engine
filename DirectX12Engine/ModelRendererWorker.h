@@ -29,7 +29,7 @@ public:
 	Microsoft::WRL::ComPtr <ID3D12CommandQueue> m_commandQueue;
 
 	std::vector< Microsoft::WRL::ComPtr <ID3D12CommandAllocator>> m_commandAllocators;
-	ShaderParameters shaderParams;
+	
 	const UINT FrameBufferCount = 2;
 
 	std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> m_cbViews;

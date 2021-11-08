@@ -3,6 +3,8 @@
 #include "Resource.h"
 
 
+//レンダラーに、コマンドとシーンビューを渡す為のクラス
+
 // コマンドキューの生成
 D3D12_COMMAND_QUEUE_DESC queueDesc{
   D3D12_COMMAND_LIST_TYPE_DIRECT,
@@ -81,10 +83,10 @@ void ModelRendererWorker::CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p
 		D3D12_CONSTANT_BUFFER_VIEW_DESC cbDesc{};
 		cbDesc.BufferLocation = m_constantBuffers[i]->GetGPUVirtualAddress();
 		cbDesc.SizeInBytes = bufferSize;
-		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(m_heapSrvCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(CBV_SRVHeaps.m_heapSrvCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
 		p_device->CreateConstantBufferView(&cbDesc, handleCBV);
 
-		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(CBV_SRVHeaps.m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
 	}
 
 }

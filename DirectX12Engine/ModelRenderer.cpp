@@ -1,20 +1,22 @@
 #include "ModelRenderer.h"
 #include "DX12EngineCore.h"
-
+#include "ModelRendererWorker.h"
 //コアクラスでスワップチェーン、レンダーターゲットビュー、デプスステンシルビュー,フェンス
 // ワーカークラスでパイプラインオブジェクト（シェーダー、ルートシグネチャ、PSO）を作り、
 //作成したこれらを、エンジンの初期化クラスでこのクラスのコンストラクタに渡して初期化する)
 ModelRenderer::ModelRenderer(const std::shared_ptr<DX12EngineCore> core, 
 	const DescriptorHeapsContainer& DSV_RTV, 
 	const Commands& commands,
-	std::shared_ptr<Model> in_model)
+	std::shared_ptr<Model> in_model,
+	const std::shared_ptr<ModelRendererWorker> in_modelRendererWorker,
+	const DescriptorHeap& CBV_SRV)
 {
 	m_core = core;
 	m_model = in_model;
 	m_frameIndex = core->m_swapchain->GetCurrentBackBufferIndex();
 	m_DSV_RTV = DSV_RTV;
 	m_commands = commands;
-
+	m_Rendererworker = in_modelRendererWorker;
 	
 
 }
@@ -59,7 +61,7 @@ void ModelRenderer::Render(std::shared_ptr<Camera>
 	// 描画先をセット
 	m_commands.list->OMSetRenderTargets(1, &rtv, FALSE, &dsv);
 
-	MakeCommand(m_commands.list,m_model->m_constantBuffers,camera);
+	MakeCommand(m_commands.list,m_Rendererworker->m_constantBuffers,camera);
 
 	// レンダーターゲットからスワップチェイン表示可能へ
 	auto barrierToPresent = CD3DX12_RESOURCE_BARRIER::Transition(
@@ -124,7 +126,7 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 
 	camera->Update(DirectX::XMLoadFloat4x4(&m_model->modelmat));
 	// 定数バッファの更新.
-	auto& constantBuffer = m_model->m_constantBuffers[m_frameIndex];
+	auto& constantBuffer = m_Rendererworker->m_constantBuffers[m_frameIndex];
 	{
 		void* p;
 		CD3DX12_RANGE range(0, 0);
@@ -144,7 +146,7 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 
 	// ディスクリプタヒープをセット.
 	ID3D12DescriptorHeap* heaps[] = {
-	 m_model->m_heapSrvCbv.Get(),  m_model->m_heapSampler.Get()
+	 ->m_heapSrvCbv.Get(),  m_model->m_heapSampler.Get()
 	};
 	command->SetDescriptorHeaps(_countof(heaps), heaps);
 
@@ -155,7 +157,7 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 	command->IASetVertexBuffers(0, 1, &m_model->m_vertexBufferView);
 	command->IASetIndexBuffer(&m_model->m_indexBufferView);
 
-	command->SetGraphicsRootDescriptorTable(0, m_model->m_cbViews[m_frameIndex]);
+	command->SetGraphicsRootDescriptorTable(0, ->m_cbViews[m_frameIndex]);
 	command->SetGraphicsRootDescriptorTable(1, m_model->m_srv);
 	command->SetGraphicsRootDescriptorTable(2, m_model->m_sampler);
 

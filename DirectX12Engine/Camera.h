@@ -8,7 +8,7 @@ class Camera
 {
 public:
 	Camera() {};
-	
+	ShaderParameters shaderParams;
 	
 	Camera(CD3DX12_VIEWPORT& in_viewport, CD3DX12_RECT& in_scissorRect, const DirectX::XMMATRIX& modelMat);
 	//CubeApp::ShaderParameters shaderParams;

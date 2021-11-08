@@ -12,7 +12,7 @@ void MainEngine::Init(HWND hwnd)
 	DescriptorHeapsContainer tempdes{ m_core->m_heapDsv,m_core->m_heapRtv };
 	DescriptorHeap CBV_SRVHeaps;
 	CBV_SRVHeaps.PrepareCBV_SRVHeaps(m_core->m_device.Get());
-	m_rendererworker = std::make_shared<ModelRendererWorker>();
+	m_rendererworker = std::make_shared<ModelRendererWorker>(m_core->m_device,m_core->FrameBufferCount,CBV_SRVHeaps);
 	Commands tempcommands{ m_rendererworker->m_commandAllocators,m_rendererworker->m_commandList,m_rendererworker->m_commandQueue };
 	std::shared_ptr<Model> temp_model = std::make_shared<Model>(m_core->m_device, tempcommands, "Hoge", m_core->m_swapchain->GetCurrentBackBufferIndex());
 	std::shared_ptr<Camera> maincamera = std::make_shared<Camera>(m_core->m_viewport,m_core->m_scissorRect,temp_model->modelmat);

@@ -25,4 +25,5 @@ struct DescriptorHeapsContainer
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> heapDsv;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> heapSrv;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> heapUav;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> heapCbv;
 };
