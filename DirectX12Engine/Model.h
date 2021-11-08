@@ -11,6 +11,7 @@
 #include <wrl.h>
 #include <d3dx12.h>
 #include "Commands.h"
+struct  DescriptorHeap;
 class DX12EngineCore;
 enum
 {
@@ -22,22 +23,18 @@ enum
 class Model
 {
 
-	struct ShaderParameters
-	{
-		DirectX::XMFLOAT4X4 mtxWorld;
-		DirectX::XMFLOAT4X4 mtxView;
-		DirectX::XMFLOAT4X4 mtxProj;
-	};
+	
 
 public:
 	
-	Model(ID3D12Device* p_device, const Commands& in_commands, std::string pFile, const std::shared_ptr<DX12EngineCore> in_core);
+	
+	Model(ID3D12Device* p_device, const Commands& in_commands, std::string pFile, const std::shared_ptr<DX12EngineCore> in_core, DescriptorHeap& CBV_SRV);
 	std::vector<Mesh>meshes;
 	std::vector<Vertex>vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Bone> bones;
 	DirectX::XMFLOAT4X4 modelmat;
-	
+	DirectX::XMFLOAT3 m_position;
 	
 	void Init(ID3D12Device* p_device, const Commands& in_commands, std::string pFile, UINT frameIndex);
 	UINT mcurrentAnimIndex;
@@ -48,13 +45,6 @@ public:
 	UINT m_frameIndex;
 	D3D12_VERTEX_BUFFER_VIEW  m_vertexBufferView;
 	D3D12_INDEX_BUFFER_VIEW   m_indexBufferView;
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSrvCbv;
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSampler;
-	UINT  m_samplerDescriptorSize;
-	D3D12_GPU_DESCRIPTOR_HANDLE m_sampler;
-	D3D12_GPU_DESCRIPTOR_HANDLE m_srv;
-	std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> m_cbViews;
-	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> m_constantBuffers;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
 	UINT m_srvcbvDescriptorSize;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> m_pipeline;
@@ -78,7 +68,9 @@ private:
 	void CreateVertexIndexBuffer(ID3D12Device* p_device);
 	
 	
-	void Prepare(ID3D12Device* p_device, const Commands& in_commands, UINT in_FrameIndex);
+	
+	
+	void Prepare(ID3D12Device* p_device, const Commands& in_commands, UINT in_FrameIndex, DescriptorHeap& SRV_CBV);
 	Microsoft::WRL::ComPtr<ID3D12Resource1> CreateBuffer(ID3D12Device* p_device, UINT bufferSize, const void* initialData);
 	
 	void PrepareDescriptorHeapForCubeApp(ID3D12Device* p_device);

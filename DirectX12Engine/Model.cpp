@@ -11,10 +11,11 @@
 #include <DDSTextureLoader/DDSTextureLoader12.h>
 #include <WICTextureLoader/WICTextureLoader12.h>
 #include "DX12EngineCore.h"
+#include "DescriptorHeap.h"
 using namespace MathUtility;
 using namespace  DirectX;
 
-Model::Model(ID3D12Device* p_device, const Commands& in_commands, std::string pFile, const std::shared_ptr<DX12EngineCore> in_core)
+Model::Model(ID3D12Device* p_device, const Commands& in_commands, std::string pFile, const std::shared_ptr<DX12EngineCore> in_core,DescriptorHeap& CBV_SRVHeaps)
 {
 
 	m_frameIndex = in_core->m_swapchain->GetCurrentBackBufferIndex();
@@ -43,10 +44,9 @@ Model::Model(ID3D12Device* p_device, const Commands& in_commands, std::string pF
 		ProcessAssimpMesh(pMesh);
 	}
 	CreateVertexIndexBuffer(p_device);
-	Prepare(p_device, in_commands, m_frameIndex);
+	Prepare(p_device, in_commands, m_frameIndex,CBV_SRVHeaps);
 }
 
-// for: NumChildren
 
 
 
@@ -169,7 +169,7 @@ void Model::CreateVertexIndexBuffer(ID3D12Device* p_device) {
 
 
 
-void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_FrameIndex) {
+void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_FrameIndex, DescriptorHeap& SRV_CBV) {
 	// シェーダーをコンパイル.
 	HRESULT hr;
 	Microsoft::WRL::ComPtr<ID3DBlob> errBlob;
@@ -257,7 +257,7 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 	}
 
 	PrepareDescriptorHeapForCubeApp(p_device);
-
+	
 	// 定数バッファ/定数バッファビューの生成
 	m_constantBuffers.resize(FrameBufferCount);
 	m_cbViews.resize(FrameBufferCount);
@@ -269,14 +269,14 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 		D3D12_CONSTANT_BUFFER_VIEW_DESC cbDesc{};
 		cbDesc.BufferLocation = m_constantBuffers[i]->GetGPUVirtualAddress();
 		cbDesc.SizeInBytes = bufferSize;
-		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(m_heapSrvCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(SRV_CBV.m_heapSrvCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
 		p_device->CreateConstantBufferView(&cbDesc, handleCBV);
 
-		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(SRV_CBV.m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
 	}
 
 	// テクスチャの生成
-	m_texture = CreateTexture("texture.tga",p_device,in_commands,m_frameIndex);
+	m_texture = CreateTexture(L"texture.tga",p_device,in_commands,m_frameIndex);
 
 	// サンプラーの生成
 	D3D12_SAMPLER_DESC samplerDesc{};
@@ -293,76 +293,20 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
 
 	// サンプラー用ディスクリプタヒープの0番目を使用する
-	auto descriptorSampler = CD3DX12_CPU_DESCRIPTOR_HANDLE(m_heapSampler->GetCPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, m_samplerDescriptorSize);
+	auto descriptorSampler = CD3DX12_CPU_DESCRIPTOR_HANDLE(SRV_CBV.m_heapSampler->GetCPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, SRV_CBV.m_samplerDescriptorSize);
 	p_device->CreateSampler(&samplerDesc, descriptorSampler);
-	m_sampler = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_heapSampler->GetGPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, m_samplerDescriptorSize);
-
+	SRV_CBV.m_sampler = CD3DX12_GPU_DESCRIPTOR_HANDLE(SRV_CBV.m_heapSampler->GetGPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, SRV_CBV.m_samplerDescriptorSize);
+	
 	// テクスチャからシェーダーリソースビューの準備.
-	auto srvHandle = CD3DX12_CPU_DESCRIPTOR_HANDLE(m_heapSrvCbv->GetCPUDescriptorHandleForHeapStart(), TextureSrvDescriptorBase, m_srvcbvDescriptorSize);
+	auto srvHandle = CD3DX12_CPU_DESCRIPTOR_HANDLE(SRV_CBV.m_heapSrvCbv->GetCPUDescriptorHandleForHeapStart(), TextureSrvDescriptorBase, m_srvcbvDescriptorSize);
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Texture2D.MipLevels = 1;
 	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	p_device->CreateShaderResourceView(m_texture.Get(), &srvDesc, srvHandle);
-	m_srv = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart(), TextureSrvDescriptorBase, m_srvcbvDescriptorSize);
+	SRV_CBV.m_srv = CD3DX12_GPU_DESCRIPTOR_HANDLE(SRV_CBV.m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart(), TextureSrvDescriptorBase, m_srvcbvDescriptorSize);
 
-}
-Microsoft::WRL::ComPtr<ID3D12Resource1> Model::CreateBuffer(ID3D12Device* p_device,UINT bufferSize, const void* initialData)
-{
-	HRESULT hr;
-	Microsoft::WRL::ComPtr<ID3D12Resource1> buffer;
-	auto heaprop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	auto res = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
-	hr = p_device->CreateCommittedResource(
-		&heaprop,
-		D3D12_HEAP_FLAG_NONE,
-		&res,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&buffer)
-	);
-
-	// 初期データの指定があるときにはコピーする
-	if (SUCCEEDED(hr) && initialData != nullptr)
-	{
-		void* mapped;
-		CD3DX12_RANGE range(0, 0);
-		hr = buffer->Map(0, &range, &mapped);
-		if (SUCCEEDED(hr))
-		{
-			memcpy(mapped, initialData, bufferSize);
-			buffer->Unmap(0, nullptr);
-		}
-	}
-
-	return buffer;
-}
-
-void Model::PrepareDescriptorHeapForCubeApp(ID3D12Device* p_device)
-{
-	// CBV/SRV のディスクリプタヒープ
-	//  0:シェーダーリソースビュー
-	//  1,2 : 定数バッファビュー (FrameBufferCount数分使用)
-	UINT count = FrameBufferCount + 1;
-	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc{
-	  D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-	  count,
-	  D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
-	  0
-	};
-	p_device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_heapSrvCbv));
-	m_srvcbvDescriptorSize = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-	// ダイナミックサンプラーのディスクリプタヒープ
-	D3D12_DESCRIPTOR_HEAP_DESC samplerHeapDesc{
-	  D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER,
-	  1,
-	  D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
-	  0
-	};
-	p_device->CreateDescriptorHeap(&samplerHeapDesc, IID_PPV_ARGS(&m_heapSampler));
-	m_samplerDescriptorSize = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
 }
 
 // 手動で生成版

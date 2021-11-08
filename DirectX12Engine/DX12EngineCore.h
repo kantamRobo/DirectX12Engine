@@ -16,7 +16,6 @@ public:
 	const UINT FrameBufferCount = 2;
 
 	Microsoft::WRL::ComPtr<ID3D12Device> m_device;
-	Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_commandQueue;
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapchain;
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapRtv;
@@ -30,13 +29,10 @@ public:
 
 	UINT m_rtvDescriptorSize;
 	UINT m_srvcbvDescriptorSize;
-	std::vector<Microsoft::WRL::ComPtr<ID3D12CommandAllocator>> m_commandAllocators;
 
 	HANDLE m_fenceWaitEvent;
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Fence1>> m_frameFences;
 	std::vector<UINT64> m_frameFenceValues;
 
-	Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_commandQueue;
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_commandList;
 };
 

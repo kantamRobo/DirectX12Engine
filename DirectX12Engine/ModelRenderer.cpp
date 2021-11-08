@@ -117,7 +117,12 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 	XMStoreFloat4x4(&shaderParams.mtxView, XMMatrixTranspose(mtxView));
 	XMStoreFloat4x4(&shaderParams.mtxProj, XMMatrixTranspose(mtxProj));
 	*/
-	camera->Update();
+	DirectX::XMStoreFloat4x4(&m_model->modelmat, DirectX::XMMatrixMultiply(DirectX::XMMatrixMultiply(DirectX::XMMatrixScaling(1.0f, 1.0f, 1.0f),
+		DirectX::XMMatrixRotationAxis(
+			DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),
+			DirectX::XMConvertToRadians(45.0f))), DirectX::XMMatrixTranslation(m_model->m_position.x, m_model->m_position.y, m_model->m_position.z)));
+
+	camera->Update(DirectX::XMLoadFloat4x4(&m_model->modelmat));
 	// 定数バッファの更新.
 	auto& constantBuffer = m_model->m_constantBuffers[m_frameIndex];
 	{
@@ -150,9 +155,9 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 	command->IASetVertexBuffers(0, 1, &m_model->m_vertexBufferView);
 	command->IASetIndexBuffer(&m_model->m_indexBufferView);
 
-	command->SetGraphicsRootDescriptorTable(0, m_cbViews[m_frameIndex]);
-	command->SetGraphicsRootDescriptorTable(1, m_srv);
-	command->SetGraphicsRootDescriptorTable(2, m_sampler);
+	command->SetGraphicsRootDescriptorTable(0, m_model->m_cbViews[m_frameIndex]);
+	command->SetGraphicsRootDescriptorTable(1, m_model->m_srv);
+	command->SetGraphicsRootDescriptorTable(2, m_model->m_sampler);
 
 	// 描画命令の発行
 	command->DrawIndexedInstanced(m_model->m_indexCount, 1, 0, 0, 0);

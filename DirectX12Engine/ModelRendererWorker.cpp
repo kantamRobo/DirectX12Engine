@@ -1,6 +1,6 @@
 #include "ModelRendererWorker.h"
 #include <stdexcept>
-
+#include "Resource.h"
 
 
 // コマンドキューの生成
@@ -12,11 +12,12 @@ D3D12_COMMAND_QUEUE_DESC queueDesc{
 };
 
 
-ModelRendererWorker::ModelRendererWorker(ID3D12Device* p_device,UINT FrameBufferCount)
+ModelRendererWorker::ModelRendererWorker(Microsoft::WRL::ComPtr<ID3D12Device> p_device,UINT FrameBufferCount, DescriptorHeap& CBV_SRVHeaps)
 {
-	CreateCommandAllocators(p_device,FrameBufferCount);
-	CreateCommandQueue(p_device);
-	CreateCommandLists(p_device);
+	CreateCommandAllocators(p_device.Get(),FrameBufferCount);
+	CreateCommandQueue(p_device.Get());
+	CreateCommandLists(p_device.Get());
+	CreateSceneView(p_device, CBV_SRVHeaps);
 	m_commandList->Close();
 }
 
@@ -62,6 +63,29 @@ void ModelRendererWorker::CreateCommandLists(ID3D12Device* p_device)
 		IID_PPV_ARGS(&m_commandList)
 	);
 
+
+}
+
+void ModelRendererWorker::CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, DescriptorHeap& CBV_SRVHeaps)
+{
+
+
+	// 定数バッファ/定数バッファビューの生成
+	m_constantBuffers.resize(FrameBufferCount);
+	m_cbViews.resize(FrameBufferCount);
+	for (UINT i = 0; i < FrameBufferCount; ++i)
+	{
+		UINT bufferSize = sizeof(ShaderParameters) + 255 & ~255;
+		m_constantBuffers[i] = CreateBuffer(p_device.Get(),bufferSize, nullptr);
+
+		D3D12_CONSTANT_BUFFER_VIEW_DESC cbDesc{};
+		cbDesc.BufferLocation = m_constantBuffers[i]->GetGPUVirtualAddress();
+		cbDesc.SizeInBytes = bufferSize;
+		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(m_heapSrvCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+		p_device->CreateConstantBufferView(&cbDesc, handleCBV);
+
+		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+	}
 
 }
 

@@ -3,17 +3,22 @@
 #include <DirectXMath.h>
 #include <d3dx12.h>
 #include "CubeApp.h"
+#include "ShaderParameters.h"
 class Camera
 {
 public:
 	Camera() {};
-	Camera(CD3DX12_VIEWPORT& in_viewport, CD3DX12_RECT& in_scissorRect);
 	
-	CubeApp::ShaderParameters shaderParams;
+	
+	Camera(CD3DX12_VIEWPORT& in_viewport, CD3DX12_RECT& in_scissorRect, const DirectX::XMMATRIX& modelMat);
+	//CubeApp::ShaderParameters shaderParams;
+	
 	CD3DX12_VIEWPORT m_viewport;
 	CD3DX12_RECT m_rect;
-	void Update();
-	void SetViewProj();
+	
+	void Update(const DirectX::XMMATRIX& modelMat);
+	
+	void SetViewProj(const DirectX::XMMATRIX& ModelMat);
 	void SetPosition(const DirectX::XMVECTOR& in_posvector);
 	void SetRotation(const DirectX::XMVECTOR& in_rotvector);
 	DirectX::XMVECTOR m_position;

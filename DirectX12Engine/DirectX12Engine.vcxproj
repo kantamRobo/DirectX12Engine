@@ -38,6 +38,7 @@
     <ClInclude Include="Commands.h" />
     <ClInclude Include="CubeApp.h" />
     <ClInclude Include="Descriptor.h" />
+    <ClInclude Include="DescriptorHeap.h" />
     <ClInclude Include="DX12EngineCore.h" />
     <ClInclude Include="MainEngine.h" />
     <ClInclude Include="Appbase.h" />
@@ -47,6 +48,8 @@
     <ClInclude Include="ModelRenderer.h" />
     <ClInclude Include="ModelRendererWorker.h" />
     <ClInclude Include="PipelineObjectContainer.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ShaderParameters.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -70,6 +73,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="SimpleDef.hlsli" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -204,5 +208,14 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets" Condition="Exists('..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets')" />
+    <Import Project="..\packages\Assimp.3.0.0\build\native\Assimp.targets" Condition="Exists('..\packages\Assimp.3.0.0\build\native\Assimp.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\Assimp.3.0.0\build\native\Assimp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Assimp.3.0.0\build\native\Assimp.targets'))" />
+  </Target>
 </Project>

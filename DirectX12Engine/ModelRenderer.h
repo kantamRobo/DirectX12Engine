@@ -6,12 +6,13 @@
 #include "PipelineObjectContainer.h"
 #include "Model.h"
 #include "Camera.h"
+#include "DescriptorHeap.h"
 class DX12EngineCore;
 class ModelRenderer
 {
 public:
 	ModelRenderer() {};
-
+	
 	
 	
 	

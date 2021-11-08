@@ -119,6 +119,15 @@
     <ClInclude Include="PipelineObjectContainer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderParameters.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorHeap.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="simpleTexPS.hlsl">
@@ -135,5 +144,6 @@
     <None Include="SimpleDef.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
