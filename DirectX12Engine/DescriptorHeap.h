@@ -30,17 +30,17 @@ struct DescriptorHeap {
 		//  0:シェーダーリソースビュー
 		//  1,2 : 定数バッファビュー (FrameBufferCount数分使用)
 
+		
 
-		UINT count = FrameBufferCount + 1;
-		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc{
-		  D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-		  count,
-		  D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
-		  0
-		};
+		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
+
+		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+		srvHeapDesc.NumDescriptors = 1;
+		srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+		srvHeapDesc.NodeMask = 0;
+
 		p_device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_heapSrv));
-		m_srvDescriptorSize = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
+		
 		// ダイナミックサンプラーのディスクリプタヒープ
 		D3D12_DESCRIPTOR_HEAP_DESC samplerHeapDesc{
 		  D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER,
@@ -48,8 +48,8 @@ struct DescriptorHeap {
 		  D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
 		  0
 		};
-		p_device->CreateDescriptorHeap(&samplerHeapDesc, IID_PPV_ARGS(&m_SamplerHeap));
-		m_samplerDescriptorSize = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
+		p_device->CreateDescriptorHeap(&samplerHeapDesc, IID_PPV_ARGS(&m_HeapSampler));
+		//m_samplerDescriptorSize = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
 	}
 
 	void CreateSceneCBVHeaps(ID3D12Device* p_device)
@@ -71,7 +71,9 @@ struct DescriptorHeap {
 	}
 	
 
-	void CreateRTVHeap(ID3D12Device* p_device)
+
+	void CreateRTVHeap(ID3D12Device* p_device, Microsoft::WRL::ComPtr< ID3D12DescriptorHeap> rtvheap, UINT FrameBufferCount, UINT& m_rtvDescriptorSize);
+	void CreateDSVHeap(ID3D12Device* p_device)
 	{
 		// CBV/SRV のディスクリプタヒープ
 				//  0:シェーダーリソースビュー
@@ -79,37 +81,17 @@ struct DescriptorHeap {
 
 
 		UINT count = FrameBufferCount + 1;
-		D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{
-		  D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
+		D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{
+		  D3D12_DESCRIPTOR_HEAP_TYPE_DSV,
 		  count,
 		  D3D12_DESCRIPTOR_HEAP_FLAG_NONE,
 		  0
 		};
-		p_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_RTVheap));
-		m_RTVDescriptorSize = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-		
-	    
-	}
-
-	void PrepareDSVHeap(ID3D12Device* p_device)
-	{
-		// CBV/SRV のディスクリプタヒープ
-				//  0:シェーダーリソースビュー
-				//  1,2 : 定数バッファビュー (FrameBufferCount数分使用)
-
-
-		UINT count = FrameBufferCount + 1;
-		D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{
-		  D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
-		  count,
-		  D3D12_DESCRIPTOR_HEAP_FLAG_NONE,
-		  0
-		};
-		p_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_RTVheap));
-	m_samplerDescriptorSize = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+		p_device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&m_HeapDsv));
+	m_dsvDescriptorSize = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
 
 
 	}
+	
 };

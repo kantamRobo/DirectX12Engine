@@ -1,7 +1,7 @@
 #include "DescriptorHeap.h"
 #include <stdexcept>
 
-void DescriptorHeap::PrepareDescriptorHeaps(ID3D12Device* p_device,Microsoft::WRL::ComPtr< ID3D12DescriptorHeap> rtvheap,UINT FrameBufferCount ,UINT&  m_rtvDescriptorSize)
+void DescriptorHeap::CreateRTVHeap(ID3D12Device* p_device,Microsoft::WRL::ComPtr< ID3D12DescriptorHeap> rtvheap,UINT FrameBufferCount ,UINT&  m_rtvDescriptorSize)
 {
 	// RTV のディスクリプタヒープ
 	HRESULT hr;
@@ -26,7 +26,7 @@ void DescriptorHeap::PrepareDescriptorHeaps(ID3D12Device* p_device,Microsoft::WR
 }
 
 
-void Descriptor::CreateDepthBuffer(ID3D12Device* p_device,int width, int height, Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvheap)
+void ::CreateDepthBuffer(ID3D12Device* p_device,int width, int height, Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvheap)
 {
 	HRESULT hr;
 	// DSV のディスクリプタヒープ

@@ -12,7 +12,7 @@
 #include <d3dx12.h>
 #include "Commands.h"
 
-struct  DescriptorHeap;
+struct  DescriptorHeapsContainer;
 class DX12EngineCore;
 class PipelineState;
 
@@ -75,7 +75,8 @@ private:
 	
 	
 	
-	void Prepare(ID3D12Device* p_device, const Commands& in_commands, UINT in_FrameIndex, DescriptorHeap& SRV_CBV);
+	
+	void Prepare(ID3D12Device* p_device, const Commands& in_commands, UINT in_FrameIndex, const DescriptorHeapsContainer* SRV_CBV);
 	Microsoft::WRL::ComPtr<ID3D12Resource1> CreateBuffer(ID3D12Device* p_device, UINT bufferSize, const void* initialData);
 	
 	void PrepareDescriptorHeapForCubeApp(ID3D12Device* p_device);
@@ -85,6 +86,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource1> CreateTexture(const std::wstring& fileName, ID3D12Device* p_device, const Commands& in_commands, UINT in_frameIndex);
 	HRESULT CompileShaderFromFile(const std::wstring& fileName, const std::wstring& profile, Microsoft::WRL::ComPtr<ID3DBlob>& shaderBlob, Microsoft::WRL::ComPtr<ID3DBlob>& errorBlob);
 	const UINT FrameBufferCount = 2;
+	D3D12_GPU_DESCRIPTOR_HANDLE m_sampler;
+	D3D12_GPU_DESCRIPTOR_HANDLE m_srv;
 };
 
 struct Bone
