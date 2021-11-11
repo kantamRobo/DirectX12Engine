@@ -12,10 +12,11 @@
 #include <WICTextureLoader/WICTextureLoader12.h>
 #include "DX12EngineCore.h"
 #include "DescriptorHeap.h"
+#include "PipelineState.h"
 using namespace MathUtility;
 using namespace  DirectX;
 
-Model::Model(ID3D12Device* p_device, const Commands& in_commands, std::string pFile, const std::shared_ptr<DX12EngineCore> in_core,DescriptorHeap& CBV_SRVHeaps)
+Model::Model(const std::shared_ptr<DX12EngineCore> in_core, const Commands& in_commands, std::string pFile,DescriptorHeap& CBV_SRVHeaps)
 {
 
 	m_frameIndex = in_core->m_swapchain->GetCurrentBackBufferIndex();
@@ -43,8 +44,8 @@ Model::Model(ID3D12Device* p_device, const Commands& in_commands, std::string pF
 		const auto pMesh = m_pScene->mMeshes[i];
 		ProcessAssimpMesh(pMesh);
 	}
-	CreateVertexIndexBuffer(p_device);
-	Prepare(p_device, in_commands, m_frameIndex,CBV_SRVHeaps);
+	CreateVertexIndexBuffer(in_core->m_device.Get());
+	Prepare(in_core->m_device.Get(), in_commands, m_frameIndex,CBV_SRVHeaps);
 }
 
 
@@ -183,7 +184,7 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 	{
 		OutputDebugStringA((const char*)errBlob->GetBufferPointer());
 	}
-
+	
 	CD3DX12_DESCRIPTOR_RANGE cbv, srv, sampler;
 	cbv.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0); // b0 レジスタ
 	srv.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
@@ -217,7 +218,8 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 	{
 		throw std::runtime_error("CrateRootSignature failed.");
 	}
-
+	
+	/*
 	// インプットレイアウト
 	D3D12_INPUT_ELEMENT_DESC inputElementDesc[] = {
 	  { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, offsetof(Vertex, Pos), D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA},
@@ -255,6 +257,7 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 	{
 		throw std::runtime_error("CreateGraphicsPipelineState failed");
 	}
+	*/
 
 	//PrepareDescriptorHeapForCubeApp(p_device);
 	
@@ -277,6 +280,10 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(SRV_CBV.m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
 	}
 	*/
+
+
+
+	m_modelPSO->CreatePipeLineState(m_ps.Get(), m_vs.Get(), p_device, m_rootSignature.Get());
 	// テクスチャの生成
 	m_texture = CreateTexture(L"texture.tga",p_device,in_commands,m_frameIndex);
 
@@ -295,9 +302,9 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
 
 	// サンプラー用ディスクリプタヒープの0番目を使用する
-	auto descriptorSampler = CD3DX12_CPU_DESCRIPTOR_HANDLE(SRV_CBV.m_heapSampler->GetCPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, SRV_CBV.m_samplerDescriptorSize);
+	auto descriptorSampler = CD3DX12_CPU_DESCRIPTOR_HANDLE(SRV_CBV.m_SamplerHeap->GetCPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, SRV_CBV.m_samplerDescriptorSize);
 	p_device->CreateSampler(&samplerDesc, descriptorSampler);
-	SRV_CBV.m_sampler = CD3DX12_GPU_DESCRIPTOR_HANDLE(SRV_CBV.m_heapSampler->GetGPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, SRV_CBV.m_samplerDescriptorSize);
+	SRV_CBV.m_sampler = CD3DX12_GPU_DESCRIPTOR_HANDLE(SRV_CBV.m_SamplerHeap->GetGPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, SRV_CBV.m_samplerDescriptorSize);
 	
 	// テクスチャからシェーダーリソースビューの準備.
 	auto srvHandle = CD3DX12_CPU_DESCRIPTOR_HANDLE(SRV_CBV.m_heapSrvCbv->GetCPUDescriptorHandleForHeapStart(), TextureSrvDescriptorBase, m_srvcbvDescriptorSize);

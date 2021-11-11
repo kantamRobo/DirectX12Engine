@@ -1,7 +1,7 @@
 #include "ModelRendererWorker.h"
 #include <stdexcept>
-#include "Resource.h"
-
+#include "Resourceworker.h"
+#include "DescriptorHeap.h"
 
 //レンダラーに、コマンドとシーンビューを渡す為のクラス
 
@@ -14,12 +14,14 @@ D3D12_COMMAND_QUEUE_DESC queueDesc{
 };
 
 
-ModelRendererWorker::ModelRendererWorker(Microsoft::WRL::ComPtr<ID3D12Device> p_device,UINT FrameBufferCount, DescriptorHeap& CBV_SRVHeaps)
+ModelRendererWorker::ModelRendererWorker(Microsoft::WRL::ComPtr<ID3D12Device> p_device,UINT FrameBufferCount, const DescriptorHeap& SceneCBVheap)
 {
 	CreateCommandAllocators(p_device.Get(),FrameBufferCount);
 	CreateCommandQueue(p_device.Get());
 	CreateCommandLists(p_device.Get());
-	CreateSceneView(p_device, CBV_SRVHeaps);
+	
+	
+	CreateSceneView(p_device, SceneCBVheap);
 	m_commandList->Close();
 }
 
@@ -68,13 +70,15 @@ void ModelRendererWorker::CreateCommandLists(ID3D12Device* p_device)
 
 }
 
-void ModelRendererWorker::CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, DescriptorHeap& CBV_SRVHeaps)
+void ModelRendererWorker::CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, const DescriptorHeap& SceneCBVheap)
 {
-
+	
 
 	// 定数バッファ/定数バッファビューの生成
 	m_constantBuffers.resize(FrameBufferCount);
 	m_cbViews.resize(FrameBufferCount);
+	
+
 	for (UINT i = 0; i < FrameBufferCount; ++i)
 	{
 		UINT bufferSize = sizeof(ShaderParameters) + 255 & ~255;
@@ -83,10 +87,10 @@ void ModelRendererWorker::CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p
 		D3D12_CONSTANT_BUFFER_VIEW_DESC cbDesc{};
 		cbDesc.BufferLocation = m_constantBuffers[i]->GetGPUVirtualAddress();
 		cbDesc.SizeInBytes = bufferSize;
-		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(CBV_SRVHeaps.m_heapSrvCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(m_SceneCBVHeap->m_heapCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
 		p_device->CreateConstantBufferView(&cbDesc, handleCBV);
 
-		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(CBV_SRVHeaps.m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_SceneCBVHeap->m_heapCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
 	}
 
 }

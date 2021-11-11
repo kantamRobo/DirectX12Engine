@@ -417,6 +417,8 @@ void CubeApp::PrepareDescriptorHeapForCubeApp()
 	  D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
 	  0
 	};
+	
+
 	m_device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_heapSrvCbv));
 	m_srvcbvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 

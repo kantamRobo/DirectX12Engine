@@ -34,7 +34,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource1> CreateTexture(const std::string& fileName);
 	void PrepareDescriptorHeapForCubeApp();
 
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSrvCbv;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapCbv;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSampler;
 	UINT  m_samplerDescriptorSize;
 

@@ -11,8 +11,11 @@
 #include <wrl.h>
 #include <d3dx12.h>
 #include "Commands.h"
+
 struct  DescriptorHeap;
 class DX12EngineCore;
+class PipelineState;
+
 enum
 {
 	TextureSrvDescriptorBase = 0,
@@ -28,7 +31,8 @@ class Model
 public:
 	
 	
-	Model(ID3D12Device* p_device, const Commands& in_commands, std::string pFile, const std::shared_ptr<DX12EngineCore> in_core, DescriptorHeap& CBV_SRV);
+	
+	Model(const std::shared_ptr<DX12EngineCore> in_core, const Commands& in_commands, std::string pFile, DescriptorHeap& CBV_SRVHeaps);
 	std::vector<Mesh>meshes;
 	std::vector<Vertex>vertices;
 	std::vector<unsigned int> indices;
@@ -45,12 +49,13 @@ public:
 	UINT m_frameIndex;
 	D3D12_VERTEX_BUFFER_VIEW  m_vertexBufferView;
 	D3D12_INDEX_BUFFER_VIEW   m_indexBufferView;
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
 	UINT m_srvcbvDescriptorSize;
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> m_pipeline;
 	Microsoft::WRL::ComPtr<ID3DBlob>  m_vs, m_ps;
+	std::shared_ptr<PipelineState> m_modelPSO;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
 	void ProcessBoneNode(const aiAnimation* p_animation, const aiScene* pScene, const aiNode* node, FLOAT AnimationTime, const DirectX::XMMATRIX& ParentNodeTransform);
 	const aiScene* m_pScene;
+	
 private:
 	
 	//void ProcessAssimpNode();

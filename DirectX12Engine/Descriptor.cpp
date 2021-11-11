@@ -1,7 +1,7 @@
-#include "Descriptor.h"
+#include "DescriptorHeap.h"
 #include <stdexcept>
 
-void Descriptor::PrepareDescriptorHeaps(ID3D12Device* p_device,Microsoft::WRL::ComPtr< ID3D12DescriptorHeap> rtvheap,UINT FrameBufferCount ,UINT&  m_rtvDescriptorSize)
+void DescriptorHeap::PrepareDescriptorHeaps(ID3D12Device* p_device,Microsoft::WRL::ComPtr< ID3D12DescriptorHeap> rtvheap,UINT FrameBufferCount ,UINT&  m_rtvDescriptorSize)
 {
 	// RTV のディスクリプタヒープ
 	HRESULT hr;

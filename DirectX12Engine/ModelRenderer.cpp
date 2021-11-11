@@ -1,22 +1,32 @@
 #include "ModelRenderer.h"
 #include "DX12EngineCore.h"
 #include "ModelRendererWorker.h"
+#include "PipelineState.h"
+#include <DirectXMath.h>
 //コアクラスでスワップチェーン、レンダーターゲットビュー、デプスステンシルビュー,フェンス
 // ワーカークラスでパイプラインオブジェクト（シェーダー、ルートシグネチャ、PSO）を作り、
 //作成したこれらを、エンジンの初期化クラスでこのクラスのコンストラクタに渡して初期化する)
-ModelRenderer::ModelRenderer(const std::shared_ptr<DX12EngineCore> core, 
-	const DescriptorHeapsContainer& DSV_RTV, 
+
+ModelRenderer::ModelRenderer(const std::shared_ptr<DX12EngineCore> core,
 	const Commands& commands,
 	std::shared_ptr<Model> in_model,
 	const std::shared_ptr<ModelRendererWorker> in_modelRendererWorker,
-	const DescriptorHeap& CBV_SRV)
-{
+	const DescriptorHeapsContainer& descheaps) {
 	m_core = core;
 	m_model = in_model;
 	m_frameIndex = core->m_swapchain->GetCurrentBackBufferIndex();
-	m_DSV_RTV = DSV_RTV;
+	m_heapSrv = descheaps.heapSrv;
+	m_heapCbv = descheaps.heapCbv;
+	m_heapRTV = descheaps.heapRtv;
+	m_heapDSV = descheaps.heapDsv;
+	m_heapSampler = descheaps.heapSampler;
 	m_commands = commands;
 	m_Rendererworker = in_modelRendererWorker;
+	m_swapchain = m_core->m_swapchain.Get();
+	m_viewport = m_core->m_viewport;
+	m_scissorRect = m_core->m_scissorRect;
+	m_frameFences = m_core->m_frameFences;
+	m_frameFenceValues = m_core->m_frameFenceValues;
 	
 
 }
@@ -44,10 +54,10 @@ void ModelRenderer::Render(std::shared_ptr<Camera>
 	m_commands.list->ResourceBarrier(1, &barrierToRT);
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtv(
-		m_DSV_RTV.heapRtv->GetCPUDescriptorHandleForHeapStart(),
+		m_heapRTV->GetCPUDescriptorHandleForHeapStart(),
 		m_frameIndex, rtvDescriptorSize);
 	CD3DX12_CPU_DESCRIPTOR_HANDLE dsv(
-		m_DSV_RTV.heapDsv->GetCPUDescriptorHandleForHeapStart()
+	m_heapDSV->GetCPUDescriptorHandleForHeapStart()
 	);
 
 	// カラーバッファ(レンダーターゲットビュー)のクリア
@@ -124,7 +134,7 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 			DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),
 			DirectX::XMConvertToRadians(45.0f))), DirectX::XMMatrixTranslation(m_model->m_position.x, m_model->m_position.y, m_model->m_position.z)));
 
-	camera->Update(DirectX::XMLoadFloat4x4(&m_model->modelmat));
+	camera->Update(DirectX::XMLoadFloat4x4(&m_model->modelmat),&shaderParams);
 	// 定数バッファの更新.
 	auto& constantBuffer = m_Rendererworker->m_constantBuffers[m_frameIndex];
 	{
@@ -132,35 +142,35 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 		CD3DX12_RANGE range(0, 0);
 		constantBuffer->Map(0, &range, &p);
 		//memcpy(p, &shaderParams, sizeof(shaderParams));
-		memcpy(p, &camera->shaderParams, sizeof(camera->shaderParams));
+		memcpy(p, &shaderParams, sizeof(shaderParams));
 		constantBuffer->Unmap(0, nullptr);
 	}
 	//↑CopyToVRAM
 	// パイプラインステートのセット
-	command->SetPipelineState(m_model->m_pipeline.Get());
+	m_commands.list->SetPipelineState(m_model->m_modelPSO->m_graphicpipelinestate.Get());
 	// ルートシグネチャのセット
-	command->SetGraphicsRootSignature(m_model->m_rootSignature.Get());
+	m_commands.list->SetGraphicsRootSignature(m_model->m_rootSignature.Get());
 	// ビューポートとシザーのセット
-	command->RSSetViewports(1, &m_viewport);
-	command->RSSetScissorRects(1, &m_scissorRect);
+	m_commands.list->RSSetViewports(1, &m_viewport);
+	m_commands.list->RSSetScissorRects(1, &m_scissorRect);
 
 	// ディスクリプタヒープをセット.
 	ID3D12DescriptorHeap* heaps[] = {
-	 ->m_heapSrvCbv.Get(),  m_model->m_heapSampler.Get()
+	 m_heapSrvCbv.Get() ,m_heapSampler.Get()
 	};
-	command->SetDescriptorHeaps(_countof(heaps), heaps);
+	m_commands.list->SetDescriptorHeaps(_countof(heaps), heaps);
 
 	// プリミティブタイプ、頂点・インデックスバッファのセット
-	command->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	m_commands.list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
 	
-	command->IASetVertexBuffers(0, 1, &m_model->m_vertexBufferView);
-	command->IASetIndexBuffer(&m_model->m_indexBufferView);
+	m_commands.list->IASetVertexBuffers(0, 1, &m_model->m_vertexBufferView);
+	m_commands.list->IASetIndexBuffer(&m_model->m_indexBufferView);
 
-	command->SetGraphicsRootDescriptorTable(0, ->m_cbViews[m_frameIndex]);
-	command->SetGraphicsRootDescriptorTable(1, m_model->m_srv);
-	command->SetGraphicsRootDescriptorTable(2, m_model->m_sampler);
+	m_commands.list->SetGraphicsRootDescriptorTable(0, m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart());
+	//m_commands.list->SetGraphicsRootDescriptorTable(1, m_model->m_srv);
+	m_commands.list->SetGraphicsRootDescriptorTable(2, m_heapSampler->GetGPUDescriptorHandleForHeapStart());
 
 	// 描画命令の発行
-	command->DrawIndexedInstanced(m_model->m_indexCount, 1, 0, 0, 0);
+	m_commands.list->DrawIndexedInstanced(m_model->m_indexCount, 1, 0, 0, 0);
 }

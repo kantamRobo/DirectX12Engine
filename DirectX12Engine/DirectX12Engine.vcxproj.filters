@@ -31,6 +31,9 @@
     <Filter Include="ヘッダー ファイル\Math">
       <UniqueIdentifier>{c4d338e5-19f1-47f9-a065-2f23718ae1de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Worker">
+      <UniqueIdentifier>{14d64b26-541e-4f2e-a44e-3d054e0404b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -67,6 +70,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="ModelRendererWorker.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="RootSignature.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,7 +116,7 @@
     <ClInclude Include="ModelRenderer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Descriptor.h">
+    <ClInclude Include="DescriptorHeapContainer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="ModelRendererWorker.h">
@@ -122,11 +131,17 @@
     <ClInclude Include="ShaderParameters.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="DescriptorHeap.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignature.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Resourceworker.h">
+      <Filter>ヘッダー ファイル\Worker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

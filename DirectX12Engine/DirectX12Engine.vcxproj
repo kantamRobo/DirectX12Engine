@@ -24,12 +24,14 @@
     <ClCompile Include="CubeApp.cpp" />
     <ClCompile Include="Descriptor.cpp" />
     <ClCompile Include="DX12EngineCore.cpp" />
+    <ClCompile Include="PipelineState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainEngine.cpp" />
     <ClCompile Include="Appbase.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelRenderer.cpp" />
     <ClCompile Include="ModelRendererWorker.cpp" />
+    <ClCompile Include="RootSignature.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -37,9 +39,10 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Commands.h" />
     <ClInclude Include="CubeApp.h" />
-    <ClInclude Include="Descriptor.h" />
+    <ClInclude Include="DescriptorHeapContainer.h" />
     <ClInclude Include="DescriptorHeap.h" />
     <ClInclude Include="DX12EngineCore.h" />
+    <ClInclude Include="PipelineState.h" />
     <ClInclude Include="MainEngine.h" />
     <ClInclude Include="Appbase.h" />
     <ClInclude Include="MathUtility.h" />
@@ -48,7 +51,8 @@
     <ClInclude Include="ModelRenderer.h" />
     <ClInclude Include="ModelRendererWorker.h" />
     <ClInclude Include="PipelineObjectContainer.h" />
-    <ClInclude Include="Resource.h" />
+    <ClInclude Include="Resourceworker.h" />
+    <ClInclude Include="RootSignature.h" />
     <ClInclude Include="ShaderParameters.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Window.h" />

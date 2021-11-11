@@ -8,9 +8,10 @@ class Camera
 {
 public:
 	Camera() {};
-	ShaderParameters shaderParams;
+	Camera(const std::shared_ptr<DX12EngineCore> in_core, const DirectX::XMMATRIX& modelMat);
 	
-	Camera(CD3DX12_VIEWPORT& in_viewport, CD3DX12_RECT& in_scissorRect, const DirectX::XMMATRIX& modelMat);
+	
+	Camera(const std::shared_ptr<DX12EngineCore> in_core, const DirectX::XMMATRIX& modelMat, ShaderParameters* ModelrendererShaderparam);
 	//CubeApp::ShaderParameters shaderParams;
 	
 	CD3DX12_VIEWPORT m_viewport;
@@ -18,7 +19,10 @@ public:
 	
 	void Update(const DirectX::XMMATRIX& modelMat);
 	
-	void SetViewProj(const DirectX::XMMATRIX& ModelMat);
+	
+	
+	void Update(const DirectX::XMMATRIX& modelMat, ShaderParameters* ModelrendererShaderparam);
+	void SetViewProj(const DirectX::XMMATRIX& ModelMat, ShaderParameters* ModelrendererShaderparam);
 	void SetPosition(const DirectX::XMVECTOR& in_posvector);
 	void SetRotation(const DirectX::XMVECTOR& in_rotvector);
 	DirectX::XMVECTOR m_position;
