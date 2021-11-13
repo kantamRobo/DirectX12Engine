@@ -4,8 +4,8 @@
 #include "Resourceworker.h"
 
 
-struct DescriptorHeap {
-	DescriptorHeap() {};
+struct DescriptorHeapWorker {
+	DescriptorHeapWorker() {};
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSrv;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapCbv;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapUav;
@@ -66,13 +66,16 @@ struct DescriptorHeap {
 		  0
 		};
 
-		p_device->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_SamplerHeap));
+		p_device->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_heapCbv));
 		m_cbvDescriptorSize = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
 	}
 	
 
 
-	void CreateRTVHeap(ID3D12Device* p_device, Microsoft::WRL::ComPtr< ID3D12DescriptorHeap> rtvheap, UINT FrameBufferCount, UINT& m_rtvDescriptorSize);
+	
+	
+	
+	void CreateRTVHeap(ID3D12Device* p_device, UINT FrameBufferCount);
 	void CreateDSVHeap(ID3D12Device* p_device)
 	{
 		// CBV/SRV のディスクリプタヒープ
@@ -88,8 +91,7 @@ struct DescriptorHeap {
 		  0
 		};
 		p_device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&m_HeapDsv));
-	m_dsvDescriptorSize = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-
+	
 
 
 	}

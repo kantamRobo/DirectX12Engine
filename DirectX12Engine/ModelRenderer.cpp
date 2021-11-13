@@ -156,7 +156,7 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 
 	// ディスクリプタヒープをセット.
 	ID3D12DescriptorHeap* heaps[] = {
-	 m_heapSrvCbv.Get() ,m_heapSampler.Get()
+	 m_heapSrv.Get(),m_heapCbv.Get() ,m_heapSampler.Get()
 	};
 	m_commands.list->SetDescriptorHeaps(_countof(heaps), heaps);
 
@@ -167,7 +167,8 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 	m_commands.list->IASetVertexBuffers(0, 1, &m_model->m_vertexBufferView);
 	m_commands.list->IASetIndexBuffer(&m_model->m_indexBufferView);
 
-	m_commands.list->SetGraphicsRootDescriptorTable(0, m_heapSrvCbv->GetGPUDescriptorHandleForHeapStart());
+	m_commands.list->SetGraphicsRootDescriptorTable(0, m_heapSrv->GetGPUDescriptorHandleForHeapStart());
+	m_commands.list->SetGraphicsRootDescriptorTable(0, m_heapCbv->GetGPUDescriptorHandleForHeapStart());
 	//m_commands.list->SetGraphicsRootDescriptorTable(1, m_model->m_srv);
 	m_commands.list->SetGraphicsRootDescriptorTable(2, m_heapSampler->GetGPUDescriptorHandleForHeapStart());
 

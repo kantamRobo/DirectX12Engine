@@ -1,10 +1,9 @@
 #pragma once
 #include "Commands.h"
-#include "DescriptorHeap.h"
 #include "DescriptorHeapContainer.h"
 #include "Model.h"
 #include "Camera.h"
-#include "DescriptorHeap.h"
+#include "DescriptorHeapWorker.h"
 #include <d3dx12.h>
 #include <dxgi1_6.h>
 #include <memory>
@@ -33,13 +32,8 @@ public:
 // ワーカークラスでパイプラインオブジェクト（シェーダー、ルートシグネチャ、PSO）を作り、
 //作成したこれらを、エンジンの初期化クラスでこのクラスのコンストラクタに渡して初期化する)
 
-	ModelRenderer();
 
 
-
-	void SetGraphicPipeLineStateContainer(const GraphicPipeLineObjectContainer& pipelineobjContainer);
-
-	
 	
 	
 	void Render(std::shared_ptr<Camera> camera);
@@ -67,7 +61,7 @@ public:
 
 	CD3DX12_VIEWPORT  m_viewport;
 	CD3DX12_RECT m_scissorRect;
-	std::shared_ptr<Model> m_model;
+	
 	std::shared_ptr<ModelRendererWorker> m_Rendererworker;
 
 	D3D12_GPU_DESCRIPTOR_HANDLE m_sampler;

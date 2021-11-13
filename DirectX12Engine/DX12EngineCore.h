@@ -12,6 +12,7 @@ public:
 	void PrepareRenderTargetView();
 
 
+	void CreateDepthBuffer(ID3D12Device* p_device, int width, int height, Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvheap);
 	const UINT GpuWaitTimeout = (10 * 1000);  // 10s
 	const UINT FrameBufferCount = 2;
 

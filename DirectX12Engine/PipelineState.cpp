@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include "Vertex.h"
+#include <stdexcept>
 void PipelineState::CreatePipeLineState(ID3DBlob* pixelShader,ID3DBlob* vertexshader,ID3D12Device* device,ID3D12RootSignature* rootSignature) {
 	// インプットレイアウト
 	D3D12_INPUT_ELEMENT_DESC inputElementDesc[] = {

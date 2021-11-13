@@ -13,11 +13,12 @@
 #include "DX12EngineCore.h"
 #include "DescriptorHeapContainer.h"
 #include "PipelineState.h"
+#include <fstream>
 
 using namespace MathUtility;
 using namespace  DirectX;
 
-Model::Model(const std::shared_ptr<DX12EngineCore> in_core, const Commands& in_commands, std::string pFile,DescriptorHeap& CBV_SRVHeaps)
+Model::Model(const std::shared_ptr<DX12EngineCore> in_core, const Commands& in_commands, std::string pFile,DescriptorHeapsContainer& CBV_SRVHeaps)
 {
 
 	m_frameIndex = in_core->m_swapchain->GetCurrentBackBufferIndex();
@@ -46,7 +47,7 @@ Model::Model(const std::shared_ptr<DX12EngineCore> in_core, const Commands& in_c
 		ProcessAssimpMesh(pMesh);
 	}
 	CreateVertexIndexBuffer(in_core->m_device.Get());
-	Prepare(in_core->m_device.Get(), in_commands, m_frameIndex,CBV_SRVHeaps);
+	Prepare(in_core->m_device.Get(), in_commands, m_frameIndex,&CBV_SRVHeaps);
 }
 
 
@@ -471,6 +472,7 @@ HRESULT Model::CompileShaderFromFile(
 	}
 	return hr;
 }
+/*
 bool FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim, UINT& nposIndex)
 {
 	nposIndex = 0;
@@ -763,3 +765,4 @@ inline UINT64 GetRequiredIntermediateSize(
 
 	return RequiredSize;
 }
+*/

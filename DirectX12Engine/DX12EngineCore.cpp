@@ -170,3 +170,57 @@ void DX12EngineCore::PrepareRenderTargetView()
 		rtvHandle.Offset(1, m_rtvDescriptorSize);
 	}
 }
+
+void DX12EngineCore::CreateDepthBuffer(ID3D12Device* p_device, int width, int height, Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvheap)
+{
+	HRESULT hr;
+	// DSV のディスクリプタヒープ
+	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{
+	  D3D12_DESCRIPTOR_HEAP_TYPE_DSV,
+	  1,
+	  D3D12_DESCRIPTOR_HEAP_FLAG_NONE,
+	  0
+	};
+	hr = p_device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvheap));
+
+	// デプスバッファの生成
+	auto depthBufferDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+		DXGI_FORMAT_D32_FLOAT,
+		width,
+		height,
+		1, 0,
+		1, 0,
+		D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
+	);
+	D3D12_CLEAR_VALUE depthClearValue{};
+	depthClearValue.Format = depthBufferDesc.Format;
+	depthClearValue.DepthStencil.Depth = 1.0f;
+	depthClearValue.DepthStencil.Stencil = 0;
+
+	auto heapprop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	hr = p_device->CreateCommittedResource(
+		&heapprop,
+		D3D12_HEAP_FLAG_NONE,
+		&depthBufferDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		&depthClearValue,
+		IID_PPV_ARGS(&depthBuffer)
+	);
+	if (FAILED(hr))
+	{
+		throw std::runtime_error("Failed CreateCommittedResource(DepthBuffer)");
+	}
+
+	// デプスステンシルビュー生成
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc
+	{
+	  DXGI_FORMAT_D32_FLOAT,  // Format
+	  D3D12_DSV_DIMENSION_TEXTURE2D,  // ViewDimension
+	  D3D12_DSV_FLAG_NONE,    // Flags
+	  { // D3D12_TEX2D_DSV
+		0 // MipSlice
+	  }
+	};
+	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(dsvheap->GetCPUDescriptorHandleForHeapStart());
+	p_device->CreateDepthStencilView(depthBuffer.Get(), &dsvDesc, dsvHandle);
+}

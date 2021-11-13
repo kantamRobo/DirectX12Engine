@@ -1,8 +1,8 @@
 #include "ModelRendererWorker.h"
 #include <stdexcept>
 #include "Resourceworker.h"
-#include "DescriptorHeap.h"
 
+#include "DescriptorHeapWorker.h"
 //レンダラーに、コマンドとシーンビューを渡す為のクラス
 
 // コマンドキューの生成
@@ -14,8 +14,9 @@ D3D12_COMMAND_QUEUE_DESC queueDesc{
 };
 
 
-ModelRendererWorker::ModelRendererWorker(Microsoft::WRL::ComPtr<ID3D12Device> p_device,UINT FrameBufferCount, const DescriptorHeap& SceneCBVheap)
+ModelRendererWorker::ModelRendererWorker(Microsoft::WRL::ComPtr<ID3D12Device> p_device,UINT FrameBufferCount, const DescriptorHeapWorker& SceneCBVheap)
 {
+
 	CreateCommandAllocators(p_device.Get(),FrameBufferCount);
 	CreateCommandQueue(p_device.Get());
 	CreateCommandLists(p_device.Get());
@@ -70,7 +71,7 @@ void ModelRendererWorker::CreateCommandLists(ID3D12Device* p_device)
 
 }
 
-void ModelRendererWorker::CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, const DescriptorHeap& SceneCBVheap)
+void ModelRendererWorker::CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, const DescriptorHeapWorker& SceneCBVheap)
 {
 	
 
@@ -87,10 +88,10 @@ void ModelRendererWorker::CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p
 		D3D12_CONSTANT_BUFFER_VIEW_DESC cbDesc{};
 		cbDesc.BufferLocation = m_constantBuffers[i]->GetGPUVirtualAddress();
 		cbDesc.SizeInBytes = bufferSize;
-		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(m_SceneCBVHeap->m_heapCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(SceneCBVheap.m_heapCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
 		p_device->CreateConstantBufferView(&cbDesc, handleCBV);
 
-		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_SceneCBVHeap->m_heapCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(SceneCBVheap.m_heapCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
 	}
 
 }

@@ -4,7 +4,7 @@
 #include "ShaderParameters.h"
 #include <wrl.h>
 
-struct DescriptorHeap;
+struct DescriptorHeapWorker;
 class ModelRendererWorker
 {
 public:
@@ -13,7 +13,7 @@ public:
 
 	
 	
-	ModelRendererWorker(Microsoft::WRL::ComPtr<ID3D12Device> p_device, UINT FrameBufferCount, const DescriptorHeap& SceneCBVheap);
+	ModelRendererWorker(Microsoft::WRL::ComPtr<ID3D12Device> p_device, UINT FrameBufferCount, const DescriptorHeapWorker& SceneCBVheap);
 	HRESULT CreateCommandQueue(ID3D12Device* p_device);
 	//こちらでコマンド系インターフェースを作成する。
 	CD3DX12_VIEWPORT  m_viewport;
@@ -28,7 +28,7 @@ public:
 
 	
 	
-	void CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, const DescriptorHeap& SceneCBVheap);
+	void CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, const DescriptorHeapWorker& SceneCBVheap);
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList1> m_commandList;
 
 	Microsoft::WRL::ComPtr <ID3D12CommandQueue> m_commandQueue;
@@ -39,6 +39,6 @@ public:
 
 	std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> m_cbViews;
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> m_constantBuffers;
-	std::shared_ptr<DescriptorHeap> m_SceneCBVHeap;
+	
 };
 

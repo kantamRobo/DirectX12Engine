@@ -1,25 +1,20 @@
 #pragma once
 #include <d3dx12.h>
 #include <wrl.h>
-
+#include "DescriptorHeapWorker.h"
 
 struct DescriptorHeapsContainer
 {
 	DescriptorHeapsContainer() {};
-	DescriptorHeapsContainer(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> in_heapRtv,
-		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>in_heapDsv,
-		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> in_heapSrv,
-		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> in_heapCbv,
-		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> in_heapUav,
-		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> in_Sampler)
+	DescriptorHeapsContainer(const DescriptorHeapWorker& worker)
 	{
-		heapRtv = in_heapRtv;
-		heapDsv = in_heapDsv;
-		heapCbv = in_heapCbv;
-		heapUav = in_heapUav;
-		heapSrv = in_heapSrv;
+		heapRtv = worker.m_heapRtv;
+		heapDsv = worker.m_HeapDsv;
+		heapCbv = worker.m_heapCbv;
+		heapUav = worker.m_heapUav;
+		heapSrv = worker.m_heapSrv;
 
-		heapSampler = in_Sampler;
+		heapSampler = worker.m_HeapSampler;
 	}
 	
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> heapRtv;

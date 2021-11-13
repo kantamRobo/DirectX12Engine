@@ -22,7 +22,7 @@
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CubeApp.cpp" />
-    <ClCompile Include="Descriptor.cpp" />
+    <ClCompile Include="DescriptorHeapWorker.cpp" />
     <ClCompile Include="DX12EngineCore.cpp" />
     <ClCompile Include="PipelineState.cpp" />
     <ClCompile Include="main.cpp" />
@@ -40,7 +40,7 @@
     <ClInclude Include="Commands.h" />
     <ClInclude Include="CubeApp.h" />
     <ClInclude Include="DescriptorHeapContainer.h" />
-    <ClInclude Include="DescriptorHeap.h" />
+    <ClInclude Include="DescriptorHeapWorker.h" />
     <ClInclude Include="DX12EngineCore.h" />
     <ClInclude Include="PipelineState.h" />
     <ClInclude Include="MainEngine.h" />
@@ -58,14 +58,13 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="PBR.hlsl" />
     <FxCompile Include="simpleTexPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main</EntryPointName>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="simpleTexVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
@@ -73,7 +72,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main</EntryPointName>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

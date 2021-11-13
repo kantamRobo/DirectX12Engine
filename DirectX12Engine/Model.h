@@ -11,7 +11,8 @@
 #include <wrl.h>
 #include <d3dx12.h>
 #include "Commands.h"
-
+#include "DescriptorHeapWorker.h"
+#include "Animator.h"
 struct  DescriptorHeapsContainer;
 class DX12EngineCore;
 class PipelineState;
@@ -32,11 +33,12 @@ public:
 	
 	
 	
-	Model(const std::shared_ptr<DX12EngineCore> in_core, const Commands& in_commands, std::string pFile, DescriptorHeap& CBV_SRVHeaps);
+	
+	Model(const std::shared_ptr<DX12EngineCore> in_core, const Commands& in_commands, std::string pFile, DescriptorHeapsContainer& CBV_SRVHeaps);
 	std::vector<Mesh>meshes;
 	std::vector<Vertex>vertices;
 	std::vector<unsigned int> indices;
-	std::vector<Bone> bones;
+	//std::vector<Bone> bones;
 	DirectX::XMFLOAT4X4 modelmat;
 	DirectX::XMFLOAT3 m_position;
 	

@@ -2,18 +2,18 @@
 #include "DX12EngineCore.h"
 #include "ModelRenderer.h"
 #include "ModelRendererWorker.h"
-#include "DescriptorHeap.h"
+#include "DescriptorHeapWorker.h"
 void MainEngine::Init(HWND hwnd)
 {
 	
 	
 	
 	m_core = std::make_shared<DX12EngineCore>(hwnd);
-	DescriptorHeap Heapsworker;
+	DescriptorHeapWorker Heapsworker;
 	
-	Heapsworker.CreateRTVHeap(m_core->m_device.Get());
+	Heapsworker.CreateRTVHeap(m_core->m_device.Get(),2);
 	Heapsworker.CreateSceneCBVHeaps(m_core->m_device.Get());
-	DescriptorHeapsContainer ModelRendererDescriptors{ Heapsworker.m_heapRtv,Heapsworker.m_heapSrv,Heapsworker.m_HeapDsv,Heapsworker.m_heapCbv,Heapsworker.m_heapUav,Heapsworker.m_HeapSampler };
+	DescriptorHeapsContainer ModelRendererDescriptors{ Heapsworker};
 	m_rendererworker = std::make_shared<ModelRendererWorker>(m_core->m_device,m_core->FrameBufferCount,Heapsworker);
 	Commands tempcommands{ m_rendererworker->m_commandAllocators,m_rendererworker->m_commandList,m_rendererworker->m_commandQueue };
 	std::shared_ptr<Model> temp_model = std::make_shared<Model>(m_core, tempcommands, "Hoge");
