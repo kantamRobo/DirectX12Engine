@@ -4,6 +4,7 @@
 #include <d3dx12.h>
 #include "CubeApp.h"
 #include "ShaderParameters.h"
+class DX12EngineCore;
 class Camera
 {
 public:

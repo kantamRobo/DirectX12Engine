@@ -1,9 +1,10 @@
 #pragma once
+#define NOMINMAX
 #include "Commands.h"
 #include "DescriptorHeapContainer.h"
 #include "Model.h"
 #include "Camera.h"
-#include "DescriptorHeapWorker.h"
+#include "DescriptorHeapContainer.h"
 #include <d3dx12.h>
 #include <dxgi1_6.h>
 #include <memory>
@@ -66,11 +67,10 @@ public:
 	CD3DX12_VIEWPORT  m_viewport;
 	CD3DX12_RECT m_scissorRect;
 	
-	std::shared_ptr<ModelRendererWorker> m_Rendererworker;
 
 	D3D12_GPU_DESCRIPTOR_HANDLE m_sampler;
 	D3D12_GPU_DESCRIPTOR_HANDLE m_srv;
-	std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> m_cbViews;
+	
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSrv;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapCbv;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSampler;

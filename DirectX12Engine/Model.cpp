@@ -304,19 +304,19 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
 
 	// サンプラー用ディスクリプタヒープの0番目を使用する
-	auto descriptorSampler = CD3DX12_CPU_DESCRIPTOR_HANDLE(SRV_CBV->heapSampler->GetCPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER));
+	auto descriptorSampler = CD3DX12_CPU_DESCRIPTOR_HANDLE(SRV_CBV->m_HeapSampler->GetCPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER));
 	p_device->CreateSampler(&samplerDesc, descriptorSampler);
-	m_sampler = CD3DX12_GPU_DESCRIPTOR_HANDLE(SRV_CBV->heapSampler->GetGPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER));
+	m_sampler = CD3DX12_GPU_DESCRIPTOR_HANDLE(SRV_CBV->m_HeapSampler->GetGPUDescriptorHandleForHeapStart(), SamplerDescriptorBase, p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER));
 	
 	// テクスチャからシェーダーリソースビューの準備.
-	auto srvHandle = CD3DX12_CPU_DESCRIPTOR_HANDLE(SRV_CBV->heapSrv->GetCPUDescriptorHandleForHeapStart(), TextureSrvDescriptorBase, p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
+	auto srvHandle = CD3DX12_CPU_DESCRIPTOR_HANDLE(SRV_CBV->m_heapSrv->GetCPUDescriptorHandleForHeapStart(), TextureSrvDescriptorBase, p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Texture2D.MipLevels = 1;
 	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	p_device->CreateShaderResourceView(m_texture.Get(), &srvDesc, srvHandle);
-	m_srv = CD3DX12_GPU_DESCRIPTOR_HANDLE(SRV_CBV->heapSrv->GetGPUDescriptorHandleForHeapStart(), TextureSrvDescriptorBase, m_srvcbvDescriptorSize);
+	m_srv = CD3DX12_GPU_DESCRIPTOR_HANDLE(SRV_CBV->m_heapSrv->GetGPUDescriptorHandleForHeapStart(), TextureSrvDescriptorBase, m_srvcbvDescriptorSize);
 
 }
 

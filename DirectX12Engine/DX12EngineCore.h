@@ -2,11 +2,12 @@
 #include <d3dx12.h>
 #include <dxgi1_6.h>
 #include <wrl.h>
-
+#include "DescriptorHeapContainer.h"
 
 class DX12EngineCore
 {
 public:
+	
 	DX12EngineCore(HWND hwnd);
 	void CreateFrameFences();
 	void CreateRenderTargetView(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> RTVheap);
@@ -48,6 +49,5 @@ public:
 	
 
 	void CreateCommandLists();
-	const UINT FrameBufferCount = 2;
 };
 

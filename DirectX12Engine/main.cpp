@@ -27,7 +27,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 {
-	CubeApp theApp{};
+	//CubeApp theApp{};
 
 	WNDCLASSEX wc{};
 	wc.cbSize = sizeof(wc);
@@ -49,11 +49,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 		nullptr,
 		nullptr,
 		hInstance,
-		&theApp
+		NULL
 	);
 	try
 	{
-		theApp.Initialize(hwnd);
+		//theApp.Initialize(hwnd);
 		//MainEngine.Initialize(hwnd);
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&theApp));
 		ShowWindow(hwnd, nCmdShow);
@@ -66,10 +66,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
-			theApp.Render();
+			//theApp.Render();
 		}
 
-		theApp.Terminate();
+		//theApp.Terminate();
 		return static_cast<int>(msg.wParam);
 	}
 	catch (std::runtime_error e)

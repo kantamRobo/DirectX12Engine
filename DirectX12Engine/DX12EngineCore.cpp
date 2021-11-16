@@ -106,7 +106,7 @@ DX12EngineCore::DX12EngineCore(HWND hwnd)
 	// 各ディスクリプタヒープの準備.（ディスクリプタクラスから呼ぶ）
 	//PrepareDescriptorHeaps();
 	// レンダーターゲットビューの生成.
-		PrepareRenderTargetView();
+		
 		//// デプスバッファ関連の準備.(デイスクリプタクラスからよぶ）
 		//CreateDepthBuffer(width, height);
 

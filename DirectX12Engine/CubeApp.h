@@ -1,5 +1,5 @@
 #pragma once
-
+/*
 #include "AppBase.h"
 #include <DirectXMath.h>
 #include "Model.h"
@@ -55,3 +55,4 @@ private:
 	D3D12_GPU_DESCRIPTOR_HANDLE m_srv;
 	std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> m_cbViews;
 };
+*/

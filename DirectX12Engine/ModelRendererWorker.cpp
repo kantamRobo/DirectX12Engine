@@ -1,8 +1,7 @@
-#include "ModelRendererWorker.h"
+
 #include <stdexcept>
 #include "Resourceworker.h"
 
-#include "DescriptorHeapWorker.h"
 //レンダラーに、コマンドとシーンビューを渡す為のクラス
 
 // コマンドキューの生成
