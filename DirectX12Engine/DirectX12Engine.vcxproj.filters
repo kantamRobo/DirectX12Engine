@@ -63,9 +63,6 @@
     <ClCompile Include="ModelRenderer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DescriptorHeapWorker.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="ModelRendererWorker.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -116,9 +113,6 @@
     <ClInclude Include="DescriptorHeapContainer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ModelRendererWorker.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Commands.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -126,9 +120,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="ShaderParameters.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="DescriptorHeapWorker.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="RootSignature.h">

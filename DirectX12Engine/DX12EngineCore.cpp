@@ -207,11 +207,11 @@ void DX12EngineCore::CreateFrameFences()
 }
 
 
-void DX12EngineCore::PrepareRenderTargetView()
+void DX12EngineCore::CreateRenderTargetView(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> RTVheap)
 {
 	// スワップチェインイメージへのレンダーターゲットビュー生成
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
-		m_heapRtv->GetCPUDescriptorHandleForHeapStart());
+		RTVheap->GetCPUDescriptorHandleForHeapStart());
 	for (UINT i = 0; i < FrameBufferCount; ++i)
 	{
 		m_swapchain->GetBuffer(i, IID_PPV_ARGS(&m_renderTargets[i]));
@@ -221,7 +221,7 @@ void DX12EngineCore::PrepareRenderTargetView()
 	}
 }
 
-void DX12EngineCore::CreateDepthBuffer(ID3D12Device* p_device, int width, int height, Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvheap)
+void DX12EngineCore::CreateDepthBuffer(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvheap)
 {
 	HRESULT hr;
 	// DSV のディスクリプタヒープ
@@ -231,13 +231,15 @@ void DX12EngineCore::CreateDepthBuffer(ID3D12Device* p_device, int width, int he
 	  D3D12_DESCRIPTOR_HEAP_FLAG_NONE,
 	  0
 	};
-	hr = p_device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvheap));
+	hr = m_device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvheap));
 
+	const int Width = 1280;
+	const int Height = 720;
 	// デプスバッファの生成
 	auto depthBufferDesc = CD3DX12_RESOURCE_DESC::Tex2D(
 		DXGI_FORMAT_D32_FLOAT,
-		width,
-		height,
+		Width,
+		Height,
 		1, 0,
 		1, 0,
 		D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
@@ -248,13 +250,13 @@ void DX12EngineCore::CreateDepthBuffer(ID3D12Device* p_device, int width, int he
 	depthClearValue.DepthStencil.Stencil = 0;
 
 	auto heapprop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-	hr = p_device->CreateCommittedResource(
+	hr = m_device->CreateCommittedResource(
 		&heapprop,
 		D3D12_HEAP_FLAG_NONE,
 		&depthBufferDesc,
 		D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		&depthClearValue,
-		IID_PPV_ARGS(&depthBuffer)
+		IID_PPV_ARGS(&m_depthBuffer)
 	);
 	if (FAILED(hr))
 	{
@@ -272,5 +274,5 @@ void DX12EngineCore::CreateDepthBuffer(ID3D12Device* p_device, int width, int he
 	  }
 	};
 	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(dsvheap->GetCPUDescriptorHandleForHeapStart());
-	p_device->CreateDepthStencilView(depthBuffer.Get(), &dsvDesc, dsvHandle);
+	m_device->CreateDepthStencilView(m_depthBuffer.Get(), &dsvDesc, dsvHandle);
 }

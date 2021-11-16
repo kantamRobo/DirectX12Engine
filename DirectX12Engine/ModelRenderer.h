@@ -12,12 +12,8 @@ class ModelRenderer
 {
 public:
 
-	ModelRenderer(const std::shared_ptr<DX12EngineCore> core, const Commands& commands, 
-		std::shared_ptr<Model> in_model, const std::shared_ptr<ModelRendererWorker> in_modelRendererWorker, 
-		const DescriptorHeapsContainer& descheaps);
-
 	
-
+	ModelRenderer(const std::shared_ptr<DX12EngineCore> core, const Commands& commands, std::shared_ptr<Model> in_model, const DescriptorHeapsContainer& descheaps);
 	std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> m_cbViews;
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> m_constantBuffers;
 	

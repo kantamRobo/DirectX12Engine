@@ -9,19 +9,21 @@ class DX12EngineCore
 public:
 	DX12EngineCore(HWND hwnd);
 	void CreateFrameFences();
-	void PrepareRenderTargetView();
+	void CreateRenderTargetView(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> RTVheap);
+	
 
 
-	void CreateDepthBuffer(ID3D12Device* p_device, int width, int height, Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvheap);
+	
+	
+	void PrepareRenderTargetView(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> RTVheap);
+	void CreateDepthBuffer(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvheap);
 	const UINT GpuWaitTimeout = (10 * 1000);  // 10s
 	const UINT FrameBufferCount = 2;
 
 	Microsoft::WRL::ComPtr<ID3D12Device> m_device;
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapchain;
 
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapRtv;
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapDsv;
-
+	
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> m_renderTargets;
 	Microsoft::WRL::ComPtr<ID3D12Resource1> m_depthBuffer;
 

@@ -12,6 +12,11 @@ void MainEngine::Init(HWND hwnd)
 	DescriptorHeapsContainer ModelRendererDescriptors;
 	ModelRendererDescriptors.CreateRTVHeap(m_core->m_device.Get(), 2);
 	ModelRendererDescriptors.CreateSceneCBVHeaps(m_core->m_device.Get());
+	ModelRendererDescriptors.CreateRTVHeap(m_core->m_device.Get(), m_core->FrameBufferCount);
+	ModelRendererDescriptors.CreateDSVHeap(m_core->m_device.Get());
+	m_core->PrepareRenderTargetView(ModelRendererDescriptors.m_heapRtv);
+	m_core->CreateDepthBuffer(ModelRendererDescriptors.m_HeapDsv);
+	
 	Commands commands{ m_core->m_commandAllocators,m_core->m_commandList,m_core->m_commandQueue };
 	
 	std::shared_ptr<Model> temp_model = std::make_shared<Model>(m_core, commands, "Hoge");

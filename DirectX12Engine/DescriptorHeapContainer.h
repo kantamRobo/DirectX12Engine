@@ -1,6 +1,7 @@
 #pragma once
 #include <d3dx12.h>
 #include <wrl.h>
+#include <stdexcept>
 
 struct DescriptorHeapsContainer
 {
@@ -77,8 +78,29 @@ struct DescriptorHeapsContainer
 
 
 
+	void CreateRTVHeap(ID3D12Device* p_device, UINT FrameBufferCount)
+	{
+		// RTV のディスクリプタヒープ
+		HRESULT hr;
+		D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc{
+		  D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
+		  FrameBufferCount,
+		  D3D12_DESCRIPTOR_HEAP_FLAG_NONE,
+		  0
+		};
+		hr = p_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_heapRtv));
+		if (FAILED(hr))
+		{
+			throw std::runtime_error("Failed CreateDescriptorHeap(RTV)");
+		}
 
-	void CreateRTVHeap(ID3D12Device* p_device, UINT FrameBufferCount);
+
+		if (FAILED(hr))
+		{
+			throw std::runtime_error("Failed CreateDescriptorHeap(DSv)");
+		}
+	}
+
 	void CreateDSVHeap(ID3D12Device* p_device)
 	{
 		// CBV/SRV のディスクリプタヒープ

@@ -22,7 +22,6 @@
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CubeApp.cpp" />
-    <ClCompile Include="DescriptorHeapWorker.cpp" />
     <ClCompile Include="DX12EngineCore.cpp" />
     <ClCompile Include="PipelineState.cpp" />
     <ClCompile Include="main.cpp" />
@@ -40,7 +39,6 @@
     <ClInclude Include="Commands.h" />
     <ClInclude Include="CubeApp.h" />
     <ClInclude Include="DescriptorHeapContainer.h" />
-    <ClInclude Include="DescriptorHeapWorker.h" />
     <ClInclude Include="DX12EngineCore.h" />
     <ClInclude Include="PipelineState.h" />
     <ClInclude Include="MainEngine.h" />
@@ -49,7 +47,6 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelRenderer.h" />
-    <ClInclude Include="ModelRendererWorker.h" />
     <ClInclude Include="PipelineObjectContainer.h" />
     <ClInclude Include="Resourceworker.h" />
     <ClInclude Include="RootSignature.h" />

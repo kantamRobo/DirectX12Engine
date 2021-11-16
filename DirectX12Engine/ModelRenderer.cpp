@@ -1,8 +1,9 @@
 #include "ModelRenderer.h"
 #include "DX12EngineCore.h"
-#include "ModelRendererWorker.h"
+#include "ModelRenderer.h"
 #include "PipelineState.h"
 #include <DirectXMath.h>
+#include "Resourceworker.h"
 
 
 
@@ -35,10 +36,10 @@ void ModelRenderer::CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_devic
 		cbDesc.SizeInBytes = bufferSize;
 
 		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(SceneCBVheap.m_heapCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_cbvDescriptorSize);
-		D3D12_CPU_DESCRIPTOR_HANDLE handleCBV = SceneCBVheap.m_heapCbv->GetCPUDescriptorHandleForHeapStart()
+		
 		p_device->CreateConstantBufferView(&cbDesc, handleCBV);
 
-		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(SceneCBVheap.m_heapCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(SceneCBVheap.m_heapCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_cbvDescriptorSize);
 	}
 
 }
@@ -47,27 +48,24 @@ void ModelRenderer::CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_devic
 
 
 ModelRenderer::ModelRenderer(const std::shared_ptr<DX12EngineCore> core, const Commands& commands,
-	std::shared_ptr<Model> in_model, const std::shared_ptr<ModelRendererWorker> in_modelRendererWorker,
+	std::shared_ptr<Model> in_model,
 	const DescriptorHeapsContainer& descheaps) {
 
 
-	CreateCommandAllocators(m_core->m_device.Get(), FrameBufferCount);
-	CreateCommandQueue(m_core->m_device.Get());
-	CreateCommandLists(m_core->m_device.Get());
+	
 
 
-	CreateSceneView(m_core->m_device.Get(), SceneCBVheap);
-	m_commandList->Close();
+	CreateSceneView(m_core->m_device.Get(),descheaps);
+	
 	m_core = core;
 	m_model = in_model;
 	m_frameIndex = core->m_swapchain->GetCurrentBackBufferIndex();
-	m_heapSrv = descheaps.heapSrv;
-	m_heapCbv = descheaps.heapCbv;
-	m_heapRTV = descheaps.heapRtv;
-	m_heapDSV = descheaps.heapDsv;
-	m_heapSampler = descheaps.heapSampler;
+	m_heapSrv = descheaps.m_heapSrv;
+	m_heapCbv = descheaps.m_heapCbv;
+	m_heapRTV = descheaps.m_heapRtv;
+	m_heapDSV = descheaps.m_HeapDsv;
+	m_heapSampler = descheaps.m_HeapSampler;
 	m_commands = commands;
-	m_Rendererworker = in_modelRendererWorker;
 	m_swapchain = m_core->m_swapchain.Get();
 	m_viewport = m_core->m_viewport;
 	m_scissorRect = m_core->m_scissorRect;
@@ -117,7 +115,7 @@ void ModelRenderer::Render(std::shared_ptr<Camera>
 	// 描画先をセット
 	m_commands.list->OMSetRenderTargets(1, &rtv, FALSE, &dsv);
 
-	MakeCommand(m_commands.list,m_Rendererworker->m_constantBuffers,camera);
+	MakeCommand(m_commands.list,m_constantBuffers,camera);
 
 	// レンダーターゲットからスワップチェイン表示可能へ
 	auto barrierToPresent = CD3DX12_RESOURCE_BARRIER::Transition(
@@ -182,7 +180,7 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 
 	camera->Update(DirectX::XMLoadFloat4x4(&m_model->modelmat),&shaderParams);
 	// 定数バッファの更新.
-	auto& constantBuffer = m_Rendererworker->m_constantBuffers[m_frameIndex];
+	auto& constantBuffer = m_constantBuffers[m_frameIndex];
 	{
 		void* p;
 		CD3DX12_RANGE range(0, 0);
