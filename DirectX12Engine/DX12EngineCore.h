@@ -34,6 +34,18 @@ public:
 	HANDLE m_fenceWaitEvent;
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Fence1>> m_frameFences;
 	std::vector<UINT64> m_frameFenceValues;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList1> m_commandList;
 
+	Microsoft::WRL::ComPtr <ID3D12CommandQueue> m_commandQueue;
+
+	std::vector< Microsoft::WRL::ComPtr <ID3D12CommandAllocator>> m_commandAllocators;
+
+	
+	HRESULT CreateCommandQueue();
+	void CreateCommandAllocators();
+	
+
+	void CreateCommandLists();
+	const UINT FrameBufferCount = 2;
 };
 

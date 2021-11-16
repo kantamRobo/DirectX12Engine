@@ -3,15 +3,61 @@
 #include "ModelRendererWorker.h"
 #include "PipelineState.h"
 #include <DirectXMath.h>
-//コアクラスでスワップチェーン、レンダーターゲットビュー、デプスステンシルビュー,フェンス
-// ワーカークラスでパイプラインオブジェクト（シェーダー、ルートシグネチャ、PSO）を作り、
-//作成したこれらを、エンジンの初期化クラスでこのクラスのコンストラクタに渡して初期化する)
 
-ModelRenderer::ModelRenderer(const std::shared_ptr<DX12EngineCore> core,
-	const Commands& commands,
-	std::shared_ptr<Model> in_model,
-	const std::shared_ptr<ModelRendererWorker> in_modelRendererWorker,
+
+
+
+
+D3D12_COMMAND_QUEUE_DESC queueDesc{
+  D3D12_COMMAND_LIST_TYPE_DIRECT,
+  0,
+  D3D12_COMMAND_QUEUE_FLAG_NONE,
+  0
+};
+
+
+void ModelRenderer::CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, const DescriptorHeapsContainer& SceneCBVheap)
+{
+
+
+	// 定数バッファ/定数バッファビューの生成
+	m_constantBuffers.resize(FrameBufferCount);
+	m_cbViews.resize(FrameBufferCount);
+
+
+	for (UINT i = 0; i < FrameBufferCount; ++i)
+	{
+		UINT bufferSize = sizeof(ShaderParameters) + 255 & ~255;
+		m_constantBuffers[i] = CreateBuffer(p_device.Get(), bufferSize, nullptr);
+
+		D3D12_CONSTANT_BUFFER_VIEW_DESC cbDesc{};
+		cbDesc.BufferLocation = m_constantBuffers[i]->GetGPUVirtualAddress();
+		cbDesc.SizeInBytes = bufferSize;
+
+		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(SceneCBVheap.m_heapCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_cbvDescriptorSize);
+		D3D12_CPU_DESCRIPTOR_HANDLE handleCBV = SceneCBVheap.m_heapCbv->GetCPUDescriptorHandleForHeapStart()
+		p_device->CreateConstantBufferView(&cbDesc, handleCBV);
+
+		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(SceneCBVheap.m_heapCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_srvcbvDescriptorSize);
+	}
+
+}
+
+
+
+
+ModelRenderer::ModelRenderer(const std::shared_ptr<DX12EngineCore> core, const Commands& commands,
+	std::shared_ptr<Model> in_model, const std::shared_ptr<ModelRendererWorker> in_modelRendererWorker,
 	const DescriptorHeapsContainer& descheaps) {
+
+
+	CreateCommandAllocators(m_core->m_device.Get(), FrameBufferCount);
+	CreateCommandQueue(m_core->m_device.Get());
+	CreateCommandLists(m_core->m_device.Get());
+
+
+	CreateSceneView(m_core->m_device.Get(), SceneCBVheap);
+	m_commandList->Close();
 	m_core = core;
 	m_model = in_model;
 	m_frameIndex = core->m_swapchain->GetCurrentBackBufferIndex();

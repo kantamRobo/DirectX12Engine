@@ -8,22 +8,30 @@
 #include <dxgi1_6.h>
 #include <memory>
 class DX12EngineCore;
-class ModelRendererWorker;
 class ModelRenderer
 {
 public:
-	ModelRenderer() {};
 
-
-
-
-
-
-	ModelRenderer(const std::shared_ptr<DX12EngineCore> core,
-		const Commands& commands,
-		std::shared_ptr<Model> in_model,
-		const std::shared_ptr<ModelRendererWorker> in_modelRendererWorker,
+	ModelRenderer(const std::shared_ptr<DX12EngineCore> core, const Commands& commands, 
+		std::shared_ptr<Model> in_model, const std::shared_ptr<ModelRendererWorker> in_modelRendererWorker, 
 		const DescriptorHeapsContainer& descheaps);
+
+	
+
+	std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> m_cbViews;
+	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> m_constantBuffers;
+	
+	
+	void CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, const DescriptorHeapsContainer& SceneCBVheap);
+	ModelRenderer() {};
+	UINT m_cbvDescriptorSize;
+
+
+
+
+
+	
+	
 	
 	UINT rtvDescriptorSize;
 

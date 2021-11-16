@@ -13,7 +13,7 @@ public:
 
 	
 	
-	ModelRendererWorker(Microsoft::WRL::ComPtr<ID3D12Device> p_device, UINT FrameBufferCount, const DescriptorHeapWorker& SceneCBVheap);
+	ModelRendererWorker(Microsoft::WRL::ComPtr<ID3D12Device> p_device, UINT FrameBufferCount, const DescriptorHeapsContainer& SceneCBVheap);
 	HRESULT CreateCommandQueue(ID3D12Device* p_device);
 	//こちらでコマンド系インターフェースを作成する。
 	CD3DX12_VIEWPORT  m_viewport;
