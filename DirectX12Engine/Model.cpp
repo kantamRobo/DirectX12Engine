@@ -14,6 +14,8 @@
 #include "DescriptorHeapContainer.h"
 #include "PipelineState.h"
 #include <fstream>
+#include "Resourceworker.h"
+
 
 using namespace MathUtility;
 using namespace  DirectX;
@@ -46,8 +48,9 @@ Model::Model(const std::shared_ptr<DX12EngineCore> in_core, const Commands& in_c
 		const auto pMesh = m_pScene->mMeshes[i];
 		ProcessAssimpMesh(pMesh);
 	}
-	CreateVertexIndexBuffer(in_core->m_device.Get());
+	
 	Prepare(in_core->m_device.Get(), in_commands, m_frameIndex,&CBV_SRVHeaps);
+	CreateVertexIndexBuffer(in_core->m_device.Get());
 }
 
 
@@ -155,6 +158,121 @@ void Model::ProcessAssimpMesh(const aiMesh* p_mesh)
 	*/
 }
 
+void Model::LoadMaterial(aiMaterial* pSrcMaterial)
+{
+
+
+	// 拡散反射成分.
+	{
+		aiColor3D color(0.0f, 0.0f, 0.0f);
+
+		if (pSrcMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS)
+		{
+			m_modelMaterial.Diffuse.x = color.r;
+			m_modelMaterial.Diffuse.y = color.g;
+			m_modelMaterial.Diffuse.z = color.b;
+		}
+		else
+		{
+			m_modelMaterial.Diffuse.x = 0.5f;
+			m_modelMaterial.Diffuse.y = 0.5f;
+			m_modelMaterial.Diffuse.z = 0.5f;
+		}
+	}
+
+	// 鏡面反射成分.
+	{
+		aiColor3D color(0.0f, 0.0f, 0.0f);
+
+		if (pSrcMaterial->Get(AI_MATKEY_COLOR_SPECULAR, color) == AI_SUCCESS)
+		{
+			m_modelMaterial.Specular.x = color.r;
+			m_modelMaterial.Specular.y = color.g;
+			m_modelMaterial.Specular.z = color.b;
+		}
+		else
+		{
+			m_modelMaterial.Specular.x = 0.0f;
+			m_modelMaterial.Specular.y = 0.0f;
+			m_modelMaterial.Specular.z = 0.0f;
+		}
+	}
+
+	// 鏡面反射強度.
+	{
+		auto shininess = 0.0f;
+		if (pSrcMaterial->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS)
+		{
+			m_modelMaterial.Shininess = shininess;
+		}
+		else
+		{
+			m_modelMaterial.Shininess = 0.0f;
+		}
+	}
+
+	// ディフューズマップ.
+	{
+		aiString path;
+		if (pSrcMaterial->Get(AI_MATKEY_TEXTURE_DIFFUSE(0), path) == AI_SUCCESS)
+		{
+			m_modelMaterial.DiffuseMap = Convert(path);
+		}
+		else
+		{
+			m_modelMaterial.DiffuseMap.clear();
+		}
+	}
+
+	// スペキュラーマップ.
+	{
+		aiString path;
+		if (pSrcMaterial->Get(AI_MATKEY_TEXTURE_SPECULAR(0), path) == AI_SUCCESS)
+		{
+			m_modelMaterial.SpecularMap = Convert(path);
+		}
+		else
+		{
+			m_modelMaterial.SpecularMap.clear();
+		}
+	}
+
+	// シャイネスマップ.
+	{
+		aiString path;
+		if (pSrcMaterial->Get(AI_MATKEY_TEXTURE_SHININESS(0), path) == AI_SUCCESS)
+		{
+			m_modelMaterial.ShininessMap = Convert(path);
+		}
+		else
+		{
+			m_modelMaterial.ShininessMap.clear();
+		}
+	}
+
+	// 法線マップ
+	{
+		aiString path;
+		if (pSrcMaterial->Get(AI_MATKEY_TEXTURE_NORMALS(0), path) == AI_SUCCESS)
+		{
+			m_modelMaterial.NormalMap = Convert(path);
+		}
+		else
+		{
+			if (pSrcMaterial->Get(AI_MATKEY_TEXTURE_HEIGHT(0), path) == AI_SUCCESS)
+			{
+				m_modelMaterial.NormalMap = Convert(path);
+			}
+			else
+			{
+				m_modelMaterial.NormalMap.clear();
+			}
+		}
+	}
+}
+
+
+
 void Model::CreateVertexIndexBuffer(ID3D12Device* p_device) {
 	// 頂点バッファとインデックスバッファの生成.
 	m_vertexBuffer = CreateBuffer(p_device,vertices.size(), vertices.data());
@@ -187,15 +305,19 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 		OutputDebugStringA((const char*)errBlob->GetBufferPointer());
 	}
 	
-	CD3DX12_DESCRIPTOR_RANGE cbv, srv, sampler;
-	cbv.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0); // b0 レジスタ
+
+	
+	CD3DX12_DESCRIPTOR_RANGE scenecbv, matcbv, srv, sampler;
+	scenecbv.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0); // b0 レジスタ
+	matcbv.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);//b1レジスタ
 	srv.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 	sampler.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 0); // s0 レジスタ
 
-	CD3DX12_ROOT_PARAMETER rootParams[3];
-	rootParams[0].InitAsDescriptorTable(1, &cbv, D3D12_SHADER_VISIBILITY_VERTEX);
-	rootParams[1].InitAsDescriptorTable(1, &srv, D3D12_SHADER_VISIBILITY_PIXEL);
-	rootParams[2].InitAsDescriptorTable(1, &sampler, D3D12_SHADER_VISIBILITY_PIXEL);
+	CD3DX12_ROOT_PARAMETER rootParams[4];
+	rootParams[0].InitAsDescriptorTable(1, &scenecbv, D3D12_SHADER_VISIBILITY_VERTEX);
+	rootParams[1].InitAsDescriptorTable(1, &matcbv, D3D12_SHADER_VISIBILITY_PIXEL);
+	rootParams[2].InitAsDescriptorTable(1, &srv, D3D12_SHADER_VISIBILITY_PIXEL);
+	rootParams[3].InitAsDescriptorTable(1, &sampler, D3D12_SHADER_VISIBILITY_PIXEL);
 
 	// ルートシグネチャの構築
 	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc{};
@@ -221,7 +343,8 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 		throw std::runtime_error("CrateRootSignature failed.");
 	}
 	
-	/*
+	
+	
 	// インプットレイアウト
 	D3D12_INPUT_ELEMENT_DESC inputElementDesc[] = {
 	  { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, offsetof(Vertex, Pos), D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA},
@@ -472,6 +595,8 @@ HRESULT Model::CompileShaderFromFile(
 	}
 	return hr;
 }
+
+
 /*
 bool FindPosition(float AnimationTime, const aiNodeAnim* pNodeAnim, UINT& nposIndex)
 {
@@ -766,3 +891,15 @@ inline UINT64 GetRequiredIntermediateSize(
 	return RequiredSize;
 }
 */
+
+
+//-----------------------------------------------------------------------------
+//      std::wstring型に変換します.
+//-----------------------------------------------------------------------------
+std::wstring Convert(const aiString& path)
+{
+	wchar_t temp[256] = {};
+	size_t  size;
+	mbstowcs_s(&size, temp, path.C_Str(), 256);
+	return std::wstring(temp);
+}

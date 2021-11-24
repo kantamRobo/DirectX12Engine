@@ -22,27 +22,43 @@ void ModelRenderer::CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_devic
 
 
 	// 定数バッファ/定数バッファビューの生成
-	m_constantBuffers.resize(FrameBufferCount);
-	m_cbViews.resize(FrameBufferCount);
+	m_SceneconstantBuffers.resize(FrameBufferCount);
+	m_cbSceneViews.resize(FrameBufferCount);
 
 
 	for (UINT i = 0; i < FrameBufferCount; ++i)
 	{
 		UINT bufferSize = sizeof(ShaderParameters) + 255 & ~255;
-		m_constantBuffers[i] = CreateBuffer(p_device.Get(), bufferSize, nullptr);
+		m_SceneconstantBuffers[i] = CreateBuffer(p_device.Get(), D3D12_RESOURCE_DIMENSION_BUFFER,
+			bufferSize, sizeAligned, 1, DXGI_FORMAT_UNKNOWN, D3D12_TEXTURE_LAYOUT_ROW_MAJOR, nullptr);
 
 		D3D12_CONSTANT_BUFFER_VIEW_DESC cbDesc{};
-		cbDesc.BufferLocation = m_constantBuffers[i]->GetGPUVirtualAddress();
+		cbDesc.BufferLocation = m_SceneconstantBuffers[i]->GetGPUVirtualAddress();
 		cbDesc.SizeInBytes = bufferSize;
 
-		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(SceneCBVheap.m_heapCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_cbvDescriptorSize);
+		CD3DX12_CPU_DESCRIPTOR_HANDLE handleCBV(SceneCBVheap.m_heapSceneCbv->GetCPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_cbvDescriptorSize);
 		
 		p_device->CreateConstantBufferView(&cbDesc, handleCBV);
 
-		m_cbViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(SceneCBVheap.m_heapCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_cbvDescriptorSize);
+	m_cbSceneViews[i] = CD3DX12_GPU_DESCRIPTOR_HANDLE(SceneCBVheap.m_heapSceneCbv->GetGPUDescriptorHandleForHeapStart(), ConstantBufferDescriptorBase + i, m_cbvDescriptorSize);
 	}
 
 }
+
+void ModelRenderer::CreateMaterialView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, const DescriptorHeapsContainer& MaterialCBVheap)
+{
+	UINT bufferSize = sizeof(Material) + 255 & ~255;
+	m_materialBuffers = CreateBuffer(p_device.Get(), D3D12_RESOURCE_DIMENSION_BUFFER,
+		bufferSize,sizeAligned,1, DXGI_FORMAT_UNKNOWN,D3D12_TEXTURE_LAYOUT_ROW_MAJOR,&material);
+	D3D12_CONSTANT_BUFFER_VIEW_DESC cbDesc{};
+	cbDesc.BufferLocation = m_materialBuffers->GetGPUVirtualAddress();
+	cbDesc.SizeInBytes = bufferSize;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE handlematCBV = MaterialCBVheap.m_heapMaterialCbv->GetCPUDescriptorHandleForHeapStart();
+	
+	p_device->CreateConstantBufferView(&cbDesc, handlematCBV);
+}
+
 
 
 
@@ -55,13 +71,15 @@ ModelRenderer::ModelRenderer(const std::shared_ptr<DX12EngineCore> core, const C
 	
 
 
-	CreateSceneView(m_core->m_device.Get(),descheaps);
 	
 	m_core = core;
 	m_model = in_model;
-	m_frameIndex = core->m_swapchain->GetCurrentBackBufferIndex();
+	CreateSceneView(m_core->m_device.Get(), descheaps);
+
+	m_frameIndex = m_core->m_swapchain->GetCurrentBackBufferIndex();
 	m_heapSrv = descheaps.m_heapSrv;
-	m_heapCbv = descheaps.m_heapCbv;
+	m_heapSceneCbv = descheaps.m_heapSceneCbv;
+	m_heapmatCbv = descheaps.m_heapMaterialCbv;
 	m_heapRTV = descheaps.m_heapRtv;
 	m_heapDSV = descheaps.m_HeapDsv;
 	m_heapSampler = descheaps.m_HeapSampler;
@@ -115,7 +133,7 @@ void ModelRenderer::Render(std::shared_ptr<Camera>
 	// 描画先をセット
 	m_commands.list->OMSetRenderTargets(1, &rtv, FALSE, &dsv);
 
-	MakeCommand(m_commands.list,m_constantBuffers,camera);
+	MakeCommand(m_commands.list,m_SceneconstantBuffers,camera);
 
 	// レンダーターゲットからスワップチェイン表示可能へ
 	auto barrierToPresent = CD3DX12_RESOURCE_BARRIER::Transition(
@@ -200,7 +218,7 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 
 	// ディスクリプタヒープをセット.
 	ID3D12DescriptorHeap* heaps[] = {
-	 m_heapSrv.Get(),m_heapCbv.Get() ,m_heapSampler.Get()
+	 m_heapSrv.Get(),m_heapSceneCbv.Get() ,m_heapSampler.Get(),m_heapmatCbv.Get()
 	};
 	m_commands.list->SetDescriptorHeaps(_countof(heaps), heaps);
 
@@ -212,7 +230,8 @@ void ModelRenderer::MakeCommand(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList
 	m_commands.list->IASetIndexBuffer(&m_model->m_indexBufferView);
 
 	m_commands.list->SetGraphicsRootDescriptorTable(0, m_heapSrv->GetGPUDescriptorHandleForHeapStart());
-	m_commands.list->SetGraphicsRootDescriptorTable(0, m_heapCbv->GetGPUDescriptorHandleForHeapStart());
+	m_commands.list->SetGraphicsRootDescriptorTable(0, m_heapSceneCbv->GetGPUDescriptorHandleForHeapStart());
+	m_commands.list->SetGraphicsRootDescriptorTable(0, m_heapmatCbv->GetGPUDescriptorHandleForHeapStart());
 	//m_commands.list->SetGraphicsRootDescriptorTable(1, m_model->m_srv);
 	m_commands.list->SetGraphicsRootDescriptorTable(2, m_heapSampler->GetGPUDescriptorHandleForHeapStart());
 

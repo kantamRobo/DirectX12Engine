@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include "CubeApp.h"
 #include <stdexcept>
-
+#include "MainEngine.h"
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 
@@ -53,9 +53,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 	);
 	try
 	{
+		MainEngine mainengine;
 		//theApp.Initialize(hwnd);
-		//MainEngine.Initialize(hwnd);
-		SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&theApp));
+		mainengine.Init(hwnd);
+		SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&mainengine));
 		ShowWindow(hwnd, nCmdShow);
 
 		MSG msg{};

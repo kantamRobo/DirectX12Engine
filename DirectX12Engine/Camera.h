@@ -3,13 +3,13 @@
 #include <DirectXMath.h>
 #include <d3dx12.h>
 #include "CubeApp.h"
-#include "ShaderParameters.h"
+
+struct ShaderParameters;
 class DX12EngineCore;
 class Camera
 {
 public:
 	Camera() {};
-	Camera(const std::shared_ptr<DX12EngineCore> in_core, const DirectX::XMMATRIX& modelMat);
 	
 	
 	Camera(const std::shared_ptr<DX12EngineCore> in_core, const DirectX::XMMATRIX& modelMat, ShaderParameters* ModelrendererShaderparam);
@@ -18,7 +18,7 @@ public:
 	CD3DX12_VIEWPORT m_viewport;
 	CD3DX12_RECT m_rect;
 	
-	void Update(const DirectX::XMMATRIX& modelMat);
+	//void Update(const DirectX::XMMATRIX& modelMat);
 	
 	
 	

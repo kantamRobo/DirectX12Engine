@@ -4,16 +4,29 @@
 
 
 
-Microsoft::WRL::ComPtr<ID3D12Resource1> CreateBuffer(ID3D12Device* p_device, UINT bufferSize, const void* initialData)
+static Microsoft::WRL::ComPtr<ID3D12Resource1> CreateBuffer(
+	ID3D12Device* p_device,
+	D3D12_RESOURCE_DIMENSION in_dimension,
+	UINT bufferSize, UINT width, UINT height, DXGI_FORMAT format,
+	D3D12_TEXTURE_LAYOUT layout,
+	void* initialData)
 {
 	HRESULT hr;
 	Microsoft::WRL::ComPtr<ID3D12Resource1> buffer;
 	auto heaprop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	auto res = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
+	D3D12_RESOURCE_DESC desc = {};
+
+	desc.Dimension = in_dimension;
+	desc.Flags = D3D12_RESOURCE_FLAG_NONE;
+	desc.Alignment = 0;
+	desc.Width = width;
+	desc.Height = height;
+	desc.Format = format;
+	desc.Layout = layout;
 	hr = p_device->CreateCommittedResource(
 		&heaprop,
 		D3D12_HEAP_FLAG_NONE,
-		&res,
+		&desc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&buffer)

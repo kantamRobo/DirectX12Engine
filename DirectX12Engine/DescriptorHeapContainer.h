@@ -11,7 +11,8 @@ struct DescriptorHeapsContainer
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapRtv;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_HeapDsv;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSrv;
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapCbv;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapSceneCbv;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapMaterialCbv;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_heapUav;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_HeapSampler;
 
@@ -58,22 +59,30 @@ struct DescriptorHeapsContainer
 
 	void CreateSceneCBVHeaps(ID3D12Device* p_device)
 	{
-		// CBV/SRV のディスクリプタヒープ
-		//  0:シェーダーリソースビュー
-		//  1,2 : 定数バッファビュー (FrameBufferCount数分使用)
-
+		
 		UINT count = FrameBufferCount;
-		D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc{
-		  D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-		  count,
-		  D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
-		  0
-		};
+		
 
-		p_device->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_heapCbv));
-		m_cbvDescriptorSize = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc = {};
+		cbvHeapDesc.NumDescriptors = 0;
+		cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+		cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+		cbvHeapDesc.NodeMask = 0;
+
+		p_device->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_heapSceneCbv));
+		
 	}
 
+	void CreateMaterialCBVHeap(ID3D12Device* p_device)
+	{
+		D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc = {};
+		cbvHeapDesc.NumDescriptors = 0;
+		cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+		cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+		cbvHeapDesc.NodeMask = 0;
+
+		p_device->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_heapMaterialCbv));
+	}
 
 
 

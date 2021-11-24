@@ -13,6 +13,7 @@
 #include "Commands.h"
 #include "DescriptorHeapContainer.h"
 #include "Animator.h"
+#include "Material.h"
 struct  DescriptorHeapsContainer;
 class DX12EngineCore;
 class PipelineState;
@@ -42,7 +43,7 @@ public:
 	DirectX::XMFLOAT4X4 modelmat;
 	DirectX::XMFLOAT3 m_position;
 	
-	void Init(ID3D12Device* p_device, const Commands& in_commands, std::string pFile, UINT frameIndex);
+	//void Init(ID3D12Device* p_device, const Commands& in_commands, std::string pFile, UINT frameIndex);
 	UINT mcurrentAnimIndex;
 	Microsoft::WRL::ComPtr<ID3D12Resource1> m_vertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D12Resource1> m_indexBuffer;
@@ -55,8 +56,9 @@ public:
 	Microsoft::WRL::ComPtr<ID3DBlob>  m_vs, m_ps;
 	std::shared_ptr<PipelineState> m_modelPSO;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
-	void ProcessBoneNode(const aiAnimation* p_animation, const aiScene* pScene, const aiNode* node, FLOAT AnimationTime, const DirectX::XMMATRIX& ParentNodeTransform);
+	//void ProcessBoneNode(const aiAnimation* p_animation, const aiScene* pScene, const aiNode* node, FLOAT AnimationTime, const DirectX::XMMATRIX& ParentNodeTransform);
 	const aiScene* m_pScene;
+	Material m_modelMaterial;
 	
 private:
 	
@@ -72,6 +74,8 @@ private:
 	
 	
 	
+	void LoadMaterial(aiMaterial* p_srcmat);
+	void CreateMaterialBuffer();
 	void CreateVertexIndexBuffer(ID3D12Device* p_device);
 	
 	
@@ -79,9 +83,9 @@ private:
 	
 	
 	void Prepare(ID3D12Device* p_device, const Commands& in_commands, UINT in_FrameIndex, const DescriptorHeapsContainer* SRV_CBV);
-	Microsoft::WRL::ComPtr<ID3D12Resource1> CreateBuffer(ID3D12Device* p_device, UINT bufferSize, const void* initialData);
+	//Microsoft::WRL::ComPtr<ID3D12Resource1> CreateBuffer(ID3D12Device* p_device, UINT bufferSize, const void* initialData);
 	
-	void PrepareDescriptorHeapForCubeApp(ID3D12Device* p_device);
+	//void PrepareDescriptorHeapForCubeApp(ID3D12Device* p_device);
 	
 	
 	

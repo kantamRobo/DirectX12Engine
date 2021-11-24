@@ -5,6 +5,7 @@
 #include "Camera.h"
 
 #include "DX12EngineCore.h"
+#include "ShaderParameters.h"
 Camera::Camera(const std::shared_ptr<DX12EngineCore> in_core, const DirectX::XMMATRIX& modelMat, ShaderParameters* ModelrendererShaderparam)
 {
 	m_viewport = in_core->m_viewport;

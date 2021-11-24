@@ -70,6 +70,7 @@ DX12EngineCore::DX12EngineCore(HWND hwnd)
 		int width = rect.right - rect.left;
 		int height = rect.bottom - rect.top;
 
+		CreateCommandQueue();
 		// スワップチェインの生成
 		{
 			DXGI_SWAP_CHAIN_DESC1 scDesc{};
@@ -97,11 +98,7 @@ DX12EngineCore::DX12EngineCore(HWND hwnd)
 			swapchain.As(&m_swapchain); // IDXGISwapChain4 取得
 
 		}
-
-		CreateCommandAllocators();
-		CreateCommandLists();
-		CreateCommandQueue();
-		m_commandList->Close();
+		
 
 	// 各ディスクリプタヒープの準備.（ディスクリプタクラスから呼ぶ）
 	//PrepareDescriptorHeaps();
@@ -113,7 +110,7 @@ DX12EngineCore::DX12EngineCore(HWND hwnd)
 		// コマンドアロケータ－の準備（レンダーから呼ぶ）
 		//CreateCommandAllocators();
 		// 描画フレーム同期用フェンス生成.
-		CreateFrameFences();
+		
 		// コマンドリストの生成.(レンダーから呼ぶ）
 		/*
 		
