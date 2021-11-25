@@ -104,5 +104,5 @@ struct Bone
 	DirectX::XMMATRIX transformmatrixforGPU;
 	DirectX::XMMATRIX boneoffsetmatrix;
 };
-
+std::wstring Convert(const aiString& path);
 

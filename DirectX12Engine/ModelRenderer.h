@@ -8,6 +8,7 @@
 #include <dxgi1_6.h>
 #include <memory>
 #include "ShaderParameters.h"
+#include "Material.h"
 class DX12EngineCore;
 class ModelRenderer
 {
@@ -15,13 +16,18 @@ public:
 
 	
 	ModelRenderer(const std::shared_ptr<DX12EngineCore> core, const Commands& commands, std::shared_ptr<Model> in_model, const DescriptorHeapsContainer& descheaps);
+	ModelRenderer(const std::shared_ptr<DX12EngineCore> core, const Commands& commands, std::shared_ptr<Model> in_model, const DescriptorHeapsContainer& descheaps, const Material& in_mat);
 	std::vector<D3D12_GPU_DESCRIPTOR_HANDLE> m_cbSceneViews;
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource1>> m_SceneconstantBuffers;
 	Microsoft::WRL::ComPtr<ID3D12Resource1> m_materialBuffers;
+	UINT size = sizeof(Material) * sizeof(material);
+	size_t align = D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT;
+	UINT64 sizeAligned = (size + (align - 1)) & ~(align - 1); // alignÇ…êÿÇËè„Ç∞ÇÈ.
 
 	
 	void CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, const DescriptorHeapsContainer& SceneCBVheap);
-	void CreateMaterialView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, const DescriptorHeapsContainer& SceneCBVheap);
+	
+	void CreateMaterialView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> MaterialCBVheap);
 	ModelRenderer() {};
 	UINT m_cbvDescriptorSize;
 
@@ -69,8 +75,6 @@ public:
 	CD3DX12_VIEWPORT  m_viewport;
 	CD3DX12_RECT m_scissorRect;
 	
-	size_t align = D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT;
-	UINT64 sizeAligned = (size + (align - 1)) & ~(align - 1); // alignÇ…êÿÇËè„Ç∞ÇÈ.
 
 	D3D12_GPU_DESCRIPTOR_HANDLE m_sampler;
 	D3D12_GPU_DESCRIPTOR_HANDLE m_srv;

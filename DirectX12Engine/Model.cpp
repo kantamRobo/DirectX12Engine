@@ -15,6 +15,8 @@
 #include "PipelineState.h"
 #include <fstream>
 #include "Resourceworker.h"
+#include <stdlib.h>
+
 
 
 using namespace MathUtility;
@@ -275,9 +277,15 @@ void Model::LoadMaterial(aiMaterial* pSrcMaterial)
 
 void Model::CreateVertexIndexBuffer(ID3D12Device* p_device) {
 	// 頂点バッファとインデックスバッファの生成.
-	m_vertexBuffer = CreateBuffer(p_device,vertices.size(), vertices.data());
-	m_indexBuffer = CreateBuffer(p_device,indices.size(), indices.data());
+	m_vertexBuffer = CreateBuffer(p_device,
+		D3D12_RESOURCE_DIMENSION_BUFFER,0,vertices.size(),
+		1,DXGI_FORMAT_UNKNOWN,D3D12_TEXTURE_LAYOUT_ROW_MAJOR,vertices.data());
+	m_indexBuffer = CreateBuffer(p_device,
+		D3D12_RESOURCE_DIMENSION_BUFFER, 0, indices.size(),
+		1, DXGI_FORMAT_UNKNOWN, D3D12_TEXTURE_LAYOUT_ROW_MAJOR, indices.data());
 	m_indexCount = indices.size();
+
+	
 
 	// 各バッファのビューを生成.
 	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
@@ -351,7 +359,7 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 	  { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT,0, offsetof(Vertex,Color), D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA},
 	  { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, offsetof(Vertex,UV), D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA}
 	};
-
+	/*
 	// パイプラインステートオブジェクトの生成.
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc{};
 	// シェーダーのセット
@@ -377,7 +385,7 @@ void Model::Prepare(ID3D12Device* p_device,const Commands& in_commands,UINT in_F
 	psoDesc.SampleDesc = { 1,0 };
 	psoDesc.SampleMask = UINT_MAX; // これを忘れると絵が出ない＆警告も出ないので注意.
 
-	hr = p_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipeline));
+	hr = p_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_modelPSO->m_graphicpipelinestate));
 	if (FAILED(hr))
 	{
 		throw std::runtime_error("CreateGraphicsPipelineState failed");

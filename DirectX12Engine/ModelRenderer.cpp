@@ -45,8 +45,12 @@ void ModelRenderer::CreateSceneView(Microsoft::WRL::ComPtr<ID3D12Device> p_devic
 
 }
 
-void ModelRenderer::CreateMaterialView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, const DescriptorHeapsContainer& MaterialCBVheap)
+void ModelRenderer::CreateMaterialView(Microsoft::WRL::ComPtr<ID3D12Device> p_device, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> MaterialCBVheap)
 {
+	
+	size_t align = D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT;
+	UINT64 sizeAligned = (size + (align - 1)) & ~(align - 1); // alignÇ…êÿÇËè„Ç∞ÇÈ.
+
 	UINT bufferSize = sizeof(Material) + 255 & ~255;
 	m_materialBuffers = CreateBuffer(p_device.Get(), D3D12_RESOURCE_DIMENSION_BUFFER,
 		bufferSize,sizeAligned,1, DXGI_FORMAT_UNKNOWN,D3D12_TEXTURE_LAYOUT_ROW_MAJOR,&material);
@@ -54,7 +58,7 @@ void ModelRenderer::CreateMaterialView(Microsoft::WRL::ComPtr<ID3D12Device> p_de
 	cbDesc.BufferLocation = m_materialBuffers->GetGPUVirtualAddress();
 	cbDesc.SizeInBytes = bufferSize;
 
-	D3D12_CPU_DESCRIPTOR_HANDLE handlematCBV = MaterialCBVheap.m_heapMaterialCbv->GetCPUDescriptorHandleForHeapStart();
+	D3D12_CPU_DESCRIPTOR_HANDLE handlematCBV = MaterialCBVheap->GetCPUDescriptorHandleForHeapStart();
 	
 	p_device->CreateConstantBufferView(&cbDesc, handlematCBV);
 }
@@ -65,12 +69,7 @@ void ModelRenderer::CreateMaterialView(Microsoft::WRL::ComPtr<ID3D12Device> p_de
 
 ModelRenderer::ModelRenderer(const std::shared_ptr<DX12EngineCore> core, const Commands& commands,
 	std::shared_ptr<Model> in_model,
-	const DescriptorHeapsContainer& descheaps) {
-
-
-	
-
-
+	const DescriptorHeapsContainer& descheaps,const Material& in_mat) {
 	
 	m_core = core;
 	m_model = in_model;
@@ -89,7 +88,8 @@ ModelRenderer::ModelRenderer(const std::shared_ptr<DX12EngineCore> core, const C
 	m_scissorRect = m_core->m_scissorRect;
 	m_frameFences = m_core->m_frameFences;
 	m_frameFenceValues = m_core->m_frameFenceValues;
-	
+	material = in_mat;
+	CreateMaterialView(m_core->m_device.Get(), m_heapmatCbv);
 
 }
 

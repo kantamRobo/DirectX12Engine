@@ -1,6 +1,7 @@
 #include "MainEngine.h"
 #include "DX12EngineCore.h"
 #include "ModelRenderer.h"
+#include "Camera.h"
 void MainEngine::Init(HWND hwnd)
 {
 	
@@ -27,7 +28,7 @@ void MainEngine::Init(HWND hwnd)
 	
 	m_renderer = std::make_shared<ModelRenderer>(m_core, 
 		commands, temp_model, 
-		 ModelRendererDescriptors);
+		 ModelRendererDescriptors,temp_model->m_modelMaterial);
 	 maincamera = std::make_shared<Camera>(m_core, DirectX::XMLoadFloat4x4(&temp_model->modelmat), &m_renderer->shaderParams);
 	m_core->m_commandList->Close();
 	m_renderer->WaitPreviousFrame();

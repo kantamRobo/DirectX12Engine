@@ -5,6 +5,7 @@
 class ModelRenderer;
 
 class DX12EngineCore;
+class Camera;
 class MainEngine
 {
 public:
