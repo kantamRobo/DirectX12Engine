@@ -4,7 +4,8 @@
 
 #include "pch.h"
 #include "Game.h"
-
+#include <Dbt.h>
+#include <ksmedia.h>
 using namespace DirectX;
 
 #ifdef __clang__
@@ -49,6 +50,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     g_game = std::make_unique<Game>();
 
     // Register class and create window
+    HDEVNOTIFY hNewAudio = nullptr;
     {
         // Register class
         WNDCLASSEXW wcex = {};
@@ -66,7 +68,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
         // Create window
         int w, h;
-        g_game->GetDefaultSize(w, h);
+       
 
         RECT rc = { 0, 0, static_cast<LONG>(w), static_cast<LONG>(h) };
 
@@ -77,18 +79,35 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
             nullptr);
         // TODO: Change to CreateWindowExW(WS_EX_TOPMOST, L"DirectX12EngineWindowClass", g_szAppName, WS_POPUP,
         // to default to fullscreen.
+		  // Listen for new audio devices
+		g_game->GetDefaultSize(w, h);
+		g_game->Initialize(hwnd);
+		DEV_BROADCAST_DEVICEINTERFACE filter = {};
+		filter.dbcc_size = sizeof(filter);
+		filter.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
+		filter.dbcc_classguid = KSCATEGORY_AUDIO;
 
+		hNewAudio = RegisterDeviceNotification(hwnd, &filter,
+			DEVICE_NOTIFY_WINDOW_HANDLE);
         if (!hwnd)
             return 1;
 
         ShowWindow(hwnd, nCmdShow);
         // TODO: Change nCmdShow to SW_SHOWMAXIMIZED to default to fullscreen.
+		   // Setup Dear ImGui context
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+
 
         SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(g_game.get()) );
 
         GetClientRect(hwnd, &rc);
 
         g_game->Initialize(hwnd, rc.right - rc.left, rc.bottom - rc.top);
+    
+		ImGui::StyleColorsDark();
+
     }
 
     // Main message loop
@@ -103,10 +122,17 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
         else
         {
             g_game->Tick();
+
         }
     }
 
     g_game.reset();
+	if (hNewAudio)
+	{
+		UnregisterDeviceNotification(hNewAudio);
+		hNewAudio = nullptr;
+	}
+    CoUninitialize();
 
     return static_cast<int>(msg.wParam);
 }
@@ -261,12 +287,31 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             s_fullscreen = !s_fullscreen;
         }
         break;
+	case WM_DEVICECHANGE:
+		if (wParam == DBT_DEVICEARRIVAL)
+		{
+			auto pDev = reinterpret_cast<PDEV_BROADCAST_HDR>(lParam);
+			if (pDev)
+			{
+				if (pDev->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
+				{
+					auto pInter = reinterpret_cast<
+						const PDEV_BROADCAST_DEVICEINTERFACE>(pDev);
+					if (pInter->dbcc_classguid == KSCATEGORY_AUDIO)
+					{
+						if (game)
+							game->OnNewAudioDevice();
+					}
+				}
+			}
+		}
 
     case WM_MENUCHAR:
         // A menu is active and the user presses a key that does not correspond
         // to any mnemonic or accelerator key. Ignore so we don't produce an error beep.
         return MAKELRESULT(0, MNC_CLOSE);
     }
+
 
     return DefWindowProc(hWnd, message, wParam, lParam);
 }

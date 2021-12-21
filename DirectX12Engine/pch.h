@@ -9,8 +9,11 @@
 
 #pragma once
 
-
-
+#include <random>
+#include "Audio.h"
+#include <winsdkver.h>
+#define _WIN32_WINNT 0x0A00
+#include <sdkddkver.h>
 #include "BufferHelpers.h"
 #include "CommonStates.h"
 #include "DDSTextureLoader.h"
