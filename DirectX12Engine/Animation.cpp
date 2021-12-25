@@ -136,7 +136,7 @@ bool AnimationSDKMESH::Bind(const Model& model)
 	auto header = reinterpret_cast<const SDKANIMATION_FILE_HEADER*>(m_animData.get());
 	assert(header->Version == SDKMESH_FILE_VERSION);
 	auto frameData = reinterpret_cast<SDKANIMATION_FRAME_DATA*>(m_animData.get() + header->AnimationDataOffset);
-	
+
 	m_boneToTrack.resize(model.bones.size());
 	for (auto& it : m_boneToTrack)
 	{
