@@ -8,6 +8,9 @@
 #include "StepTimer.h"
 #include "Character.h"
 #include "Camera.h"
+#include "ImguiCore.h"
+#include "Rigidshape.h"
+
 
 // A basic game implementation that creates a D3D12 device and
 // provides a game loop.
@@ -49,23 +52,31 @@ private:
 	DirectX::SimpleMath::Matrix m_world;
 	DirectX::SimpleMath::Matrix m_view;
 	DirectX::SimpleMath::Matrix m_proj;
+    HWND hwnd;
     Camera m_camera;
 	std::unique_ptr<DirectX::CommonStates> m_states;
 	std::unique_ptr<DirectX::IEffectFactory> m_fxFactory;
 	std::unique_ptr<DirectX::EffectTextureFactory> m_modelResources;
 	std::unique_ptr<DirectX::Model> m_model;
     std::unique_ptr<SkinnedCharacter> m_skinnedcharacter;
+    std::unique_ptr<DirectX::DescriptorHeap> imguidescriptorheap;
+    std::unique_ptr<DirectX::GamePad> m_gamePad;
+    ImguiCore m_imguicore;
 	DirectX::Model::EffectCollection m_modelNormal;
     DX::AnimationSDKMESH m_animation;
 	DirectX::ModelBone::TransformArray m_drawBones;
 
     std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
+
+    Rigidshape m_rigidshape;
     void Update(DX::StepTimer const& timer);
     void Render();
 
     void Clear();
 
-    void CreateDeviceDependentResources();
+  
+    
+    void CreateDeviceDependentResources(HWND hwnd);
     void CreateWindowSizeDependentResources();
 
     // Device resources.

@@ -4,6 +4,7 @@
 
 #include "pch.h"
 #include "Game.h"
+#include <memory>
 
 
 using namespace DirectX;
@@ -16,7 +17,14 @@ extern void ExitGame() noexcept;
 using namespace DirectX;
 
 using Microsoft::WRL::ComPtr;
-
+enum Descriptors
+{
+	WindowsLogo,
+	CourierFont,
+	ControllerFont,
+	GamerPic,
+	Count
+};
 Game::Game() noexcept(false)
 {
     m_deviceResources = std::make_unique<DX::DeviceResources>();
@@ -34,13 +42,16 @@ Game::~Game()
 // Initialize the Direct3D resources required to run.
 void Game::Initialize(HWND window, int width, int height)
 {
+    hwnd = window;
     m_deviceResources->SetWindow(window, width, height);
 
-    m_deviceResources->CreateDeviceResources();
-    CreateDeviceDependentResources();
+    m_deviceResources->CreateDeviceResources(hwnd);
+    CreateDeviceDependentResources(window);
 
     m_deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
+
+    m_gamePad = std::make_unique<GamePad>();
 
     // TODO: Change the timer settings if you want something other than the default variable timestep mode.
     // e.g. for 60 FPS fixed timestep update logic, call:
@@ -74,6 +85,16 @@ void Game::Update(DX::StepTimer const& timer)
 
 	m_animation.Update(elapsedTime);
 
+	auto pad = m_gamePad->GetState(0);
+
+	if (pad.IsConnected())
+	{
+		if (pad.IsViewPressed())
+		{
+			ExitGame();
+		}
+	}
+
 	float time = float(timer.GetTotalSeconds());
 
 	m_world = XMMatrixRotationY(time);
@@ -91,7 +112,9 @@ void Game::Render()
     {
         return;
     }
-
+   
+   
+   
     // Prepare the command list to render a new frame.
     m_deviceResources->Prepare();
     Clear();
@@ -101,14 +124,23 @@ void Game::Render()
 
     // TODO: Add your rendering code here.
 	size_t nbones = m_skinnedcharacter->m_Model->bones.size();
-
+	//Imgui‚ÍV‚µ‚¢ƒtƒŒ[ƒ€‚Å‚Ì•`‰æ‚É”õ‚¦‚é
+	m_imguicore.ImguiCore_Tick();
+	ID3D12DescriptorHeap* imguiheap[] = { imguidescriptorheap->Heap() };
+	imguiheap[0] = imguidescriptorheap->Heap();
+	commandList->SetDescriptorHeaps(1, imguiheap);
+    //GUIPanel‚ð•`‰æ‚·‚é
+	m_imguicore.RenderGUIpanel(m_deviceResources.get());
+    
 	m_animation.Apply(*m_skinnedcharacter->m_Model, nbones, m_drawBones.get());
-
+    
 	ID3D12DescriptorHeap* heaps[] = { m_modelResources->Heap(),
-		m_states->Heap() };
+		m_states->Heap()};
+	
 	commandList->SetDescriptorHeaps(
 		static_cast<UINT>(std::size(heaps)), heaps);
-
+   
+    
 	Model::UpdateEffectMatrices(m_modelNormal, m_world, m_camera.m_view, m_camera.m_proj);
 
     m_skinnedcharacter->m_Model->DrawSkinned(commandList, nbones, m_drawBones.get(),
@@ -154,6 +186,7 @@ void Game::Clear()
 void Game::OnActivated()
 {
     // TODO: Game is becoming active window.
+    m_gamePad->Resume();
 }
 
 void Game::OnDeactivated()
@@ -164,6 +197,7 @@ void Game::OnDeactivated()
 void Game::OnSuspending()
 {
     // TODO: Game is being power-suspended (or minimized).
+    m_gamePad->Suspend();
 }
 
 void Game::OnResuming()
@@ -193,14 +227,14 @@ void Game::OnWindowSizeChanged(int width, int height)
 void Game::GetDefaultSize(int& width, int& height) const noexcept
 {
     // TODO: Change to desired default window size (note minimum size is 320x200).
-    width = 800;
-    height = 600;
+    width = 1280;
+    height = 800;
 }
 #pragma endregion
 
 #pragma region Direct3D Resources
 // These are the resources that depend on the device.
-void Game::CreateDeviceDependentResources()
+void Game::CreateDeviceDependentResources(HWND in_hwnd)
 {
     auto device = m_deviceResources->GetD3DDevice();
 
@@ -228,7 +262,11 @@ void Game::CreateDeviceDependentResources()
 	 DX::ThrowIfFailed(
 		 m_animation.Load(L"soldier.sdkmesh_anim")
 	 );
-    
+     imguidescriptorheap = std::make_unique<DescriptorHeap>(device, Descriptors::Count);
+     
+     imguidescriptorheap->Heap()->SetName(L"ImguiHeap");
+     m_imguicore = ImguiCore(hwnd, m_deviceResources->GetD3DDevice(),*imguidescriptorheap,imguidescriptorheap->GetFirstCpuHandle(),imguidescriptorheap->GetFirstGpuHandle()
+         );
 
      m_skinnedcharacter->m_Model->materials[0].diffuseTextureIndex = 0;
      m_skinnedcharacter->m_Model->materials[0].samplerIndex = static_cast<int>(
@@ -265,8 +303,17 @@ void Game::CreateDeviceDependentResources()
 		 cull,
 		 rtState);
 
-	 m_modelNormal = m_skinnedcharacter->m_Model->CreateEffects(*m_fxFactory, pd, pd);
+	 EffectPipelineStateDescription shapepd(
+		 &GeometricPrimitive::VertexType::InputLayout,
+		 CommonStates::Opaque,
+		 CommonStates::DepthDefault,
+		 CommonStates::CullNone,
+		 rtState);
 
+	 m_modelNormal = m_skinnedcharacter->m_Model->CreateEffects(*m_fxFactory, pd, pd);
+     m_rigidshape.m_effect = std::make_unique<BasicEffect>(device, EffectFlags::Lighting, pd);
+     m_rigidshape.m_effect->EnableDefaultLighting();
+     m_rigidshape.m_world = Matrix::Identity;
 	 m_world = Matrix::Identity;
 }
 
@@ -282,12 +329,22 @@ void Game::CreateWindowSizeDependentResources()
 	m_camera.m_view = Matrix::CreateLookAt(m_camera.m_transform.position, c_lookAt.v, Vector3::UnitY);
     m_camera.m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
 		float(size.right) / float(size.bottom), 0.1f, 1000.f);
+
+	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
+		Vector3::Zero, Vector3::UnitY);
+	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
+		float(size.right) / float(size.bottom), 0.1f, 10.f);
+
+	m_rigidshape.m_effect->SetView(m_view);
+    m_rigidshape.m_effect->SetProjection(m_proj);
 }
 
 void Game::OnDeviceLost()
 {
     // TODO: Add Direct3D resource cleanup here.
-    
+	m_rigidshape.m_shape.reset();
+	m_rigidshape.m_effect.reset();
+	m_imguicore.EndRenderImguicore();
     // If using the DirectX Tool Kit for DX12, uncomment this line:
      m_graphicsMemory.reset();
 	 m_states.reset();
@@ -299,8 +356,9 @@ void Game::OnDeviceLost()
 
 void Game::OnDeviceRestored()
 {
-    CreateDeviceDependentResources();
+    CreateDeviceDependentResources(hwnd);
 
     CreateWindowSizeDependentResources();
+   
 }
 #pragma endregion

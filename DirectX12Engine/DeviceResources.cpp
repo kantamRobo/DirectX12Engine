@@ -74,7 +74,7 @@ DeviceResources::~DeviceResources()
 }
 
 // Configures the Direct3D device, and stores handles to it and the device context.
-void DeviceResources::CreateDeviceResources()
+void DeviceResources::CreateDeviceResources(HWND hwnd)
 {
 #if defined(_DEBUG)
     // Enable the debug layer (requires the Graphics Tools "optional feature").
@@ -302,7 +302,7 @@ void DeviceResources::CreateWindowSizeDependentResources()
             OutputDebugStringA(buff);
 #endif
             // If the device was removed for any reason, a new device and swap chain will need to be created.
-            HandleDeviceLost();
+            HandleDeviceLost(GetWindow());
 
             // Everything is set up now. Do not continue execution of this method. HandleDeviceLost will reenter this method
             // and correctly set up the new device.
@@ -459,7 +459,7 @@ bool DeviceResources::WindowSizeChanged(int width, int height)
 }
 
 // Recreate all device resources and set them back to the current state.
-void DeviceResources::HandleDeviceLost()
+void DeviceResources::HandleDeviceLost(HWND hwnd)
 {
     if (m_deviceNotify)
     {
@@ -492,7 +492,7 @@ void DeviceResources::HandleDeviceLost()
     }
 #endif
 
-    CreateDeviceResources();
+    CreateDeviceResources(hwnd);
     CreateWindowSizeDependentResources();
 
     if (m_deviceNotify)
@@ -555,7 +555,7 @@ void DeviceResources::Present(D3D12_RESOURCE_STATES beforeState)
             static_cast<unsigned int>((hr == DXGI_ERROR_DEVICE_REMOVED) ? m_d3dDevice->GetDeviceRemovedReason() : hr));
         OutputDebugStringA(buff);
 #endif
-        HandleDeviceLost();
+        HandleDeviceLost(GetWindow());
     }
     else
     {

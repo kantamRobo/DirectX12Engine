@@ -30,17 +30,19 @@ namespace DX
                         unsigned int flags = 0) noexcept(false);
         ~DeviceResources();
 
+        void CreateDeviceResources(HWND hwnd);
         DeviceResources(DeviceResources&&) = default;
         DeviceResources& operator= (DeviceResources&&) = default;
 
         DeviceResources(DeviceResources const&) = delete;
         DeviceResources& operator= (DeviceResources const&) = delete;
 
-        void CreateDeviceResources();
+        
         void CreateWindowSizeDependentResources();
         void SetWindow(HWND window, int width, int height) noexcept;
         bool WindowSizeChanged(int width, int height);
-        void HandleDeviceLost();
+        void HandleDeviceLost(HWND hwnd);
+       
         void RegisterDeviceNotify(IDeviceNotify* deviceNotify) noexcept { m_deviceNotify = deviceNotify; }
         void Prepare(D3D12_RESOURCE_STATES beforeState = D3D12_RESOURCE_STATE_PRESENT,
                      D3D12_RESOURCE_STATES afterState = D3D12_RESOURCE_STATE_RENDER_TARGET);
