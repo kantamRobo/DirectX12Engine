@@ -107,6 +107,8 @@ void Game::Update(DX::StepTimer const& timer)
 // Draws the scene.
 void Game::Render()
 {
+
+	auto size = m_deviceResources->GetOutputSize();
     // Don't try to render anything before the first Update.
     if (m_timer.GetFrameCount() == 0)
     {
@@ -152,6 +154,17 @@ void Game::Render()
 	commandList->SetDescriptorHeaps(
 		static_cast<UINT>(std::size(heaps)), heaps);
    
+	m_planepolygon.m_planepolyview = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
+		Vector3::Zero, Vector3::UnitY);
+    m_planepolygon.m_planepolyproj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
+		float(size.right) / float(size.bottom), 0.1f, 10.f);
+
+    m_planepolygon.m_planepolyeffect->SetView(m_planepolygon.m_planepolyview);
+    m_planepolygon.m_planepolyeffect->SetProjection(m_planepolygon.m_planepolyproj);
+	
+
+	m_rigidshape.m_effect->SetView(m_rigidshape.m_view);
+	m_rigidshape.m_effect->SetProjection(m_rigidshape.m_proj);
     
 	Model::UpdateEffectMatrices(m_modelNormal, m_world, m_camera.m_view, m_camera.m_proj);
 
