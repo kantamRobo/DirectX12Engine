@@ -212,6 +212,7 @@
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PlanePolygon.h" />
     <ClInclude Include="Rigidshape.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="DeviceResources.h" />
@@ -240,6 +241,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PlanePolygon.cpp" />
     <ClCompile Include="Rigidshape.cpp" />
     <ClCompile Include="Utility.cpp" />
   </ItemGroup>

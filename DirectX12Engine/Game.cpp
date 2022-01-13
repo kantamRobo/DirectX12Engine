@@ -128,10 +128,22 @@ void Game::Render()
 	m_imguicore.ImguiCore_Tick();
 	ID3D12DescriptorHeap* imguiheap[] = { imguidescriptorheap->Heap() };
 	imguiheap[0] = imguidescriptorheap->Heap();
+
 	commandList->SetDescriptorHeaps(1, imguiheap);
     //GUIPanel‚ð•`‰æ‚·‚é
 	m_imguicore.RenderGUIpanel(m_deviceResources.get());
     
+	D3D12_VERTEX_BUFFER_VIEW vbv;
+	vbv.BufferLocation = m_planepolygon.vertexbuffer.GpuAddress();
+	vbv.StrideInBytes = sizeof(DirectX::VertexPosition);
+	vbv.SizeInBytes = static_cast<UINT>(m_planepolygon.vertexbuffer.Size());
+	commandList->IASetVertexBuffers(0, 1, &vbv);
+    D3D12_INDEX_BUFFER_VIEW idv;
+    idv.BufferLocation = m_planepolygon.indexbuffer.GpuAddress();
+    idv.Format = DXGI_FORMAT_R32_SINT;
+    idv.SizeInBytes = static_cast<UINT>(m_planepolygon.indexbuffer.Size());
+    commandList->IASetIndexBuffer(&idv);
+
 	m_animation.Apply(*m_skinnedcharacter->m_Model, nbones, m_drawBones.get());
     
 	ID3D12DescriptorHeap* heaps[] = { m_modelResources->Heap(),
@@ -330,13 +342,13 @@ void Game::CreateWindowSizeDependentResources()
     m_camera.m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
 		float(size.right) / float(size.bottom), 0.1f, 1000.f);
 
-	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
+	rigidshape_m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
 		Vector3::Zero, Vector3::UnitY);
-	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
+    rigidshape_m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
 		float(size.right) / float(size.bottom), 0.1f, 10.f);
 
-	m_rigidshape.m_effect->SetView(m_view);
-    m_rigidshape.m_effect->SetProjection(m_proj);
+	m_rigidshape.m_effect->SetView(rigidshape_m_view);
+    m_rigidshape.m_effect->SetProjection(rigidshape_m_proj);
 }
 
 void Game::OnDeviceLost()

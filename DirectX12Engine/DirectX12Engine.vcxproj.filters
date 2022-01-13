@@ -37,6 +37,7 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Rigidshape.h" />
+    <ClInclude Include="PlanePolygon.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -59,6 +60,7 @@
     <ClCompile Include="ImguiCore.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Rigidshape.cpp" />
+    <ClCompile Include="PlanePolygon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

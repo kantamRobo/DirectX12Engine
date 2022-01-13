@@ -10,6 +10,8 @@
 #include "Camera.h"
 #include "ImguiCore.h"
 #include "Rigidshape.h"
+#include "PlanePolygon.h"
+#include <../packages/directxtk12_desktop_2017.2021.11.8.1/include/GraphicsMemory.h>
 
 
 // A basic game implementation that creates a D3D12 device and
@@ -49,9 +51,12 @@ public:
     void GetDefaultSize( int& width, int& height ) const noexcept;
 
 private:
+    
 	DirectX::SimpleMath::Matrix m_world;
-	DirectX::SimpleMath::Matrix m_view;
-	DirectX::SimpleMath::Matrix m_proj;
+    
+	DirectX::SimpleMath::Matrix rigidshape_m_view;
+	DirectX::SimpleMath::Matrix rigidshape_m_proj;
+    
     HWND hwnd;
     Camera m_camera;
 	std::unique_ptr<DirectX::CommonStates> m_states;
@@ -69,6 +74,7 @@ private:
     std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
 
     Rigidshape m_rigidshape;
+    PlanePolygon m_planepolygon;
     void Update(DX::StepTimer const& timer);
     void Render();
 
