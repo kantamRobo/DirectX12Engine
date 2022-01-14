@@ -134,17 +134,18 @@ void Game::Render()
 	commandList->SetDescriptorHeaps(1, imguiheap);
     //GUIPanelを描画する
 	m_imguicore.RenderGUIpanel(m_deviceResources.get());
-    
+    auto planepolycommand = commandList;
 	D3D12_VERTEX_BUFFER_VIEW vbv;
 	vbv.BufferLocation = m_planepolygon.vertexbuffer.GpuAddress();
 	vbv.StrideInBytes = sizeof(DirectX::VertexPosition);
 	vbv.SizeInBytes = static_cast<UINT>(m_planepolygon.vertexbuffer.Size());
-	commandList->IASetVertexBuffers(0, 1, &vbv);
+    planepolycommand->IASetVertexBuffers(0, 1, &vbv);
     D3D12_INDEX_BUFFER_VIEW idv;
     idv.BufferLocation = m_planepolygon.indexbuffer.GpuAddress();
     idv.Format = DXGI_FORMAT_R32_SINT;
     idv.SizeInBytes = static_cast<UINT>(m_planepolygon.indexbuffer.Size());
-    commandList->IASetIndexBuffer(&idv);
+   
+    
 
 	m_animation.Apply(*m_skinnedcharacter->m_Model, nbones, m_drawBones.get());
     
@@ -167,7 +168,7 @@ void Game::Render()
 	m_rigidshape.m_effect->SetProjection(m_rigidshape.m_proj);
     
 	Model::UpdateEffectMatrices(m_modelNormal, m_world, m_camera.m_view, m_camera.m_proj);
-
+    
     m_skinnedcharacter->m_Model->DrawSkinned(commandList, nbones, m_drawBones.get(),
 		m_world, m_modelNormal.cbegin());
     PIXEndEvent(commandList);
@@ -335,11 +336,18 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
 		 CommonStates::CullNone,
 		 rtState);
 
+    
+
+     
+
 	 m_modelNormal = m_skinnedcharacter->m_Model->CreateEffects(*m_fxFactory, pd, pd);
      m_rigidshape.m_effect = std::make_unique<BasicEffect>(device, EffectFlags::Lighting, pd);
      m_rigidshape.m_effect->EnableDefaultLighting();
      m_rigidshape.m_world = Matrix::Identity;
-	 m_world = Matrix::Identity;
+     m_planepolygon.m_planepolyeffect = std::make_unique<DirectX::BasicEffect>(device, EffectFlags::Lighting, pd);
+     m_planepolygon.m_planepolyworld = m_world
+         ここのワールド行列変換を行う
+     m_world = Matrix::Identity;
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
@@ -360,6 +368,8 @@ void Game::CreateWindowSizeDependentResources()
     rigidshape_m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
 		float(size.right) / float(size.bottom), 0.1f, 10.f);
 
+    m_planepolygon.m_planepolyeffect->SetView(m_planepolygon.m_planepolyview);
+    m_planepolygon.m_planepolyeffect->SetProjection(m_planepolygon.m_planepolyproj);
 	m_rigidshape.m_effect->SetView(rigidshape_m_view);
     m_rigidshape.m_effect->SetProjection(rigidshape_m_proj);
 }
