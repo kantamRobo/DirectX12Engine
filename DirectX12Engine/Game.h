@@ -52,10 +52,9 @@ public:
 
 private:
     
-	DirectX::SimpleMath::Matrix m_world;
+	DirectX::SimpleMath::Matrix m_Skinnedcharacterworld;
     
-	DirectX::SimpleMath::Matrix rigidshape_m_view;
-	DirectX::SimpleMath::Matrix rigidshape_m_proj;
+	
     
     HWND hwnd;
     Camera m_camera;

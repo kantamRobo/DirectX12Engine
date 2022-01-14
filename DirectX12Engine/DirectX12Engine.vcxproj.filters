@@ -38,6 +38,7 @@
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Rigidshape.h" />
     <ClInclude Include="PlanePolygon.h" />
+    <ClInclude Include="Terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -61,6 +62,7 @@
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Rigidshape.cpp" />
     <ClCompile Include="PlanePolygon.cpp" />
+    <ClCompile Include="Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

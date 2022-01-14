@@ -96,8 +96,19 @@ void Game::Update(DX::StepTimer const& timer)
 	}
 
 	float time = float(timer.GetTotalSeconds());
+    float rotateangle = 10;
+	m_Skinnedcharacterworld = XMMatrixRotationY(time);
+    m_planepolygon.m_planepolyworld = DirectX::XMMatrixMultiply(DirectX::XMMatrixScalingFromVector(
 
-	m_world = XMMatrixRotationY(time);
+        DirectX::XMVectorMultiply(
+            DirectX::XMVectorScale(DirectX::XMVectorSet(
+                m_planepolygon.m_transform.position.x,
+                m_planepolygon.m_transform.position.y,
+                m_planepolygon.m_transform.position.z, 0.0f),
+                1.0f),
+        DirectX::XMQuaternionRotationAxis(m_planepolygon.m_transform.rotation, rotateangle))),
+        DirectX::XMMatrixTranslation(m_planepolygon.m_transform.position.x, m_planepolygon.m_transform.position.y,
+            m_planepolygon.m_transform.position.z));
 
     PIXEndEvent();
 }
@@ -167,10 +178,10 @@ void Game::Render()
 	m_rigidshape.m_effect->SetView(m_rigidshape.m_view);
 	m_rigidshape.m_effect->SetProjection(m_rigidshape.m_proj);
     
-	Model::UpdateEffectMatrices(m_modelNormal, m_world, m_camera.m_view, m_camera.m_proj);
+	Model::UpdateEffectMatrices(m_modelNormal, m_Skinnedcharacterworld, m_camera.m_view, m_camera.m_proj);
     
     m_skinnedcharacter->m_Model->DrawSkinned(commandList, nbones, m_drawBones.get(),
-		m_world, m_modelNormal.cbegin());
+        m_Skinnedcharacterworld, m_modelNormal.cbegin());
     PIXEndEvent(commandList);
 
     // Show the new frame.
@@ -345,9 +356,9 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
      m_rigidshape.m_effect->EnableDefaultLighting();
      m_rigidshape.m_world = Matrix::Identity;
      m_planepolygon.m_planepolyeffect = std::make_unique<DirectX::BasicEffect>(device, EffectFlags::Lighting, pd);
-     m_planepolygon.m_planepolyworld = m_world
-         ここのワールド行列変換を行う
-     m_world = Matrix::Identity;
+     m_planepolygon.m_planepolyworld = Matrix::Identity;
+       
+     m_Skinnedcharacterworld = Matrix::Identity;
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
@@ -363,15 +374,12 @@ void Game::CreateWindowSizeDependentResources()
     m_camera.m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
 		float(size.right) / float(size.bottom), 0.1f, 1000.f);
 
-	rigidshape_m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
-		Vector3::Zero, Vector3::UnitY);
-    rigidshape_m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
-		float(size.right) / float(size.bottom), 0.1f, 10.f);
+	
 
     m_planepolygon.m_planepolyeffect->SetView(m_planepolygon.m_planepolyview);
     m_planepolygon.m_planepolyeffect->SetProjection(m_planepolygon.m_planepolyproj);
-	m_rigidshape.m_effect->SetView(rigidshape_m_view);
-    m_rigidshape.m_effect->SetProjection(rigidshape_m_proj);
+	m_rigidshape.m_effect->SetView(m_camera.m_view);
+    m_rigidshape.m_effect->SetProjection(m_camera.m_proj);
 }
 
 void Game::OnDeviceLost()
