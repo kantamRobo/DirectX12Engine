@@ -20,16 +20,14 @@ public:
 	PlanePolygon(ID3D12Device* device);
 	
 	StaticCharacter planePolygon;
-	std::unique_ptr<DirectX::GraphicsMemory> graphicsmemory;
-	DirectX::GraphicsResource vertexbuffer;
-	DirectX::GraphicsResource indexbuffer;
-	std::unique_ptr<DirectX::BasicEffect> m_planepolyeffect;
+	
+	std::unique_ptr<DirectX::EffectFactory> m_planepolyeffect;
 	Transform m_transform;
 	DirectX::SimpleMath::Matrix m_planepolyworld;
 	DirectX::SimpleMath::Matrix m_planepolyview;
 	DirectX::SimpleMath::Matrix m_planepolyproj;
 	std::array<std::shared_ptr<btBvhTriangleMeshShape>, 2> planepolycollision;
-	
+	DirectX::Model::EffectCollection m_planepolyNormal;
 	
 };
 

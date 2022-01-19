@@ -26,7 +26,8 @@ class ImguiCore
 		
 		
 	
-		void RenderGUIpanel(DX::DeviceResources* deviceresources);
+		
+		void RenderGUIpanel(DX::DeviceResources* deviceresources, float* x,float *y,float *z);
 		void EndRenderImguicore();
 
 };

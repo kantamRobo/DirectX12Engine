@@ -4,6 +4,7 @@
 
 Rigidshape::Rigidshape()
 {
+	
 	m_shape = DirectX::GeometricPrimitive::CreateSphere();
 
 

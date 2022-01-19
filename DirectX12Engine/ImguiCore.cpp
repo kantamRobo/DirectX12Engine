@@ -1,5 +1,6 @@
 
 #include "ImguiCore.h"
+#include "imgui.h"
 
 
 
@@ -34,13 +35,18 @@ void ImguiCore::ImguiCore_Tick()
 
 bool show_demo_window = true;
 bool show_another_window = false;
-void ImguiCore::RenderGUIpanel(DX::DeviceResources* deviceresources)
+void ImguiCore::RenderGUIpanel(DX::DeviceResources* deviceresources, float* x, float* y, float* z)
 {
 	
 	ImGui::Begin("Rendering Test Menu");
 	ImGui::SetWindowSize(ImVec2(400, 500),
 		ImGuiCond_::ImGuiCond_FirstUseEver);
 	
+	float min = 0;
+	float max = 1.0f;
+	ImGui::SliderFloat("x", x,min,0.5f);
+	ImGui::SliderFloat("y", y, min, 0.5f);
+	ImGui::SliderFloat("z", z, min, 0.5f);
 	ImGui::End();
 	ImGui::Render();
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), deviceresources->GetCommandList());

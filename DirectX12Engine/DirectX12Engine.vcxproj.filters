@@ -106,5 +106,6 @@
     <None Include="imgui.ini" />
     <None Include="soldier.sdkmesh" />
     <None Include="soldier.sdkmesh_anim" />
+    <None Include="planepoly.sdkmesh" />
   </ItemGroup>
 </Project>

@@ -59,6 +59,7 @@ void Game::Initialize(HWND window, int width, int height)
     m_timer.SetFixedTimeStep(true);
     m_timer.SetTargetElapsedSeconds(1.0 / 60);
     */
+    
 }
 
 #pragma region Frame Update
@@ -79,36 +80,22 @@ void Game::Update(DX::StepTimer const& timer)
     PIXBeginEvent(PIX_COLOR_DEFAULT, L"Update");
 
     float elapsedTime = float(timer.GetElapsedSeconds());
-
+    
     // TODO: Add your game logic here.
-    elapsedTime;
+    
 
 	m_animation.Update(elapsedTime);
 
-	auto pad = m_gamePad->GetState(0);
-
-	if (pad.IsConnected())
-	{
-		if (pad.IsViewPressed())
-		{
-			ExitGame();
-		}
-	}
-
+	
+	
 	float time = float(timer.GetTotalSeconds());
-    float rotateangle = 10;
-	m_Skinnedcharacterworld = XMMatrixRotationY(time);
-    m_planepolygon.m_planepolyworld = DirectX::XMMatrixMultiply(DirectX::XMMatrixScalingFromVector(
+   
+	//m_Skinnedcharacterworld = XMMatrixRotationY(time);
+  
+	
 
-        DirectX::XMVectorMultiply(
-            DirectX::XMVectorScale(DirectX::XMVectorSet(
-                m_planepolygon.m_transform.position.x,
-                m_planepolygon.m_transform.position.y,
-                m_planepolygon.m_transform.position.z, 0.0f),
-                1.0f),
-        DirectX::XMQuaternionRotationAxis(m_planepolygon.m_transform.rotation, rotateangle))),
-        DirectX::XMMatrixTranslation(m_planepolygon.m_transform.position.x, m_planepolygon.m_transform.position.y,
-            m_planepolygon.m_transform.position.z));
+   
+	
 
     PIXEndEvent();
 }
@@ -126,8 +113,7 @@ void Game::Render()
         return;
     }
    
-   
-   
+	
     // Prepare the command list to render a new frame.
     m_deviceResources->Prepare();
     Clear();
@@ -144,17 +130,11 @@ void Game::Render()
 
 	commandList->SetDescriptorHeaps(1, imguiheap);
     //GUIPanel‚ð•`‰æ‚·‚é
-	m_imguicore.RenderGUIpanel(m_deviceResources.get());
-    auto planepolycommand = commandList;
-	D3D12_VERTEX_BUFFER_VIEW vbv;
-	vbv.BufferLocation = m_planepolygon.vertexbuffer.GpuAddress();
-	vbv.StrideInBytes = sizeof(DirectX::VertexPosition);
-	vbv.SizeInBytes = static_cast<UINT>(m_planepolygon.vertexbuffer.Size());
-    planepolycommand->IASetVertexBuffers(0, 1, &vbv);
-    D3D12_INDEX_BUFFER_VIEW idv;
-    idv.BufferLocation = m_planepolygon.indexbuffer.GpuAddress();
-    idv.Format = DXGI_FORMAT_R32_SINT;
-    idv.SizeInBytes = static_cast<UINT>(m_planepolygon.indexbuffer.Size());
+    //c_cameraPos = { camx,camy,camz,0 };
+
+	m_imguicore.RenderGUIpanel(m_deviceResources.get(), &m_skinnedcharacter->m_transform.position.x,
+		&m_skinnedcharacter->m_transform.position.y,
+		&m_skinnedcharacter->m_transform.position.z);
    
     
 
@@ -166,22 +146,19 @@ void Game::Render()
 	commandList->SetDescriptorHeaps(
 		static_cast<UINT>(std::size(heaps)), heaps);
    
-	m_planepolygon.m_planepolyview = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
-		Vector3::Zero, Vector3::UnitY);
-    m_planepolygon.m_planepolyproj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
-		float(size.right) / float(size.bottom), 0.1f, 10.f);
-
-    m_planepolygon.m_planepolyeffect->SetView(m_planepolygon.m_planepolyview);
-    m_planepolygon.m_planepolyeffect->SetProjection(m_planepolygon.m_planepolyproj);
 	
+	m_Skinnedcharacterworld = DirectX::XMMatrixTranslation(m_skinnedcharacter->m_transform.position.x,
+		m_skinnedcharacter->m_transform.position.y,
+		m_skinnedcharacter->m_transform.position.z);
 
-	m_rigidshape.m_effect->SetView(m_rigidshape.m_view);
-	m_rigidshape.m_effect->SetProjection(m_rigidshape.m_proj);
-    
+  
+    //m_camera.m_transform.position = c_cameraPos;
 	Model::UpdateEffectMatrices(m_modelNormal, m_Skinnedcharacterworld, m_camera.m_view, m_camera.m_proj);
-    
+  
+ 
     m_skinnedcharacter->m_Model->DrawSkinned(commandList, nbones, m_drawBones.get(),
         m_Skinnedcharacterworld, m_modelNormal.cbegin());
+    
     PIXEndEvent(commandList);
 
     // Show the new frame.
@@ -292,15 +269,18 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
     // TODO: Initialize device dependent objects here (independent of window size).
 	 m_states = std::make_unique<CommonStates>(device);
 
-	 size_t animsOffset;
+	
      m_skinnedcharacter = std::make_unique<SkinnedCharacter>();
+    
 	 m_skinnedcharacter->m_Model = Model::CreateFromSDKMESH(device, L"soldier.sdkmesh",
 		 ModelLoader_IncludeBones);
+    
 	 DX::ThrowIfFailed(
 		 m_animation.Load(L"soldier.sdkmesh_anim")
 	 );
+    
+    
      imguidescriptorheap = std::make_unique<DescriptorHeap>(device, Descriptors::Count);
-     
      imguidescriptorheap->Heap()->SetName(L"ImguiHeap");
      m_imguicore = ImguiCore(hwnd, m_deviceResources->GetD3DDevice(),*imguidescriptorheap,imguidescriptorheap->GetFirstCpuHandle(),imguidescriptorheap->GetFirstGpuHandle()
          );
@@ -308,6 +288,7 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
      m_skinnedcharacter->m_Model->materials[0].diffuseTextureIndex = 0;
      m_skinnedcharacter->m_Model->materials[0].samplerIndex = static_cast<int>(
 		 CommonStates::SamplerIndex::AnisotropicClamp);
+     
 
 	
 	 m_animation.Bind(*m_skinnedcharacter->m_Model);
@@ -321,7 +302,7 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
      m_skinnedcharacter->m_Model->LoadStaticBuffers(device, resourceUpload);
 
 	 m_modelResources = m_skinnedcharacter->m_Model->LoadTextures(device, resourceUpload);
-
+	
 	 m_fxFactory = std::make_unique<EffectFactory>(m_modelResources->Heap(),
 		 m_states->Heap());
 
@@ -340,23 +321,12 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
 		 cull,
 		 rtState);
 
-	 EffectPipelineStateDescription shapepd(
-		 &GeometricPrimitive::VertexType::InputLayout,
-		 CommonStates::Opaque,
-		 CommonStates::DepthDefault,
-		 CommonStates::CullNone,
-		 rtState);
-
-    
-
-     
-
+	
+  
 	 m_modelNormal = m_skinnedcharacter->m_Model->CreateEffects(*m_fxFactory, pd, pd);
-     m_rigidshape.m_effect = std::make_unique<BasicEffect>(device, EffectFlags::Lighting, pd);
-     m_rigidshape.m_effect->EnableDefaultLighting();
-     m_rigidshape.m_world = Matrix::Identity;
-     m_planepolygon.m_planepolyeffect = std::make_unique<DirectX::BasicEffect>(device, EffectFlags::Lighting, pd);
-     m_planepolygon.m_planepolyworld = Matrix::Identity;
+     
+	
+   
        
      m_Skinnedcharacterworld = Matrix::Identity;
 }
@@ -365,10 +335,11 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
 void Game::CreateWindowSizeDependentResources()
 {
     // TODO: Initialize windows-size dependent objects here.
+    
+	
 	static const XMVECTORF32 c_cameraPos = { 0.f, 0.f, 1.5f, 0.f };
 	static const XMVECTORF32 c_lookAt = { 0.f, 0.25f, 0.f, 0.f };
     m_camera.m_transform.position = c_cameraPos;
-    
     auto size = m_deviceResources->GetOutputSize();
 	m_camera.m_view = Matrix::CreateLookAt(m_camera.m_transform.position, c_lookAt.v, Vector3::UnitY);
     m_camera.m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
@@ -376,17 +347,15 @@ void Game::CreateWindowSizeDependentResources()
 
 	
 
-    m_planepolygon.m_planepolyeffect->SetView(m_planepolygon.m_planepolyview);
-    m_planepolygon.m_planepolyeffect->SetProjection(m_planepolygon.m_planepolyproj);
-	m_rigidshape.m_effect->SetView(m_camera.m_view);
-    m_rigidshape.m_effect->SetProjection(m_camera.m_proj);
+    
+	
 }
 
 void Game::OnDeviceLost()
 {
     // TODO: Add Direct3D resource cleanup here.
-	m_rigidshape.m_shape.reset();
-	m_rigidshape.m_effect.reset();
+	m_rigidshape->m_shape.reset();
+	m_rigidshape->m_effect.reset();
 	m_imguicore.EndRenderImguicore();
     // If using the DirectX Tool Kit for DX12, uncomment this line:
      m_graphicsMemory.reset();

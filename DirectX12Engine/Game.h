@@ -12,6 +12,7 @@
 #include "Rigidshape.h"
 #include "PlanePolygon.h"
 #include <../packages/directxtk12_desktop_2017.2021.11.8.1/include/GraphicsMemory.h>
+#include <DirectXMath.h>
 
 
 // A basic game implementation that creates a D3D12 device and
@@ -54,7 +55,9 @@ private:
     
 	DirectX::SimpleMath::Matrix m_Skinnedcharacterworld;
     
-	
+    float camx = 0;
+    float camy = 0;
+    float camz = 0;
     
     HWND hwnd;
     Camera m_camera;
@@ -72,8 +75,8 @@ private:
 
     std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
 
-    Rigidshape m_rigidshape;
-    PlanePolygon m_planepolygon;
+    std::unique_ptr<Rigidshape> m_rigidshape;
+    std::unique_ptr<PlanePolygon> m_planepolygon;
     void Update(DX::StepTimer const& timer);
     void Render();
 
