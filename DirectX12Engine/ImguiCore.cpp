@@ -14,6 +14,7 @@ ImguiCore::ImguiCore(const HWND& hwnd,ID3D12Device* device, const
 	ImGui::CreateContext();
 	ImNodes::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	
 	ImGui::StyleColorsDark();
 	auto d3ddevice = device;
 	ImGui_ImplWin32_Init(hwnd);
@@ -49,13 +50,10 @@ void ImguiCore::RenderMainpanel(DX::DeviceResources* deviceresources, float* x, 
 	ImGui::SliderFloat("x", x,min,0.5f);
 	ImGui::SliderFloat("y", y, min, 0.5f);
 	ImGui::SliderFloat("z", z, min, 0.5f);
-	ImGui::End();
-	ImGui::Render();
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), deviceresources->GetCommandList());
-}
+	
+	
 
-void RenderNodes(DX::DeviceResources* deviceresources)
-{
+	ImGui::End();
 	ImGui::Begin("simple node editor");
 
 	ImNodes::BeginNodeEditor();
@@ -78,7 +76,20 @@ void RenderNodes(DX::DeviceResources* deviceresources)
 	ImNodes::EndNodeEditor();
 
 	ImGui::End();
+	
+}
 
+void ImguiCore::RenderNodes(DX::DeviceResources* deviceresources)
+{
+	
+	
+
+}
+
+void ImguiCore::Render_AllGUI(DX::DeviceResources* deviceresources)
+{
+	ImGui::Render();
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), deviceresources->GetCommandList());
 }
 
 void ImguiCore::EndRenderImguicore()

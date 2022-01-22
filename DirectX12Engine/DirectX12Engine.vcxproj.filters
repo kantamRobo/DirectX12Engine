@@ -33,9 +33,6 @@
     <ClInclude Include="DescriptorPool.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="ImguiCore.h" />
-    <ClInclude Include="imstb_rectpack.h" />
-    <ClInclude Include="imstb_textedit.h" />
-    <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Rigidshape.h" />
@@ -58,6 +55,15 @@
     </ClInclude>
     <ClInclude Include="imnodes_internal.h">
       <Filter>Imnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>Imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

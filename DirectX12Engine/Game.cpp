@@ -120,10 +120,12 @@ void Game::Render()
 
     auto commandList = m_deviceResources->GetCommandList();
     PIXBeginEvent(commandList, PIX_COLOR_DEFAULT, L"Render");
+   
 
     // TODO: Add your rendering code here.
 	size_t nbones = m_skinnedcharacter->m_Model->bones.size();
-	//Imgui‚ÍV‚µ‚¢ƒtƒŒ[ƒ€‚Å‚Ì•`‰æ‚É”õ‚¦‚é
+	/*
+    //Imgui‚ÍV‚µ‚¢ƒtƒŒ[ƒ€‚Å‚Ì•`‰æ‚É”õ‚¦‚é
 	m_imguicore.ImguiCore_Tick();
 	ID3D12DescriptorHeap* imguiheap[] = { imguidescriptorheap->Heap() };
 	imguiheap[0] = imguidescriptorheap->Heap();
@@ -132,11 +134,12 @@ void Game::Render()
     //GUIPanel‚ð•`‰æ‚·‚é
     //c_cameraPos = { camx,camy,camz,0 };
 
-	m_imguicore.RenderMainpanel(m_deviceResources.get(), &m_skinnedcharacter->m_transform.position.x,
+    	m_imguicore.RenderMainpanel(m_deviceResources.get(), &m_skinnedcharacter->m_transform.position.x,
 		&m_skinnedcharacter->m_transform.position.y,
 		&m_skinnedcharacter->m_transform.position.z);
-   
-    
+    m_imguicore.RenderNodes(m_deviceResources.get());
+    m_imguicore.Render_AllGUI(m_deviceResources.get());
+    */
 
 	m_animation.Apply(*m_skinnedcharacter->m_Model, nbones, m_drawBones.get());
     
@@ -155,10 +158,25 @@ void Game::Render()
     //m_camera.m_transform.position = c_cameraPos;
 	Model::UpdateEffectMatrices(m_modelNormal, m_Skinnedcharacterworld, m_camera.m_view, m_camera.m_proj);
   
- 
+  
     m_skinnedcharacter->m_Model->DrawSkinned(commandList, nbones, m_drawBones.get(),
         m_Skinnedcharacterworld, m_modelNormal.cbegin());
+   
     
+    m_imguicore.ImguiCore_Tick();
+    ID3D12DescriptorHeap* imguiheap[] = { imguidescriptorheap->Heap() };
+    imguiheap[0] = imguidescriptorheap->Heap();
+
+    commandList->SetDescriptorHeaps(1, imguiheap);
+    //GUIPanel‚ð•`‰æ‚·‚é
+    //c_cameraPos = { camx,camy,camz,0 };
+
+    m_imguicore.RenderMainpanel(m_deviceResources.get(), &m_skinnedcharacter->m_transform.position.x,
+        &m_skinnedcharacter->m_transform.position.y,
+        &m_skinnedcharacter->m_transform.position.z);
+    m_imguicore.RenderNodes(m_deviceResources.get());
+    m_imguicore.Render_AllGUI(m_deviceResources.get());
+
     PIXEndEvent(commandList);
 
     // Show the new frame.
