@@ -8,6 +8,12 @@
       <UniqueIdentifier>dc921414-83aa-496d-932f-69c4d614b111</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dds;dlg;fbx;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Imgui">
+      <UniqueIdentifier>{6f091185-8172-4c20-90d6-f4236ac9d7a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imnodes">
+      <UniqueIdentifier>{eab9181c-ef7d-4e1a-965a-d7c2a9f17deb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -26,10 +32,6 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="DescriptorPool.h" />
     <ClInclude Include="imconfig.h" />
-    <ClInclude Include="imgui.h" />
-    <ClInclude Include="imgui_impl_dx12.h" />
-    <ClInclude Include="imgui_impl_win32.h" />
-    <ClInclude Include="imgui_internal.h" />
     <ClInclude Include="ImguiCore.h" />
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
@@ -39,6 +41,24 @@
     <ClInclude Include="Rigidshape.h" />
     <ClInclude Include="PlanePolygon.h" />
     <ClInclude Include="Terrain.h" />
+    <ClInclude Include="imgui.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx12.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_win32.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imnodes.h">
+      <Filter>Imnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="imnodes_internal.h">
+      <Filter>Imnodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -51,18 +71,35 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="character.cpp" />
     <ClCompile Include="DescriptorPool.cpp" />
-    <ClCompile Include="imgui.cpp" />
-    <ClCompile Include="imgui_demo.cpp" />
-    <ClCompile Include="imgui_draw.cpp" />
-    <ClCompile Include="imgui_impl_dx12.cpp" />
-    <ClCompile Include="imgui_impl_win32.cpp" />
-    <ClCompile Include="imgui_tables.cpp" />
-    <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="ImguiCore.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Rigidshape.cpp" />
     <ClCompile Include="PlanePolygon.cpp" />
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="imgui.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx12.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_win32.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_tables.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imnodes.cpp">
+      <Filter>Imnodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -103,9 +140,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="imgui.ini" />
     <None Include="soldier.sdkmesh" />
     <None Include="soldier.sdkmesh_anim" />
     <None Include="planepoly.sdkmesh" />
+    <None Include="imgui.ini">
+      <Filter>Imgui</Filter>
+    </None>
   </ItemGroup>
 </Project>

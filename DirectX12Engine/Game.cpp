@@ -132,7 +132,7 @@ void Game::Render()
     //GUIPanel‚ð•`‰æ‚·‚é
     //c_cameraPos = { camx,camy,camz,0 };
 
-	m_imguicore.RenderGUIpanel(m_deviceResources.get(), &m_skinnedcharacter->m_transform.position.x,
+	m_imguicore.RenderMainpanel(m_deviceResources.get(), &m_skinnedcharacter->m_transform.position.x,
 		&m_skinnedcharacter->m_transform.position.y,
 		&m_skinnedcharacter->m_transform.position.z);
    

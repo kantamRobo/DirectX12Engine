@@ -1,7 +1,8 @@
 
 #include "ImguiCore.h"
 #include "imgui.h"
-
+#include "imnodes.h"
+#include "imnodes_internal.h"
 
 
 ImguiCore::ImguiCore(const HWND& hwnd,ID3D12Device* device, const
@@ -11,6 +12,7 @@ ImguiCore::ImguiCore(const HWND& hwnd,ID3D12Device* device, const
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+	ImNodes::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::StyleColorsDark();
 	auto d3ddevice = device;
@@ -35,7 +37,7 @@ void ImguiCore::ImguiCore_Tick()
 
 bool show_demo_window = true;
 bool show_another_window = false;
-void ImguiCore::RenderGUIpanel(DX::DeviceResources* deviceresources, float* x, float* y, float* z)
+void ImguiCore::RenderMainpanel(DX::DeviceResources* deviceresources, float* x, float* y, float* z)
 {
 	
 	ImGui::Begin("Rendering Test Menu");
@@ -50,6 +52,33 @@ void ImguiCore::RenderGUIpanel(DX::DeviceResources* deviceresources, float* x, f
 	ImGui::End();
 	ImGui::Render();
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), deviceresources->GetCommandList());
+}
+
+void RenderNodes(DX::DeviceResources* deviceresources)
+{
+	ImGui::Begin("simple node editor");
+
+	ImNodes::BeginNodeEditor();
+	ImNodes::BeginNode(1);
+
+	ImNodes::BeginNodeTitleBar();
+	ImGui::TextUnformatted("simple node :)");
+	ImNodes::EndNodeTitleBar();
+
+	ImNodes::BeginInputAttribute(2);
+	ImGui::Text("input");
+	ImNodes::EndInputAttribute();
+
+	ImNodes::BeginOutputAttribute(3);
+	ImGui::Indent(40);
+	ImGui::Text("output");
+	ImNodes::EndOutputAttribute();
+
+	ImNodes::EndNode();
+	ImNodes::EndNodeEditor();
+
+	ImGui::End();
+
 }
 
 void ImguiCore::EndRenderImguicore()

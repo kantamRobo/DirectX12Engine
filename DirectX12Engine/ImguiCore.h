@@ -19,15 +19,9 @@ class ImguiCore
 		ImguiCore(const HWND& hwnd, ID3D12Device* device,  const DirectX::DescriptorHeap& desc, D3D12_CPU_DESCRIPTOR_HANDLE srvcpuhandle, const D3D12_GPU_DESCRIPTOR_HANDLE& srvgpuhandle);
 		void ImguiCore_Tick();
 
-
-		
-		
-
-		
-		
-	
-		
-		void RenderGUIpanel(DX::DeviceResources* deviceresources, float* x,float *y,float *z);
+ 
+		void RenderMainpanel(DX::DeviceResources* deviceresources, float* x, float* y, float* z);
+		void RenderNodes(DX::DeviceResources* deviceresources);
 		void EndRenderImguicore();
 
 };
