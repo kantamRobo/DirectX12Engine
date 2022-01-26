@@ -75,8 +75,7 @@ private:
 
     std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
 
-    std::unique_ptr<Rigidshape> m_rigidshape;
-    std::unique_ptr<PlanePolygon> m_planepolygon;
+   
     void Update(DX::StepTimer const& timer);
     void Render();
 

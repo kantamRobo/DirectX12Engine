@@ -21,6 +21,8 @@ struct SkinnedCharacter :CharacterBase
 	bool iskinematic;//ラグドールを有効にする？
 
 	void SetRagdolls();
+
+	
 };
 
 struct StaticCharacter :CharacterBase

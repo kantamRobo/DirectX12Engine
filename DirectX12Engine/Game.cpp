@@ -140,16 +140,17 @@ void Game::Render()
     m_imguicore.RenderNodes(m_deviceResources.get());
     m_imguicore.Render_AllGUI(m_deviceResources.get());
     */
-
+    m_imguicore.ImguiCore_Tick();
 	m_animation.Apply(*m_skinnedcharacter->m_Model, nbones, m_drawBones.get());
-    
+    ImGui::Begin("Rendering Test Menu");
+    ImGui::SetWindowSize(ImVec2(400, 500),
+        ImGuiCond_::ImGuiCond_FirstUseEver);
 	ID3D12DescriptorHeap* heaps[] = { m_modelResources->Heap(),
 		m_states->Heap()};
 	
 	commandList->SetDescriptorHeaps(
 		static_cast<UINT>(std::size(heaps)), heaps);
-   
-	
+    
 	m_Skinnedcharacterworld = DirectX::XMMatrixTranslation(m_skinnedcharacter->m_transform.position.x,
 		m_skinnedcharacter->m_transform.position.y,
 		m_skinnedcharacter->m_transform.position.z);
@@ -158,12 +159,12 @@ void Game::Render()
     //m_camera.m_transform.position = c_cameraPos;
 	Model::UpdateEffectMatrices(m_modelNormal, m_Skinnedcharacterworld, m_camera.m_view, m_camera.m_proj);
   
-  
-    m_skinnedcharacter->m_Model->DrawSkinned(commandList, nbones, m_drawBones.get(),
+     m_skinnedcharacter->m_Model->DrawSkinned(commandList, nbones, m_drawBones.get(),
         m_Skinnedcharacterworld, m_modelNormal.cbegin());
-   
+     ImGui::End();
+
     
-    m_imguicore.ImguiCore_Tick();
+    //m_imguicore.ImguiCore_Tick();
     ID3D12DescriptorHeap* imguiheap[] = { imguidescriptorheap->Heap() };
     imguiheap[0] = imguidescriptorheap->Heap();
 
@@ -372,9 +373,9 @@ void Game::CreateWindowSizeDependentResources()
 void Game::OnDeviceLost()
 {
     // TODO: Add Direct3D resource cleanup here.
-	m_rigidshape->m_shape.reset();
-	m_rigidshape->m_effect.reset();
+    m_skinnedcharacter.reset();
 	m_imguicore.EndRenderImguicore();
+    imguidescriptorheap.reset();
     // If using the DirectX Tool Kit for DX12, uncomment this line:
      m_graphicsMemory.reset();
 	 m_states.reset();

@@ -41,7 +41,7 @@ bool show_another_window = false;
 void ImguiCore::RenderMainpanel(DX::DeviceResources* deviceresources, float* x, float* y, float* z)
 {
 	
-	ImGui::Begin("Rendering Test Menu");
+	ImGui::Begin("3DModel Position");
 	ImGui::SetWindowSize(ImVec2(400, 500),
 		ImGuiCond_::ImGuiCond_FirstUseEver);
 	
