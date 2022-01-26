@@ -14,6 +14,9 @@
     <Filter Include="Imnodes">
       <UniqueIdentifier>{eab9181c-ef7d-4e1a-965a-d7c2a9f17deb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="stb">
+      <UniqueIdentifier>{885d90fa-187c-4557-8ee3-f73622236c04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -65,6 +68,63 @@
     <ClInclude Include="imstb_truetype.h">
       <Filter>Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_voxel_render.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_truetype.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_tilemap_editor.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_textedit.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_sprintf.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_rect_pack.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_leakcheck.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_include.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_image_write.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_image_resize.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_image.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_hexwave.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_herringbone_wang_tile.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_easy_font.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_dxt.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_ds.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_divide.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_connected_components.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\stb\stb_c_lexer.h">
+      <Filter>stb</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -105,6 +165,9 @@
     </ClCompile>
     <ClCompile Include="imnodes.cpp">
       <Filter>Imnodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\packages\stb\stb_vorbis.c">
+      <Filter>stb</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

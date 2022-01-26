@@ -5,7 +5,7 @@
 #include "Animation.h"
 #include "pch.h"
 #include <random>
-
+#include <stb_image_write.h>
 Terrain::Terrain(ID3D12Device* p_device,  DirectX::GraphicsMemory* in_resource)
 {
 	m_vertexbuffer = in_resource->Allocate(sizeof(DirectX::VertexPositionNormalTexture));
@@ -35,4 +35,6 @@ void Terrain::SetHeightMap()
 			m_grayscale.grayscale[i][j] = engine();
 		}
 	}
+	stbi_write_png("heightmap.png", m_grayscale.Width, m_grayscale.Height
+		, static_cast<int>(sizeof(grayscale)), &m_grayscale,0);
 }
