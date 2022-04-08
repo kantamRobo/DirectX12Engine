@@ -23,7 +23,6 @@ ImguiCore::ImguiCore(const HWND& hwnd,ID3D12Device* device, const
 		srvcpuhandle,
 		srvgpuhandle);
 
-
 }
 void ImguiCore::ImguiCore_Tick()
 {

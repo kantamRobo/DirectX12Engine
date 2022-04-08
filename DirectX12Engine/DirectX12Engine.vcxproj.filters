@@ -40,7 +40,6 @@
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Rigidshape.h" />
     <ClInclude Include="PlanePolygon.h" />
-    <ClInclude Include="Terrain.h" />
     <ClInclude Include="imgui.h">
       <Filter>Imgui</Filter>
     </ClInclude>
@@ -125,6 +124,8 @@
     <ClInclude Include="..\packages\stb\stb_c_lexer.h">
       <Filter>stb</Filter>
     </ClInclude>
+    <ClInclude Include="Terrein.h" />
+    <ClInclude Include="TerreinEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -141,7 +142,6 @@
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Rigidshape.cpp" />
     <ClCompile Include="PlanePolygon.cpp" />
-    <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="imgui.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
@@ -169,6 +169,8 @@
     <ClCompile Include="..\packages\stb\stb_vorbis.c">
       <Filter>stb</Filter>
     </ClCompile>
+    <ClCompile Include="Terrein.cpp" />
+    <ClCompile Include="TerreinEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
