@@ -103,10 +103,14 @@ void Terrein::PrepareNormalMap(const grayscale* heightMap, Normalmap* normalMap,
 			float nz = 1.0f / sqrt(dx * dx + dy * dy + 1.0f);
 			float nx = fmin(fmax(-dx * nz, -1.0f), 1.0f);
 			float ny = fmin(fmax(-dy * nz, -1.0f), 1.0f);
-			//normalMap[x].Set(nx,ny,nz)
+			normalMap[x].normalmap->x = nx;
+			normalMap[x].normalmap->y = ny;
+			normalMap[x].normalmap->z = nz;
 			//
 		}
-		normalMap->normalmap += width;
+		normalMap->normalmap->x += width;
+		normalMap->normalmap->y += width;
+		normalMap->normalmap->z += width;
 		//Še—v‘f‚É‰E•Ó’l‚ð‰ÁŽZ‚·‚éoperator +=‚ð’Ç‰Á‚·‚é
 	}
 }
