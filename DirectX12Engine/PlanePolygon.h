@@ -5,7 +5,7 @@
 #include <memory>
 #include <Effects.h>
 #include <SimpleMath.h>
-#include <BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h>
+//#include <BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h>
 #include <array>
 #include <initializer_list>
 #include "Transform.h"
@@ -26,7 +26,7 @@ public:
 	DirectX::SimpleMath::Matrix m_planepolyworld;
 	DirectX::SimpleMath::Matrix m_planepolyview;
 	DirectX::SimpleMath::Matrix m_planepolyproj;
-	std::array<std::shared_ptr<btBvhTriangleMeshShape>, 2> planepolycollision;
+	//std::array<std::shared_ptr<btBvhTriangleMeshShape>, 2> planepolycollision;
 	DirectX::Model::EffectCollection m_planepolyNormal;
 	
 };

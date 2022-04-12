@@ -11,8 +11,10 @@
 #include "ImguiCore.h"
 #include "Rigidshape.h"
 #include "PlanePolygon.h"
-#include <../packages/directxtk12_desktop_2017.2021.11.8.1/include/GraphicsMemory.h>
+#include "GraphicsMemory.h"
 #include <DirectXMath.h>
+#include <Dbt.h>
+#include <ksmedia.h>
 
 
 // A basic game implementation that creates a D3D12 device and
@@ -47,10 +49,10 @@ public:
     void OnResuming();
     void OnWindowMoved();
     void OnWindowSizeChanged(int width, int height);
-
+    void OnNewAudioDevice() noexcept { m_retryAudio = true; }
     // Properties
     void GetDefaultSize( int& width, int& height ) const noexcept;
-
+    bool m_retryAudio;
 private:
     
 	DirectX::SimpleMath::Matrix m_Skinnedcharacterworld;
@@ -74,7 +76,7 @@ private:
 	DirectX::ModelBone::TransformArray m_drawBones;
 
     std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
-
+    std::unique_ptr<DirectX::AudioEngine> m_audEngine;
    
     void Update(DX::StepTimer const& timer);
     void Render();

@@ -25,7 +25,7 @@ enum Descriptors
 	GamerPic,
 	Count
 };
-Game::Game() noexcept(false)
+Game::Game() noexcept(false):m_retryAudio(false)
 {
     m_deviceResources = std::make_unique<DX::DeviceResources>();
     m_deviceResources->RegisterDeviceNotify(this);
@@ -36,6 +36,11 @@ Game::~Game()
     if (m_deviceResources)
     {
         m_deviceResources->WaitForGpu();
+    }
+
+    if (m_audEngine)
+    {
+        m_audEngine->Suspend();
     }
 }
 
@@ -52,6 +57,11 @@ void Game::Initialize(HWND window, int width, int height)
     CreateWindowSizeDependentResources();
 
     m_gamePad = std::make_unique<GamePad>();
+    AUDIO_ENGINE_FLAGS eflags = AudioEngine_Default;
+#ifdef _DEBUG
+    eflags |= AudioEngine_Debug;
+#endif
+    m_audEngine = std::make_unique<AudioEngine>(eflags);
 
     // TODO: Change the timer settings if you want something other than the default variable timestep mode.
     // e.g. for 60 FPS fixed timestep update logic, call:
@@ -91,7 +101,21 @@ void Game::Update(DX::StepTimer const& timer)
 	float time = float(timer.GetTotalSeconds());
    
 	//m_Skinnedcharacterworld = XMMatrixRotationY(time);
-  
+    if (m_retryAudio)
+    {
+        m_retryAudio = false;
+        if (m_audEngine->Reset())
+        {
+            // TODO: restart any looped sounds here
+        }
+    }
+    else if (!m_audEngine->Update())
+    {
+        if (m_audEngine->IsCriticalError())
+        {
+            m_retryAudio = true;
+        }
+    }
 	
 
    
@@ -231,12 +255,14 @@ void Game::OnSuspending()
 {
     // TODO: Game is being power-suspended (or minimized).
     m_gamePad->Suspend();
+    m_audEngine->Suspend();
+
 }
 
 void Game::OnResuming()
 {
     m_timer.ResetElapsedTime();
-
+    m_audEngine->Resume();
     // TODO: Game is being power-resumed (or returning from minimize).
 }
 

@@ -5,6 +5,12 @@
 #include "VertexTypes.h"
 #include "ImguiCore.h"
 #include "TerreinEditor.h"
+#include "stb_image_write.h"
+#include "stb_image.h"
+#include <GraphicsMemory.h>
+#include "TesselationEffectPipelineDescription.h"
+#include "CommonStates.h"
+#include <wrl.h>
 struct grayscale
 {
 	unsigned int width=0;
@@ -15,16 +21,16 @@ struct grayscale
 
 struct Normalmap
 {
-	unsigned int width;
-	unsigned int height;
-	std::shared_ptr< DirectX::SimpleMath::Vector3> normalmap;
+	unsigned int m_width;
+	unsigned int m_height;
+	std::shared_ptr< DirectX::SimpleMath::Vector3> m_normalmap;
 };
 
 class Terrein
 {
 	Terrein();
-	grayscale heightmap;
-	std::vector<DirectX::VertexPositionNormalTexture> vertices;
+	grayscale m_heightmap;
+	std::vector<DirectX::VertexPositionNormalTexture> m_vertices;
 	//ハイトマップを作成、またはロード、どちらか
 	//を行う
 	void Preparegrayscale();
@@ -35,8 +41,18 @@ class Terrein
 
 	void PrepareNormalMap(const grayscale* heightMap, Normalmap* normalMap, unsigned int width,unsigned int height)
 		;
-	void Preparepatch();
+	void Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate);
 
+	void DrawTerrein(ID3D12GraphicsCommandList4* );
+	std::vector<UINT> indices;
 	std::unique_ptr<TerreinEditor> m_terreineditor;
+	DirectX::GraphicsResource  m_patchvertexbuffer;
+	DirectX::GraphicsResource  m_patchindexbuffer;
+	std::unique_ptr<DirectX::GraphicsMemory> m_terreingraphicsmemory;
+	TesselationEffectPipelineDescription terreinpipeline;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> m_patchpipelinestate=nullptr;
+
+
+	
 };
 

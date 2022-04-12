@@ -126,6 +126,8 @@
     </ClInclude>
     <ClInclude Include="Terrein.h" />
     <ClInclude Include="TerreinEditor.h" />
+    <ClInclude Include="AudioEngine.h" />
+    <ClInclude Include="TesselationEffectPipelineDescription.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -171,6 +173,8 @@
     </ClCompile>
     <ClCompile Include="Terrein.cpp" />
     <ClCompile Include="TerreinEditor.cpp" />
+    <ClCompile Include="AudioEngine.cpp" />
+    <ClCompile Include="TesselationEffectPipelineDescription.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

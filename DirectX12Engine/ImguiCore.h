@@ -22,7 +22,7 @@ class ImguiCore
  
 		void RenderMainpanel(DX::DeviceResources* deviceresources, float* x, float* y, float* z);
 		void RenderNodes(DX::DeviceResources* deviceresources);
-		void ImguiCore::Render_AllGUI(DX::DeviceResources* deviceresources);
+		void Render_AllGUI(DX::DeviceResources* deviceresources);
 		void EndRenderImguicore();
 
 };

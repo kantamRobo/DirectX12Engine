@@ -1,6 +1,4 @@
 #include "Character.h"
-#include <btBulletDynamicsCommon.h>
-#include <btBulletCollisionCommon.h>
 #include "Utility.h"
 void SkinnedCharacter::SetRagdolls()
 {
@@ -9,6 +7,7 @@ void SkinnedCharacter::SetRagdolls()
 
 void StaticCharacter::SetRigidbody()
 {
+	/*
 	btVector3 pos = btVector3(-1, 0.5, 0);    //!< ’†SÀ•W
 	btScalar mass = 0.03;                    //!< Ž¿—Ê
 	btScalar restitution = 0.8;                //!< ”½”­ŒW”
@@ -49,5 +48,5 @@ void StaticCharacter::SetRigidbody()
 	rigidbody->applyCentralForce(forward);
 
 	BULLETUtiliry::ConvertbtVector3toVector3(convertedforce, forward);
-
+	*/
 }

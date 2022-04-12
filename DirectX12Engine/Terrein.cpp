@@ -1,21 +1,25 @@
 #include "Terrein.h"
 #include <cmath>
-
+#include <d3dcompiler.h>
 using namespace std;
 
 Terrein::Terrein()
 {
 	m_terreineditor = std::make_unique<TerreinEditor>();
+
+	
 }
 void Terrein::Preparegrayscale()
 {
 	//
+	/*
 	if ("terreinheightmap.png" != nullptr)
 	{
 		heightとwidthをロード
 
 
-	}
+	}*/
+	/*
 	else
 	{
 		heightmap.m_grayscale.resize(heightmap.width);
@@ -35,7 +39,7 @@ void Terrein::Preparegrayscale()
 		}
 	}
 	
-
+	*/
 
 
 }
@@ -103,20 +107,21 @@ void Terrein::PrepareNormalMap(const grayscale* heightMap, Normalmap* normalMap,
 			float nz = 1.0f / sqrt(dx * dx + dy * dy + 1.0f);
 			float nx = fmin(fmax(-dx * nz, -1.0f), 1.0f);
 			float ny = fmin(fmax(-dy * nz, -1.0f), 1.0f);
-			normalMap[x].normalmap->x = nx;
-			normalMap[x].normalmap->y = ny;
-			normalMap[x].normalmap->z = nz;
+			normalMap[x].m_normalmap->x = nx;
+			normalMap[x].m_normalmap->y = ny;
+			normalMap[x].m_normalmap->z = nz;
 			//
 		}
-		normalMap->normalmap->x += width;
-		normalMap->normalmap->y += width;
-		normalMap->normalmap->z += width;
+		normalMap->m_normalmap->x += width;
+		normalMap->m_normalmap->y += width;
+		normalMap->m_normalmap->z += width;
 		//各要素に右辺値を加算するoperator +=を追加する
 	}
 }
 
-void Terrein::Preparepatch()
+void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate)
 {
+	
 	const int divide = 10;
 	const float edge = 200.0f;
 	for (int z = 0; z < divide + 1; ++z)
@@ -124,19 +129,23 @@ void Terrein::Preparepatch()
 		for (int x = 0; x < divide + 1; ++x)
 		{
 			DirectX::VertexPositionNormalTexture v;
-			v.position = DirectX::SimpleMath::Vector3(
-				edge * x / divide,
-				0.0f,
-				edge * z / divide
-			);
+			v.position = DirectX::XMFLOAT3(m_terreineditor->Nodes[x].x, m_terreineditor->Nodes[x].y,
+				m_terreineditor->slope * (
+					m_terreineditor->Nodes[x].x *
+					m_terreineditor->Nodes[x].x +
+					m_terreineditor->Nodes[x].y *
+					m_terreineditor->Nodes[x].y));
 			v.textureCoordinate = DirectX::SimpleMath::Vector2(
 				v.position.x / edge,
 				v.position.z / edge
 			);
-			vertices.push_back(v);
+
+			
+
+			m_vertices.push_back(v);
 		}
 	}
-	std::vector<UINT> indices;
+	
 	for (int z = 0; z < divide; ++z) {
 		for (int x = 0; x < divide; ++x) {
 			const UINT rows = divide + 1;
@@ -149,11 +158,76 @@ void Terrein::Preparepatch()
 			indices.push_back(v0);
 			indices.push_back(v1);
 		}
+		
 	}
-	// 中心補正
-	for (auto& v : vertices)
-	{
-		v.position.x -= edge * 0.5f;
-		v.position.z -= edge * 0.5f;
-	}
+	
+	m_terreingraphicsmemory = std::make_unique<DirectX::GraphicsMemory>(device);
+	m_patchvertexbuffer = m_terreingraphicsmemory->Allocate(sizeof(DirectX::
+		VertexPositionNormalTexture) * m_vertices.size());
+
+	
+	m_patchindexbuffer = m_terreingraphicsmemory->Allocate(sizeof(
+		UINT) * indices.size());
+
+	memcpy(m_patchvertexbuffer.Memory(), 
+		m_vertices.data(),
+		sizeof(DirectX::VertexPositionNormalTexture)
+		* m_vertices.size());
+
+	memcpy(m_patchindexbuffer.Memory(),
+		indices.data(),
+		sizeof(UINT)
+		* indices.size());
+	D3D12_INPUT_ELEMENT_DESC desc = {};
+	desc.AlignedByteOffset = 0;
+	desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	desc.InputSlot = 0;
+	desc.InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+	desc.SemanticIndex = 0;
+	desc.SemanticName = "VERTEX";
+
+	D3D12_INPUT_LAYOUT_DESC input = {};
+	input.NumElements = 1;
+	input.pInputElementDescs = &desc;
+	D3D12_ROOT_SIGNATURE_DESC rootsignatureDesc = {};
+	Microsoft::WRL::ComPtr<ID3DBlob> error;
+	rootsignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	Microsoft::WRL::ComPtr<ID3DBlob> rootsigblob = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> patchrootsignature = nullptr;
+	D3D12SerializeRootSignature(&rootsignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, rootsigblob.GetAddressOf(), error.GetAddressOf());
+	device->CreateRootSignature(0, rootsigblob->GetBufferPointer(),
+		rootsigblob->GetBufferSize(),
+		IID_PPV_ARGS(patchrootsignature.GetAddressOf()));
+	D3D12_SHADER_BYTECODE patchHS;
+	D3D12_SHADER_BYTECODE patchDS;
+	TesselationEffectPipelineDescription pipeline(&input, DirectX::CommonStates::Opaque,
+		DirectX::CommonStates::DepthDefault,
+		DirectX::CommonStates::CullCounterClockwise,
+		targetstate);
+	pipeline.CreatePipelineState(device,patchrootsignature.Get()
+		, patchDS,patchHS,m_patchpipelinestate.GetAddressOf());
+}
+
+
+void Terrein::DrawTerrein(ID3D12GraphicsCommandList4* command)
+{
+
+	
+	D3D12_VERTEX_BUFFER_VIEW vbv;
+	vbv.BufferLocation = m_patchvertexbuffer.GpuAddress();
+	vbv.StrideInBytes = sizeof(DirectX::VertexPositionNormalTexture);
+	vbv.SizeInBytes = static_cast<UINT>(m_patchvertexbuffer.Size());
+	command->IASetVertexBuffers(0, 1, &vbv);
+	
+	D3D12_INDEX_BUFFER_VIEW ibv;
+
+	ibv.BufferLocation = m_patchindexbuffer.GpuAddress();
+	ibv.Format = DXGI_FORMAT_R16_UINT;
+	ibv.SizeInBytes = static_cast<UINT>(m_patchindexbuffer.Size());
+
+	command->IASetVertexBuffers(0, 1, &vbv);
+	command->IASetIndexBuffer(&ibv);
+	command->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	command->SetPipelineState(m_patchpipelinestate.Get());
+	command->DrawIndexedInstanced();
 }
