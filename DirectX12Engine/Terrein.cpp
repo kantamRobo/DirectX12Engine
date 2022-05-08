@@ -1,11 +1,13 @@
+
 #include "Terrein.h"
 #include <cmath>
 #include <d3dcompiler.h>
+
 using namespace std;
 
-Terrein::Terrein()
+Terrein::Terrein(ID3D12Device* device)
 {
-	m_terreineditor = std::make_unique<TerreinEditor>();
+	//m_terreineditor = std::make_unique<TerreinEditor>();
 
 	
 }
@@ -46,6 +48,7 @@ void Terrein::Preparegrayscale()
 
 void Terrein::SetGrayScale()
 {
+	/*
 	int x = 0;
 	int y = 0;
 	x = x +m_terreineditor->Nodes[0].x;
@@ -71,6 +74,7 @@ for (int i = 0; i < m_terreineditor->nodenum; i += m_terreineditor->offset)
 		break;
 	}
 }
+*/
 
 }
 
@@ -128,17 +132,19 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	{
 		for (int x = 0; x < divide + 1; ++x)
 		{
-			DirectX::VertexPositionNormalTexture v;
+			DirectX::VertexPosition v;
+			/*
 			v.position = DirectX::XMFLOAT3(m_terreineditor->Nodes[x].x, m_terreineditor->Nodes[x].y,
 				m_terreineditor->slope * (
 					m_terreineditor->Nodes[x].x *
 					m_terreineditor->Nodes[x].x +
 					m_terreineditor->Nodes[x].y *
 					m_terreineditor->Nodes[x].y));
-			v.textureCoordinate = DirectX::SimpleMath::Vector2(
+					*/
+			/*v.textureCoordinate = DirectX::SimpleMath::Vector2(
 				v.position.x / edge,
 				v.position.z / edge
-			);
+			);*/
 
 			
 
@@ -178,13 +184,27 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 		indices.data(),
 		sizeof(UINT)
 		* indices.size());
+
+
+	Microsoft::WRL::ComPtr<ID3DBlob> hullshader = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> hullshadererror = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> domainshader = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> domainshadererror = nullptr;
+	auto hullresult = D3DCompileFromFile(L"HSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "HSMain", "vs_5_0", D3DCOMPILE_DEBUG, 0, &hullshader,
+		&hullshadererror);
+	auto domainresult = D3DCompileFromFile(L"HSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "HSMain", "vs_5_0", D3DCOMPILE_DEBUG, 0, &hullshader,
+		&hullshadererror);
+	CD3DX12_SHADER_BYTECODE patchHS(hullshader.Get());
+	CD3DX12_SHADER_BYTECODE patchDS(domainshader.Get());
+
+
 	D3D12_INPUT_ELEMENT_DESC desc = {};
 	desc.AlignedByteOffset = 0;
 	desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	desc.InputSlot = 0;
 	desc.InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
 	desc.SemanticIndex = 0;
-	desc.SemanticName = "VERTEX";
+	desc.SemanticName = "WORLDPOS";
 
 	D3D12_INPUT_LAYOUT_DESC input = {};
 	input.NumElements = 1;
@@ -198,14 +218,17 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	device->CreateRootSignature(0, rootsigblob->GetBufferPointer(),
 		rootsigblob->GetBufferSize(),
 		IID_PPV_ARGS(patchrootsignature.GetAddressOf()));
-	D3D12_SHADER_BYTECODE patchHS;
-	D3D12_SHADER_BYTECODE patchDS;
+	
+	
+
 	TesselationEffectPipelineDescription pipeline(&input, DirectX::CommonStates::Opaque,
 		DirectX::CommonStates::DepthDefault,
 		DirectX::CommonStates::CullCounterClockwise,
 		targetstate);
 	pipeline.CreatePipelineState(device,patchrootsignature.Get()
 		, patchDS,patchHS,m_patchpipelinestate.GetAddressOf());
+
+	m_effect = std::make_unique<DirectX::BasicEffect>(device, DirectX::EffectFlags::None, pipeline);
 }
 
 
@@ -229,5 +252,5 @@ void Terrein::DrawTerrein(ID3D12GraphicsCommandList4* command)
 	command->IASetIndexBuffer(&ibv);
 	command->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	command->SetPipelineState(m_patchpipelinestate.Get());
-	command->DrawIndexedInstanced();
+	command->DrawIndexedInstanced(indices.size(),1,0,0,0);
 }

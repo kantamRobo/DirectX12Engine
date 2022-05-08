@@ -17,6 +17,9 @@
     <Filter Include="stb">
       <UniqueIdentifier>{885d90fa-187c-4557-8ee3-f73622236c04}</UniqueIdentifier>
     </Filter>
+    <Filter Include="terreinshader">
+      <UniqueIdentifier>{45b7d3be-2ced-4119-ae68-674667672bfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -221,5 +224,13 @@
     <None Include="imgui.ini">
       <Filter>Imgui</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="HSterrein.hlsl">
+      <Filter>terreinshader</Filter>
+    </FxCompile>
+    <FxCompile Include="DSterrein.hlsl">
+      <Filter>terreinshader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

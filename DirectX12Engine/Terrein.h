@@ -28,7 +28,7 @@ struct Normalmap
 
 class Terrein
 {
-	Terrein();
+	Terrein(ID3D12Device* device);
 	grayscale m_heightmap;
 	std::vector<DirectX::VertexPositionNormalTexture> m_vertices;
 	//ハイトマップを作成、またはロード、どちらか
@@ -51,7 +51,8 @@ class Terrein
 	std::unique_ptr<DirectX::GraphicsMemory> m_terreingraphicsmemory;
 	TesselationEffectPipelineDescription terreinpipeline;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> m_patchpipelinestate=nullptr;
-
+	DirectX::SimpleMath::Matrix world;
+	std::unique_ptr<DirectX::BasicEffect> m_effect;
 
 	
 };
