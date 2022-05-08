@@ -123,8 +123,12 @@ void Terrein::PrepareNormalMap(const grayscale* heightMap, Normalmap* normalMap,
 	}
 }
 
-void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate)
+void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate, 
+DX::DeviceResources* devicesresources)
 {
+	
+	DirectX::ResourceUploadBatch resourceUpload(device);
+	resourceUpload.Begin();
 	
 	const int divide = 10;
 	const float edge = 200.0f;
@@ -167,23 +171,24 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 		
 	}
 	
-	m_terreingraphicsmemory = std::make_unique<DirectX::GraphicsMemory>(device);
-	m_patchvertexbuffer = m_terreingraphicsmemory->Allocate(sizeof(DirectX::
-		VertexPositionNormalTexture) * m_vertices.size());
+
+	DirectX::SharedGraphicsResource hullvertex;
+	DirectX::SharedGraphicsResource hullindex;
+	resourceUpload.Upload(m_patchvertexbuffer.Get(), hullvertex);
+	resourceUpload.Upload(m_patchindexbuffer.Get(), hullindex);
+	resourceUpload.Transition(
+		m_patchvertexbuffer.Get(),
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+	resourceUpload.Transition(
+		m_patchindexbuffer.Get(),
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		D3D12_RESOURCE_STATE_INDEX_BUFFER);
+	auto uploadResourcesFinished = resourceUpload.End(devicesresources->GetCommandQueue());
+
+	uploadResourcesFinished.wait();
 
 	
-	m_patchindexbuffer = m_terreingraphicsmemory->Allocate(sizeof(
-		UINT) * indices.size());
-
-	memcpy(m_patchvertexbuffer.Memory(), 
-		m_vertices.data(),
-		sizeof(DirectX::VertexPositionNormalTexture)
-		* m_vertices.size());
-
-	memcpy(m_patchindexbuffer.Memory(),
-		indices.data(),
-		sizeof(UINT)
-		* indices.size());
 
 
 	Microsoft::WRL::ComPtr<ID3DBlob> hullshader = nullptr;
@@ -213,11 +218,11 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	Microsoft::WRL::ComPtr<ID3DBlob> error;
 	rootsignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	Microsoft::WRL::ComPtr<ID3DBlob> rootsigblob = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12RootSignature> patchrootsignature = nullptr;
+	
 	D3D12SerializeRootSignature(&rootsignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, rootsigblob.GetAddressOf(), error.GetAddressOf());
 	device->CreateRootSignature(0, rootsigblob->GetBufferPointer(),
 		rootsigblob->GetBufferSize(),
-		IID_PPV_ARGS(patchrootsignature.GetAddressOf()));
+		IID_PPV_ARGS(m_patchrootsignature.GetAddressOf()));
 	
 	
 
@@ -225,32 +230,33 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 		DirectX::CommonStates::DepthDefault,
 		DirectX::CommonStates::CullCounterClockwise,
 		targetstate);
-	pipeline.CreatePipelineState(device,patchrootsignature.Get()
+	pipeline.CreatePipelineState(device,m_patchrootsignature.Get()
 		, patchDS,patchHS,m_patchpipelinestate.GetAddressOf());
 
-	m_effect = std::make_unique<DirectX::BasicEffect>(device, DirectX::EffectFlags::None, pipeline);
+	
 }
 
 
-void Terrein::DrawTerrein(ID3D12GraphicsCommandList4* command)
+void Terrein::DrawTerrein(ID3D12GraphicsCommandList* command)
 {
 
 	
-	D3D12_VERTEX_BUFFER_VIEW vbv;
-	vbv.BufferLocation = m_patchvertexbuffer.GpuAddress();
+	D3D12_VERTEX_BUFFER_VIEW vbv={};
+	vbv.BufferLocation = m_patchvertexbuffer->GetGPUVirtualAddress();
 	vbv.StrideInBytes = sizeof(DirectX::VertexPositionNormalTexture);
-	vbv.SizeInBytes = static_cast<UINT>(m_patchvertexbuffer.Size());
+	vbv.SizeInBytes = static_cast<UINT>(sizeof(m_patchvertexbuffer));
 	command->IASetVertexBuffers(0, 1, &vbv);
 	
-	D3D12_INDEX_BUFFER_VIEW ibv;
+	D3D12_INDEX_BUFFER_VIEW ibv={};
 
-	ibv.BufferLocation = m_patchindexbuffer.GpuAddress();
+	ibv.BufferLocation = m_patchindexbuffer->GetGPUVirtualAddress();
 	ibv.Format = DXGI_FORMAT_R16_UINT;
-	ibv.SizeInBytes = static_cast<UINT>(m_patchindexbuffer.Size());
-
+	ibv.SizeInBytes = static_cast<UINT>(sizeof(m_patchindexbuffer));
+	command->SetGraphicsRootSignature(m_patchrootsignature.Get());
+	command->SetPipelineState(m_patchpipelinestate.Get());
 	command->IASetVertexBuffers(0, 1, &vbv);
 	command->IASetIndexBuffer(&ibv);
 	command->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	command->SetPipelineState(m_patchpipelinestate.Get());
+	
 	command->DrawIndexedInstanced(indices.size(),1,0,0,0);
 }

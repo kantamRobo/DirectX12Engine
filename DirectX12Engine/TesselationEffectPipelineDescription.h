@@ -3,8 +3,7 @@
 #include <stdexcept>
 #include "DirectXHelpers.h"
 #include "RenderTargetState.h"
-struct TesselationEffectPipelineDescription:public DirectX::EffectPipelineStateDescription
-{
+struct TesselationEffectPipelineDescription{
 
     D3D12_INPUT_LAYOUT_DESC             inputLayout;
     D3D12_BLEND_DESC                    blendDesc;
@@ -33,6 +32,24 @@ struct TesselationEffectPipelineDescription:public DirectX::EffectPipelineStateD
     {
         if (iinputLayout)
             this->inputLayout = *iinputLayout;
+    }
+
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC GetDesc() const noexcept
+    {
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+        psoDesc.BlendState = blendDesc;
+        psoDesc.SampleMask = renderTargetState.sampleMask;
+        psoDesc.RasterizerState = rasterizerDesc;
+        psoDesc.DepthStencilState = depthStencilDesc;
+        psoDesc.InputLayout = inputLayout;
+        psoDesc.IBStripCutValue = stripCutValue;
+        psoDesc.PrimitiveTopologyType = primitiveTopology;
+        psoDesc.NumRenderTargets = renderTargetState.numRenderTargets;
+        memcpy(psoDesc.RTVFormats, renderTargetState.rtvFormats, sizeof(DXGI_FORMAT) * D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT);
+        psoDesc.DSVFormat = renderTargetState.dsvFormat;
+        psoDesc.SampleDesc = renderTargetState.sampleDesc;
+        psoDesc.NodeMask = renderTargetState.nodeMask;
+        return psoDesc;
     }
 
     void CreatePipelineState(

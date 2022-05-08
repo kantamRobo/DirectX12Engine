@@ -11,6 +11,7 @@
 #include "TesselationEffectPipelineDescription.h"
 #include "CommonStates.h"
 #include <wrl.h>
+#include "DeviceResources.h"
 struct grayscale
 {
 	unsigned int width=0;
@@ -28,9 +29,10 @@ struct Normalmap
 
 class Terrein
 {
+	Terrein();
 	Terrein(ID3D12Device* device);
 	grayscale m_heightmap;
-	std::vector<DirectX::VertexPositionNormalTexture> m_vertices;
+	std::vector<DirectX::VertexPosition> m_vertices;
 	//ハイトマップを作成、またはロード、どちらか
 	//を行う
 	void Preparegrayscale();
@@ -41,14 +43,14 @@ class Terrein
 
 	void PrepareNormalMap(const grayscale* heightMap, Normalmap* normalMap, unsigned int width,unsigned int height)
 		;
-	void Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate);
-
-	void DrawTerrein(ID3D12GraphicsCommandList4* );
+	void Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate,
+		DX::DeviceResources* devicesresources);
+	void DrawTerrein(ID3D12GraphicsCommandList* );
 	std::vector<UINT> indices;
 	std::unique_ptr<TerreinEditor> m_terreineditor;
-	DirectX::GraphicsResource  m_patchvertexbuffer;
-	DirectX::GraphicsResource  m_patchindexbuffer;
-	std::unique_ptr<DirectX::GraphicsMemory> m_terreingraphicsmemory;
+	Microsoft::WRL::ComPtr<ID3D12Resource>  m_patchvertexbuffer;
+	Microsoft::WRL::ComPtr<ID3D12Resource>  m_patchindexbuffer;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_patchrootsignature = nullptr;
 	TesselationEffectPipelineDescription terreinpipeline;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> m_patchpipelinestate=nullptr;
 	DirectX::SimpleMath::Matrix world;
