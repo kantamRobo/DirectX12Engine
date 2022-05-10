@@ -131,6 +131,8 @@
     <ClInclude Include="TerreinEditor.h" />
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="TesselationEffectPipelineDescription.h" />
+    <ClInclude Include="DemmandCreate.h" />
+    <ClInclude Include="Platformhelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />

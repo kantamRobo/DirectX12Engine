@@ -4,12 +4,21 @@
 #include <d3dcompiler.h>
 
 using namespace std;
-
+enum Descriptors
+{
+	WindowsLogo,
+	CourierFont,
+	ControllerFont,
+	GamerPic,
+	Count
+};
 Terrein::Terrein(ID3D12Device* device)
 {
 	//m_terreineditor = std::make_unique<TerreinEditor>();
 
-	
+	m_effect = std::make_unique<DirectX::BasicEffect>(device);
+
+  
 }
 void Terrein::Preparegrayscale()
 {
@@ -127,6 +136,8 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 DX::DeviceResources* devicesresources)
 {
 	
+
+
 	DirectX::ResourceUploadBatch resourceUpload(device);
 	resourceUpload.Begin();
 	
@@ -171,7 +182,14 @@ DX::DeviceResources* devicesresources)
 		
 	}
 	
-
+	m_heightmapheap = std::make_unique<DirectX::DescriptorHeap>(device,
+		D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+		D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
+		Descriptors::Count);
+	m_normalmapheap = std::make_unique<DirectX::DescriptorHeap>(device,
+		D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+		D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
+		Descriptors::Count);
 	DirectX::SharedGraphicsResource hullvertex;
 	DirectX::SharedGraphicsResource hullindex;
 	resourceUpload.Upload(m_patchvertexbuffer.Get(), hullvertex);
@@ -237,10 +255,13 @@ DX::DeviceResources* devicesresources)
 }
 
 
-void Terrein::DrawTerrein(ID3D12GraphicsCommandList* command)
+void Terrein::DrawTerrein(ID3D12GraphicsCommandList* command,const Camera in_camera)
 {
-
 	
+	m_effect->SetWorld(world);
+	m_effect->SetView(in_camera.m_view);
+	m_effect->SetProjection(in_camera.m_proj);
+	m_effect->Apply(command);
 	D3D12_VERTEX_BUFFER_VIEW vbv={};
 	vbv.BufferLocation = m_patchvertexbuffer->GetGPUVirtualAddress();
 	vbv.StrideInBytes = sizeof(DirectX::VertexPositionNormalTexture);
@@ -252,6 +273,9 @@ void Terrein::DrawTerrein(ID3D12GraphicsCommandList* command)
 	ibv.BufferLocation = m_patchindexbuffer->GetGPUVirtualAddress();
 	ibv.Format = DXGI_FORMAT_R16_UINT;
 	ibv.SizeInBytes = static_cast<UINT>(sizeof(m_patchindexbuffer));
+	ID3D12DescriptorHeap* heaps[] = { m_heightmapheap->Heap(),m_normalmapheap->Heap() };
+
+	command->SetDescriptorHeaps(2,heaps);
 	command->SetGraphicsRootSignature(m_patchrootsignature.Get());
 	command->SetPipelineState(m_patchpipelinestate.Get());
 	command->IASetVertexBuffers(0, 1, &vbv);

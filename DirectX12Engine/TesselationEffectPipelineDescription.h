@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include "DirectXHelpers.h"
 #include "RenderTargetState.h"
-struct TesselationEffectPipelineDescription{
+struct TesselationEffectPipelineDescription:public DirectX::EffectPipelineStateDescription{
 
     D3D12_INPUT_LAYOUT_DESC             inputLayout;
     D3D12_BLEND_DESC                    blendDesc;

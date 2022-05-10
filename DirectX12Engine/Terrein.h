@@ -12,6 +12,7 @@
 #include "CommonStates.h"
 #include <wrl.h>
 #include "DeviceResources.h"
+#include "Camera.h"
 struct grayscale
 {
 	unsigned int width=0;
@@ -45,7 +46,7 @@ class Terrein
 		;
 	void Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate,
 		DX::DeviceResources* devicesresources);
-	void DrawTerrein(ID3D12GraphicsCommandList* );
+	void DrawTerrein(ID3D12GraphicsCommandList* command, const Camera in_camera);
 	std::vector<UINT> indices;
 	std::unique_ptr<TerreinEditor> m_terreineditor;
 	Microsoft::WRL::ComPtr<ID3D12Resource>  m_patchvertexbuffer;
@@ -55,7 +56,8 @@ class Terrein
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> m_patchpipelinestate=nullptr;
 	DirectX::SimpleMath::Matrix world;
 	std::unique_ptr<DirectX::BasicEffect> m_effect;
-
+	std::unique_ptr<DirectX::DescriptorHeap> m_heightmapheap = nullptr;
+	std::unique_ptr<DirectX::DescriptorHeap> m_normalmapheap = nullptr;
 	
 };
 
