@@ -16,7 +16,7 @@ Terrein::Terrein(ID3D12Device* device)
 {
 	//m_terreineditor = std::make_unique<TerreinEditor>();
 
-	m_effect = std::make_unique<DirectX::BasicEffect>(device);
+	m_effect = std::make_unique<DirectX::BasicEffect>(device,0,terreinpipeline);
 
   
 }
@@ -261,7 +261,7 @@ void Terrein::DrawTerrein(ID3D12GraphicsCommandList* command,const Camera in_cam
 	m_effect->SetWorld(world);
 	m_effect->SetView(in_camera.m_view);
 	m_effect->SetProjection(in_camera.m_proj);
-	m_effect->Apply(command);
+	
 	D3D12_VERTEX_BUFFER_VIEW vbv={};
 	vbv.BufferLocation = m_patchvertexbuffer->GetGPUVirtualAddress();
 	vbv.StrideInBytes = sizeof(DirectX::VertexPositionNormalTexture);
@@ -276,8 +276,7 @@ void Terrein::DrawTerrein(ID3D12GraphicsCommandList* command,const Camera in_cam
 	ID3D12DescriptorHeap* heaps[] = { m_heightmapheap->Heap(),m_normalmapheap->Heap() };
 
 	command->SetDescriptorHeaps(2,heaps);
-	command->SetGraphicsRootSignature(m_patchrootsignature.Get());
-	command->SetPipelineState(m_patchpipelinestate.Get());
+	m_effect->Apply_Any_RS_PSO(command, m_patchrootsignature.Get(), m_patchpipelinestate.Get());
 	command->IASetVertexBuffers(0, 1, &vbv);
 	command->IASetIndexBuffer(&ibv);
 	command->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

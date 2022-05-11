@@ -20,10 +20,12 @@
     <Filter Include="terreinshader">
       <UniqueIdentifier>{45b7d3be-2ced-4119-ae68-674667672bfd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX12Engine">
+      <UniqueIdentifier>{15681c01-3568-473c-9fcf-846288196cb2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Game.h" />
     <ClInclude Include="StepTimer.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -33,12 +35,7 @@
     <ClInclude Include="d3dx12.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Character.h" />
-    <ClInclude Include="DescriptorPool.h" />
     <ClInclude Include="imconfig.h" />
-    <ClInclude Include="ImguiCore.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Rigidshape.h" />
@@ -127,25 +124,46 @@
     <ClInclude Include="..\packages\stb\stb_c_lexer.h">
       <Filter>stb</Filter>
     </ClInclude>
-    <ClInclude Include="Terrein.h" />
-    <ClInclude Include="TerreinEditor.h" />
-    <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="TesselationEffectPipelineDescription.h" />
     <ClInclude Include="DemmandCreate.h" />
     <ClInclude Include="Platformhelper.h" />
+    <ClInclude Include="Src\AlignedNew.h" />
+    <ClInclude Include="Src\d3dx12.h" />
+    <ClInclude Include="Src\LinearAllocator.h" />
+    <ClInclude Include="Src\pch.h" />
+    <ClInclude Include="Src\PlatformHelpers.h" />
+    <ClInclude Include="Src\vbo.h" />
+    <ClInclude Include="Animation.h">
+      <Filter>DirectX12Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioEngine.h">
+      <Filter>DirectX12Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>DirectX12Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>DirectX12Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrein.h">
+      <Filter>DirectX12Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="TerreinEditor.h">
+      <Filter>DirectX12Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>DirectX12Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="ImguiCore.h">
+      <Filter>DirectX12Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DeviceResources.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="character.cpp" />
-    <ClCompile Include="DescriptorPool.cpp" />
-    <ClCompile Include="ImguiCore.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Rigidshape.cpp" />
     <ClCompile Include="PlanePolygon.cpp" />
@@ -176,10 +194,37 @@
     <ClCompile Include="..\packages\stb\stb_vorbis.c">
       <Filter>stb</Filter>
     </ClCompile>
-    <ClCompile Include="Terrein.cpp" />
-    <ClCompile Include="TerreinEditor.cpp" />
-    <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="TesselationEffectPipelineDescription.cpp" />
+    <ClCompile Include="Src\DirectXHelpers.cpp" />
+    <ClCompile Include="Src\GeometricPrimitive.cpp" />
+    <ClCompile Include="Src\Keyboard.cpp" />
+    <ClCompile Include="Src\LinearAllocator.cpp" />
+    <ClCompile Include="Src\PrimitiveBatch.cpp" />
+    <ClCompile Include="Src\ScreenGrab.cpp" />
+    <ClCompile Include="Animation.cpp">
+      <Filter>DirectX12Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioEngine.cpp">
+      <Filter>DirectX12Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>DirectX12Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="character.cpp">
+      <Filter>DirectX12Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrein.cpp">
+      <Filter>DirectX12Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="TerreinEditor.cpp">
+      <Filter>DirectX12Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>DirectX12Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="ImguiCore.cpp">
+      <Filter>DirectX12Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -219,7 +264,6 @@
     </Manifest>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="soldier.sdkmesh" />
     <None Include="soldier.sdkmesh_anim" />
     <None Include="planepoly.sdkmesh" />

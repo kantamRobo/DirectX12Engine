@@ -114,7 +114,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)\packages\stb;$(SolutionDir)\packages\DirectXTK12\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);(SolutionDir)\packages\stb;$(SolutionDir)\packages\DirectXTK12\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level4</WarningLevel>
@@ -128,8 +128,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SimulationController_static_64.lib;SceneQuery_static_64.lib;PhysXVehicle_static_64.lib;PhysXTask_static_64.lib;PhysXPvdSDK_static_64.lib;PhysXFoundation_64.lib;PhysXExtensions_static_64.lib;PhysXCooking_64.lib;PhysXCommon_64.lib;PhysXCharacterKinematic_static_64.lib;PhysX_64.lib;LowLevelDynamics_static_64.lib;LowLevel_static_64.lib;LowLevelAABB_static_64.lib;d3d12.lib;dxgi.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\packages\vcpkg\packages\physx_x64-windows\lib;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\packages\vcpkg\packages\physx_x64-windows\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DirectXTK12.lib;SimulationController_static_64.lib;SceneQuery_static_64.lib;PhysXVehicle_static_64.lib;PhysXTask_static_64.lib;PhysXPvdSDK_static_64.lib;PhysXFoundation_64.lib;PhysXExtensions_static_64.lib;PhysXCooking_64.lib;PhysXCommon_64.lib;PhysXCharacterKinematic_static_64.lib;PhysX_64.lib;LowLevelDynamics_static_64.lib;LowLevel_static_64.lib;LowLevelAABB_static_64.lib;d3d12.lib;dxgi.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\packages\vcpkg\packages\physx_x64-windows\lib;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\packages\vcpkg\packages\physx_x64-windows\bin;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
@@ -222,7 +222,6 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="d3dx12.h" />
-    <ClInclude Include="DescriptorPool.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
@@ -239,6 +238,12 @@
     <ClInclude Include="PlanePolygon.h" />
     <ClInclude Include="Platformhelper.h" />
     <ClInclude Include="Rigidshape.h" />
+    <ClInclude Include="Src\AlignedNew.h" />
+    <ClInclude Include="Src\d3dx12.h" />
+    <ClInclude Include="Src\LinearAllocator.h" />
+    <ClInclude Include="Src\pch.h" />
+    <ClInclude Include="Src\PlatformHelpers.h" />
+    <ClInclude Include="Src\vbo.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Terrein.h" />
@@ -254,7 +259,6 @@
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="character.cpp" />
-    <ClCompile Include="DescriptorPool.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="ImguiCore.cpp" />
@@ -275,6 +279,12 @@
     </ClCompile>
     <ClCompile Include="PlanePolygon.cpp" />
     <ClCompile Include="Rigidshape.cpp" />
+    <ClCompile Include="Src\DirectXHelpers.cpp" />
+    <ClCompile Include="Src\GeometricPrimitive.cpp" />
+    <ClCompile Include="Src\Keyboard.cpp" />
+    <ClCompile Include="Src\LinearAllocator.cpp" />
+    <ClCompile Include="Src\PrimitiveBatch.cpp" />
+    <ClCompile Include="Src\ScreenGrab.cpp" />
     <ClCompile Include="Terrein.cpp" />
     <ClCompile Include="TerreinEditor.cpp" />
     <ClCompile Include="TesselationEffectPipelineDescription.cpp" />
@@ -299,7 +309,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
-    <None Include="packages.config" />
     <None Include="planepoly.sdkmesh" />
     <None Include="soldier.sdkmesh" />
     <None Include="soldier.sdkmesh_anim" />
