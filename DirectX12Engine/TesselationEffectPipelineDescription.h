@@ -55,6 +55,8 @@ struct TesselationEffectPipelineDescription:public DirectX::EffectPipelineStateD
     void CreatePipelineState(
         _In_ ID3D12Device* device,
         _In_ ID3D12RootSignature* rootSignature,
+        const D3D12_SHADER_BYTECODE& VertexShader,
+        const D3D12_SHADER_BYTECODE& PixelShader,
         const D3D12_SHADER_BYTECODE& HullShader,
         const D3D12_SHADER_BYTECODE& DomainShader,
         _Outptr_ ID3D12PipelineState** pPipelineState) const
@@ -62,6 +64,8 @@ struct TesselationEffectPipelineDescription:public DirectX::EffectPipelineStateD
     {
         auto psoDesc = GetDesc();
         psoDesc.pRootSignature = rootSignature;
+        psoDesc.VS = VertexShader;
+        psoDesc.PS = PixelShader;
         psoDesc.HS = HullShader;
         psoDesc.DS = DomainShader;
 

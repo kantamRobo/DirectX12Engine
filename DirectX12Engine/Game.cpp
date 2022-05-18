@@ -27,8 +27,12 @@ enum Descriptors
 };
 Game::Game() noexcept(false):m_retryAudio(false)
 {
-    m_deviceResources = std::make_unique<DX::DeviceResources>();
+    
+    m_deviceResources = std::make_shared<DX::DeviceResources>();
+    
     m_deviceResources->RegisterDeviceNotify(this);
+    
+ 
 }
 
 Game::~Game()
@@ -47,6 +51,8 @@ Game::~Game()
 // Initialize the Direct3D resources required to run.
 void Game::Initialize(HWND window, int width, int height)
 {
+
+    DirectX::RenderTargetState targetstate;
     hwnd = window;
     m_deviceResources->SetWindow(window, width, height);
 
@@ -69,6 +75,8 @@ void Game::Initialize(HWND window, int width, int height)
     m_timer.SetFixedTimeStep(true);
     m_timer.SetTargetElapsedSeconds(1.0 / 60);
     */
+   
+   
     
 }
 
@@ -164,44 +172,57 @@ void Game::Render()
     m_imguicore.RenderNodes(m_deviceResources.get());
     m_imguicore.Render_AllGUI(m_deviceResources.get());
     */
-    m_imguicore.ImguiCore_Tick();
-	m_animation.Apply(*m_skinnedcharacter->m_Model, nbones, m_drawBones.get());
+    m_terrein->DrawTerrein(commandList, m_camera);
+
+    //m_imguicore.ImguiCore_Tick();
+	//m_animation.Apply(*m_skinnedcharacter->m_Model, nbones, m_drawBones.get());
+    /*
     ImGui::Begin("Rendering Test Menu");
     ImGui::SetWindowSize(ImVec2(400, 500),
         ImGuiCond_::ImGuiCond_FirstUseEver);
-	ID3D12DescriptorHeap* heaps[] = { m_modelResources->Heap(),
+        */
+	/*
+    ID3D12DescriptorHeap* heaps[] = { m_modelResources->Heap(),
 		m_states->Heap()};
-	
+	*/
+    /*
 	commandList->SetDescriptorHeaps(
 		static_cast<UINT>(std::size(heaps)), heaps);
-    
+    */
+    /*
 	m_Skinnedcharacterworld = DirectX::XMMatrixTranslation(m_skinnedcharacter->m_transform.position.x,
 		m_skinnedcharacter->m_transform.position.y,
 		m_skinnedcharacter->m_transform.position.z);
-
+        */
   
     //m_camera.m_transform.position = c_cameraPos;
-	Model::UpdateEffectMatrices(m_modelNormal, m_Skinnedcharacterworld, m_camera.m_view, m_camera.m_proj);
-  
+	//Model::UpdateEffectMatrices(m_modelNormal, m_Skinnedcharacterworld, m_camera.m_view, m_camera.m_proj);
+  /*
      m_skinnedcharacter->m_Model->DrawSkinned(commandList, nbones, m_drawBones.get(),
         m_Skinnedcharacterworld, m_modelNormal.cbegin());
      ImGui::End();
-
+     */
     
     //m_imguicore.ImguiCore_Tick();
+   /*
     ID3D12DescriptorHeap* imguiheap[] = { imguidescriptorheap->Heap() };
     imguiheap[0] = imguidescriptorheap->Heap();
-
-    commandList->SetDescriptorHeaps(1, imguiheap);
+    */
+    
+    
+    //commandList->SetDescriptorHeaps(1, imguiheap);
+    
+    
     //GUIPanel‚ð•`‰æ‚·‚é
     //c_cameraPos = { camx,camy,camz,0 };
 
+    /*
     m_imguicore.RenderMainpanel(m_deviceResources.get(), &m_skinnedcharacter->m_transform.position.x,
         &m_skinnedcharacter->m_transform.position.y,
         &m_skinnedcharacter->m_transform.position.z);
     m_imguicore.RenderNodes(m_deviceResources.get());
     m_imguicore.Render_AllGUI(m_deviceResources.get());
-
+    */
     PIXEndEvent(commandList);
 
     // Show the new frame.
@@ -314,43 +335,48 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
     // TODO: Initialize device dependent objects here (independent of window size).
 	 m_states = std::make_unique<CommonStates>(device);
 
-	
+	/*
      m_skinnedcharacter = std::make_unique<SkinnedCharacter>();
     
 	 m_skinnedcharacter->m_Model = Model::CreateFromSDKMESH(device, L"soldier.sdkmesh",
 		 ModelLoader_IncludeBones);
-    
+         */
+    /*
 	 DX::ThrowIfFailed(
 		 m_animation.Load(L"soldier.sdkmesh_anim")
 	 );
+     */
     
-    
+    /*
      imguidescriptorheap = std::make_unique<DescriptorHeap>(device, Descriptors::Count);
      imguidescriptorheap->Heap()->SetName(L"ImguiHeap");
      m_imguicore = ImguiCore(hwnd, m_deviceResources->GetD3DDevice(),*imguidescriptorheap,imguidescriptorheap->GetFirstCpuHandle(),imguidescriptorheap->GetFirstGpuHandle()
          );
-
+         */
+     /*
      m_skinnedcharacter->m_Model->materials[0].diffuseTextureIndex = 0;
      m_skinnedcharacter->m_Model->materials[0].samplerIndex = static_cast<int>(
 		 CommonStates::SamplerIndex::AnisotropicClamp);
-     
+     */
 
 	
-	 m_animation.Bind(*m_skinnedcharacter->m_Model);
-    
+	 //m_animation.Bind(*m_skinnedcharacter->m_Model);
+    /*
 	 m_drawBones = ModelBone::MakeArray(m_skinnedcharacter->m_Model->bones.size());
 	 const auto& cull = CommonStates::CullClockwise; 
-	 ResourceUploadBatch resourceUpload(device);
-
+	*/
+    ResourceUploadBatch resourceUpload(device);
+     
 	 resourceUpload.Begin();
 
-     m_skinnedcharacter->m_Model->LoadStaticBuffers(device, resourceUpload);
+     //m_skinnedcharacter->m_Model->LoadStaticBuffers(device, resourceUpload);
 
-	 m_modelResources = m_skinnedcharacter->m_Model->LoadTextures(device, resourceUpload);
-	
+	// m_modelResources = m_skinnedcharacter->m_Model->LoadTextures(device, resourceUpload);
+	/*
 	 m_fxFactory = std::make_unique<EffectFactory>(m_modelResources->Heap(),
 		 m_states->Heap());
-
+         */
+     
 	 auto uploadResourcesFinished = resourceUpload.End(
 		 m_deviceResources->GetCommandQueue());
 
@@ -359,21 +385,24 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
 	 RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(),
 		 m_deviceResources->GetDepthBufferFormat());
 
+     m_terrein = std::make_unique<Terrein>(m_deviceResources->GetD3DDevice(), rtState,
+         m_deviceResources);
+
+     m_terrein->Preparepatch(m_deviceResources->GetD3DDevice(), rtState, std::move(m_deviceResources));
+
+     /*
 	 EffectPipelineStateDescription pd(
 		 nullptr,
 		 CommonStates::Opaque,
 		 CommonStates::DepthDefault,
 		 cull,
 		 rtState);
-
+         */
 	
   
-	 m_modelNormal = m_skinnedcharacter->m_Model->CreateEffects(*m_fxFactory, pd, pd);
-     
-	
-   
-       
-     m_Skinnedcharacterworld = Matrix::Identity;
+	 //m_modelNormal = m_skinnedcharacter->m_Model->CreateEffects(*m_fxFactory, pd, pd);
+    
+     //m_Skinnedcharacterworld = Matrix::Identity;
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.

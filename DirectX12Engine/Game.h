@@ -12,6 +12,7 @@
 #include "Rigidshape.h"
 #include "PlanePolygon.h"
 #include "GraphicsMemory.h"
+#include "Terrein.h"
 #include <DirectXMath.h>
 #include <Dbt.h>
 #include <ksmedia.h>
@@ -89,12 +90,12 @@ private:
     void CreateWindowSizeDependentResources();
 
     // Device resources.
-    std::unique_ptr<DX::DeviceResources>        m_deviceResources;
+    std::shared_ptr<DX::DeviceResources>        m_deviceResources;
 
     // Rendering loop timer.
     DX::StepTimer                               m_timer;
 
-
+    std::unique_ptr<Terrein> m_terrein;
     // If using the DirectX Tool Kit for DX12, uncomment this line:
     // std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
 };

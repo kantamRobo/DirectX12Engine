@@ -1,31 +1,26 @@
-struct DS_OUTPUT
+#include "TestTerrein.hlsli"
+
+[domain("quad")]
+PSInput mainDS(HSParameters In, float2 loc : SV_DomainLocation, const OutputPatch<DSInput, 4> patch)
 {
-	float4 vPosition  : SV_POSITION;
-};
+    PSInput result;
+    float4x4 mtxWVP = mul(sceneConstants.world, sceneConstants.viewProj);
 
-struct HS_CONTROL_POINT_OUTPUT
-{
-	float3 vPosition : WORLDPOS; 
-};
+    float3 p0 = lerp(patch[0].Position, patch[1].Position, loc.x).xyz;
+    float3 p1 = lerp(patch[2].Position, patch[3].Position, loc.x).xyz;
+    float3 pos = lerp(p0, p1, loc.y);
 
-struct HS_CONSTANT_DATA_OUTPUT
-{
-	float EdgeTessFactor[3]			: SV_TessFactor;
-	float InsideTessFactor			: SV_InsideTessFactor;
-};
+    float2 c0 = lerp(patch[0].UV, patch[1].UV, loc.x);
+    float2 c1 = lerp(patch[2].UV, patch[3].UV, loc.x);
+    float2 uv = lerp(c0, c1, loc.y);
 
-#define NUM_CONTROL_POINTS 3
+    float height = texHeightMap.SampleLevel(mapSampler, uv, 0).x;
+    pos.y = height * 30;
 
-[domain("tri")]
-DS_OUTPUT main(
-	HS_CONSTANT_DATA_OUTPUT input,
-	float3 domain : SV_DomainLocation,
-	const OutputPatch<HS_CONTROL_POINT_OUTPUT, NUM_CONTROL_POINTS> patch)
-{
-	DS_OUTPUT Output;
+    float3 n = normalize((texNormalMap.SampleLevel(mapSampler, uv, 0).xyz - 0.5));
+    result.Normal = n;
+    result.UV = uv;
+    result.Position = mul(float4(pos.xyz, 1), mtxWVP);
 
-	Output.vPosition = float4(
-		patch[0].vPosition*domain.x+patch[1].vPosition*domain.y+patch[2].vPosition*domain.z,1);
-
-	return Output;
+    return result;
 }

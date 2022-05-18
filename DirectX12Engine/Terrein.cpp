@@ -12,10 +12,12 @@ enum Descriptors
 	GamerPic,
 	Count
 };
-Terrein::Terrein(ID3D12Device* device)
+Terrein::Terrein(ID3D12Device* device,
+	const DirectX::RenderTargetState rtState,
+	const std::shared_ptr<DX::DeviceResources> devicesresources)
 {
 	//m_terreineditor = std::make_unique<TerreinEditor>();
-
+	Preparepatch(device, rtState, devicesresources);
 	m_effect = std::make_unique<DirectX::BasicEffect>(device,0,terreinpipeline);
 
   
@@ -132,14 +134,23 @@ void Terrein::PrepareNormalMap(const grayscale* heightMap, Normalmap* normalMap,
 	}
 }
 
-void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate, 
-DX::DeviceResources* devicesresources)
+void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate,
+	const std::shared_ptr<DX::DeviceResources> devicesresources)
 {
-	
-
-
 	DirectX::ResourceUploadBatch resourceUpload(device);
 	resourceUpload.Begin();
+	
+	DX::ThrowIfFailed(
+		DirectX::CreateWICTextureFromFile(device, resourceUpload, L"normalmap.png",
+			m_normaltexture.ReleaseAndGetAddressOf()));
+
+	DX::ThrowIfFailed(
+		DirectX::CreateWICTextureFromFile(device, resourceUpload, L"heightmap.png",
+			m_heighttexture.ReleaseAndGetAddressOf()));
+
+
+
+	
 	
 	const int divide = 10;
 	const float edge = 200.0f;
@@ -192,6 +203,27 @@ DX::DeviceResources* devicesresources)
 		Descriptors::Count);
 	DirectX::SharedGraphicsResource hullvertex;
 	DirectX::SharedGraphicsResource hullindex;
+
+
+	//ここに頂点バッファとインデックスバッファのリソース作成処理を入れる
+	auto desc = CD3DX12_RESOURCE_DESC(
+		D3D12_RESOURCE_DIMENSION_TEXTURE2D,
+		D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+		c_texture_size, c_texture_size, 1, 1,
+		DXGI_FORMAT_R8G8_SNORM,
+		1, 0,
+		D3D12_TEXTURE_LAYOUT_UNKNOWN, D3D12_RESOURCE_FLAG_NONE);
+
+	CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
+
+	DX::ThrowIfFailed(device->CreateCommittedResource(
+		&defaultHeapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&desc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_GRAPHICS_PPV_ARGS(tex.ReleaseAndGetAddressOf())));
+
 	resourceUpload.Upload(m_patchvertexbuffer.Get(), hullvertex);
 	resourceUpload.Upload(m_patchindexbuffer.Get(), hullindex);
 	resourceUpload.Transition(
@@ -213,25 +245,47 @@ DX::DeviceResources* devicesresources)
 	Microsoft::WRL::ComPtr<ID3DBlob> hullshadererror = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> domainshader = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> domainshadererror = nullptr;
-	auto hullresult = D3DCompileFromFile(L"HSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "HSMain", "vs_5_0", D3DCOMPILE_DEBUG, 0, &hullshader,
+	auto hullresult = D3DCompileFromFile(L"HSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainHS", "hs_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
 		&hullshadererror);
-	auto domainresult = D3DCompileFromFile(L"HSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "HSMain", "vs_5_0", D3DCOMPILE_DEBUG, 0, &hullshader,
+	auto domainresult = D3DCompileFromFile(L"DSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainDS", "ds_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
 		&hullshadererror);
-	CD3DX12_SHADER_BYTECODE patchHS(hullshader.Get());
+
+	Microsoft::WRL::ComPtr<ID3DBlob> vertexshader = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> vertexshadererror = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> pixelshader = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> pixelshadererror = nullptr;
+	auto vertexresult = D3DCompileFromFile(L"VSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainHS", "vs_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
+		&hullshadererror);
+	auto pixelresult = D3DCompileFromFile(L"PSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainDS", "ps_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
+		&hullshadererror);
 	CD3DX12_SHADER_BYTECODE patchDS(domainshader.Get());
+	CD3DX12_SHADER_BYTECODE patchHS(hullshader.Get());
 
 
-	D3D12_INPUT_ELEMENT_DESC desc = {};
-	desc.AlignedByteOffset = 0;
-	desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	desc.InputSlot = 0;
-	desc.InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
-	desc.SemanticIndex = 0;
-	desc.SemanticName = "WORLDPOS";
+	CD3DX12_SHADER_BYTECODE patchVS(vertexshader.Get());
+	CD3DX12_SHADER_BYTECODE patchPS(pixelshader.Get());
+
+
+	D3D12_INPUT_ELEMENT_DESC desc[2] = {};
+	desc[0].AlignedByteOffset = 0;
+	desc[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	desc[0].InputSlot = 0;
+	desc[0].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+	desc[0].SemanticIndex = 0;
+	desc[0].SemanticName = "POSITION";
+
+	desc[1].AlignedByteOffset = 0;
+	desc[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	//UVのテクスチャ座標、そのフォーマットの不一致には注意。
+	desc[1].InputSlot = 0;
+	desc[1].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+	desc[1].SemanticIndex = 0;
+	desc[1].SemanticName = "TEXCOORD0";
+	
 
 	D3D12_INPUT_LAYOUT_DESC input = {};
-	input.NumElements = 1;
-	input.pInputElementDescs = &desc;
+	input.NumElements = _countof(desc);
+	input.pInputElementDescs = desc;
 	D3D12_ROOT_SIGNATURE_DESC rootsignatureDesc = {};
 	Microsoft::WRL::ComPtr<ID3DBlob> error;
 	rootsignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
@@ -248,8 +302,9 @@ DX::DeviceResources* devicesresources)
 		DirectX::CommonStates::DepthDefault,
 		DirectX::CommonStates::CullCounterClockwise,
 		targetstate);
-	pipeline.CreatePipelineState(device,m_patchrootsignature.Get()
-		, patchDS,patchHS,m_patchpipelinestate.GetAddressOf());
+	terreinpipeline = pipeline;
+	terreinpipeline.CreatePipelineState(device,m_patchrootsignature.Get()
+		, patchVS,patchPS,patchDS,patchHS,m_patchpipelinestate.GetAddressOf());
 
 	
 }
@@ -266,20 +321,21 @@ void Terrein::DrawTerrein(ID3D12GraphicsCommandList* command,const Camera in_cam
 	vbv.BufferLocation = m_patchvertexbuffer->GetGPUVirtualAddress();
 	vbv.StrideInBytes = sizeof(DirectX::VertexPositionNormalTexture);
 	vbv.SizeInBytes = static_cast<UINT>(sizeof(m_patchvertexbuffer));
-	command->IASetVertexBuffers(0, 1, &vbv);
+	
 	
 	D3D12_INDEX_BUFFER_VIEW ibv={};
 
 	ibv.BufferLocation = m_patchindexbuffer->GetGPUVirtualAddress();
 	ibv.Format = DXGI_FORMAT_R16_UINT;
 	ibv.SizeInBytes = static_cast<UINT>(sizeof(m_patchindexbuffer));
+
 	ID3D12DescriptorHeap* heaps[] = { m_heightmapheap->Heap(),m_normalmapheap->Heap() };
 
 	command->SetDescriptorHeaps(2,heaps);
 	m_effect->Apply_Any_RS_PSO(command, m_patchrootsignature.Get(), m_patchpipelinestate.Get());
 	command->IASetVertexBuffers(0, 1, &vbv);
 	command->IASetIndexBuffer(&ibv);
-	command->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	
+	command->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
+
 	command->DrawIndexedInstanced(indices.size(),1,0,0,0);
 }

@@ -196,11 +196,9 @@
     </ClCompile>
     <ClCompile Include="TesselationEffectPipelineDescription.cpp" />
     <ClCompile Include="Src\DirectXHelpers.cpp" />
-    <ClCompile Include="Src\GeometricPrimitive.cpp" />
     <ClCompile Include="Src\Keyboard.cpp" />
     <ClCompile Include="Src\LinearAllocator.cpp" />
     <ClCompile Include="Src\PrimitiveBatch.cpp" />
-    <ClCompile Include="Src\ScreenGrab.cpp" />
     <ClCompile Include="Animation.cpp">
       <Filter>DirectX12Engine</Filter>
     </ClCompile>
@@ -270,12 +268,21 @@
     <None Include="imgui.ini">
       <Filter>Imgui</Filter>
     </None>
+    <None Include="TestTerrein.hlsli">
+      <Filter>terreinshader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="HSterrein.hlsl">
       <Filter>terreinshader</Filter>
     </FxCompile>
     <FxCompile Include="DSterrein.hlsl">
+      <Filter>terreinshader</Filter>
+    </FxCompile>
+    <FxCompile Include="VSterrein.hlsl">
+      <Filter>terreinshader</Filter>
+    </FxCompile>
+    <FxCompile Include="PSterrein.hlsl">
       <Filter>terreinshader</Filter>
     </FxCompile>
   </ItemGroup>
