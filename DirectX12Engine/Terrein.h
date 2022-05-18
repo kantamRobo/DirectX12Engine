@@ -34,7 +34,7 @@ public:
 	Terrein(){};
 	Terrein(ID3D12Device* device, const DirectX::RenderTargetState rtState, const std::shared_ptr<DX::DeviceResources> devicesresources);
 	grayscale m_heightmap;
-	std::vector<DirectX::VertexPosition> m_vertices;
+	std::vector<DirectX::VertexPositionTexture> m_vertices;
 	//ハイトマップを作成、またはロード、どちらか
 	//を行う
 	void Preparegrayscale();
@@ -46,12 +46,18 @@ public:
 		;
 public:
 	void Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate,
-		const std::shared_ptr<DX::DeviceResources> devicesresources);
+		const std::shared_ptr<DX::DeviceResources> devicesresources,
+		std::shared_ptr<DirectX::GraphicsMemory> graphicsMemory);
 	void DrawTerrein(ID3D12GraphicsCommandList* command, const Camera in_camera);
-	std::vector<UINT> indices;
+	
+	DirectX::SharedGraphicsResource vertexBuffer;
+	DirectX::SharedGraphicsResource indexBuffer;
+	std::vector<UINT> m_indices;
 	std::unique_ptr<TerreinEditor> m_terreineditor;
-	Microsoft::WRL::ComPtr<ID3D12Resource>  m_patchvertexbuffer;
-	Microsoft::WRL::ComPtr<ID3D12Resource>  m_patchindexbuffer;
+	DirectX::SharedGraphicsResource  m_patchvertexbuffer;
+	DirectX::SharedGraphicsResource m_patchindexbuffer;
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_staticpatchvertexbuffer;
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_staticpatchindexbuffer;
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_normaltexture;
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_heighttexture;
 

@@ -76,7 +76,7 @@ private:
     DX::AnimationSDKMESH m_animation;
 	DirectX::ModelBone::TransformArray m_drawBones;
 
-    std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
+    std::shared_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
     std::unique_ptr<DirectX::AudioEngine> m_audEngine;
    
     void Update(DX::StepTimer const& timer);

@@ -17,7 +17,7 @@ Terrein::Terrein(ID3D12Device* device,
 	const std::shared_ptr<DX::DeviceResources> devicesresources)
 {
 	//m_terreineditor = std::make_unique<TerreinEditor>();
-	Preparepatch(device, rtState, devicesresources);
+	
 	m_effect = std::make_unique<DirectX::BasicEffect>(device,0,terreinpipeline);
 
   
@@ -135,7 +135,8 @@ void Terrein::PrepareNormalMap(const grayscale* heightMap, Normalmap* normalMap,
 }
 
 void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate,
-	const std::shared_ptr<DX::DeviceResources> devicesresources)
+	const std::shared_ptr<DX::DeviceResources> devicesresources,
+	std::shared_ptr<DirectX::GraphicsMemory> graphicsMemory)
 {
 	DirectX::ResourceUploadBatch resourceUpload(device);
 	resourceUpload.Begin();
@@ -158,7 +159,7 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	{
 		for (int x = 0; x < divide + 1; ++x)
 		{
-			DirectX::VertexPosition v;
+			DirectX::VertexPositionTexture v;
 			/*
 			v.position = DirectX::XMFLOAT3(m_terreineditor->Nodes[x].x, m_terreineditor->Nodes[x].y,
 				m_terreineditor->slope * (
@@ -185,10 +186,10 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 
 			v0 = v0 + rows * z;
 			v1 = v1 + rows * z;
-			indices.push_back(v0 + rows);
-			indices.push_back(v1 + rows);
-			indices.push_back(v0);
-			indices.push_back(v1);
+			m_indices.push_back(v0 + rows);
+			m_indices.push_back(v1 + rows);
+			m_indices.push_back(v0);
+			m_indices.push_back(v1);
 		}
 		
 	}
@@ -201,45 +202,72 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 		D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
 		D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
 		Descriptors::Count);
-	DirectX::SharedGraphicsResource hullvertex;
-	DirectX::SharedGraphicsResource hullindex;
 
 
 	//ここに頂点バッファとインデックスバッファのリソース作成処理を入れる
-	auto desc = CD3DX12_RESOURCE_DESC(
-		D3D12_RESOURCE_DIMENSION_TEXTURE2D,
+
+	graphicsMemory = std::make_unique<DirectX::GraphicsMemory>(device);
+
+	vertexBuffer =  graphicsMemory->Allocate(sizeof(DirectX::VertexPositionTexture));
+	memcpy(vertexBuffer.Memory(), m_vertices.data(), sizeof(DirectX::VertexPositionTexture));
+
+	indexBuffer = graphicsMemory->Allocate(sizeof(UINT));
+	memcpy(indexBuffer.Memory(), m_indices.data(), sizeof(UINT));
+
+	auto vertexdesc = CD3DX12_RESOURCE_DESC(
+		D3D12_RESOURCE_DIMENSION_BUFFER,
 		D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
-		c_texture_size, c_texture_size, 1, 1,
-		DXGI_FORMAT_R8G8_SNORM,
+		sizeof(m_vertices), 1, 1, 1,
+		DXGI_FORMAT_UNKNOWN,
 		1, 0,
-		D3D12_TEXTURE_LAYOUT_UNKNOWN, D3D12_RESOURCE_FLAG_NONE);
+		D3D12_TEXTURE_LAYOUT_ROW_MAJOR, D3D12_RESOURCE_FLAG_NONE);
 
-	CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
-
+	CD3DX12_HEAP_PROPERTIES vertexdefaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
+	//ここでエラーが出る可能性がある。そしたらUPLOADに変える。
 	DX::ThrowIfFailed(device->CreateCommittedResource(
-		&defaultHeapProperties,
+		&vertexdefaultHeapProperties,
 		D3D12_HEAP_FLAG_NONE,
-		&desc,
+		&vertexdesc,
 		D3D12_RESOURCE_STATE_COPY_DEST,
 		nullptr,
-		IID_GRAPHICS_PPV_ARGS(tex.ReleaseAndGetAddressOf())));
+		IID_GRAPHICS_PPV_ARGS(m_staticpatchvertexbuffer.ReleaseAndGetAddressOf())));
 
-	resourceUpload.Upload(m_patchvertexbuffer.Get(), hullvertex);
-	resourceUpload.Upload(m_patchindexbuffer.Get(), hullindex);
-	resourceUpload.Transition(
-		m_patchvertexbuffer.Get(),
+	auto indexdesc = CD3DX12_RESOURCE_DESC(
+		D3D12_RESOURCE_DIMENSION_BUFFER,
+		D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT,
+		sizeof(m_indices), 1, 1, 1,
+		DXGI_FORMAT_UNKNOWN,
+		1, 0,
+		D3D12_TEXTURE_LAYOUT_ROW_MAJOR, D3D12_RESOURCE_FLAG_NONE);
+
+	CD3DX12_HEAP_PROPERTIES indexdefaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
+	//ここでエラーが出る可能性がある。そしたらUPLOADに変える。
+	DX::ThrowIfFailed(device->CreateCommittedResource(
+		&indexdefaultHeapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&indexdesc,
 		D3D12_RESOURCE_STATE_COPY_DEST,
-		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
-	resourceUpload.Transition(
-		m_patchindexbuffer.Get(),
-		D3D12_RESOURCE_STATE_COPY_DEST,
-		D3D12_RESOURCE_STATE_INDEX_BUFFER);
-	auto uploadResourcesFinished = resourceUpload.End(devicesresources->GetCommandQueue());
-
-	uploadResourcesFinished.wait();
-
+		nullptr,
+		IID_GRAPHICS_PPV_ARGS(m_staticpatchindexbuffer.ReleaseAndGetAddressOf())));
 	
 
+	DirectX::ResourceUploadBatch upload(device);
+	upload.Upload(m_staticpatchvertexbuffer.Get(), vertexBuffer);
+
+	upload.Transition(m_staticpatchvertexbuffer.Get(),
+		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+
+	
+	upload.Upload(m_staticpatchindexbuffer.Get(), indexBuffer);
+
+	upload.Transition(m_staticpatchvertexbuffer.Get(),
+		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+
+	
+	upload.Transition(m_staticpatchindexbuffer.Get(),
+		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_INDEX_BUFFER);
+
+	
 
 	Microsoft::WRL::ComPtr<ID3DBlob> hullshader = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> hullshadererror = nullptr;
@@ -318,16 +346,16 @@ void Terrein::DrawTerrein(ID3D12GraphicsCommandList* command,const Camera in_cam
 	m_effect->SetProjection(in_camera.m_proj);
 	
 	D3D12_VERTEX_BUFFER_VIEW vbv={};
-	vbv.BufferLocation = m_patchvertexbuffer->GetGPUVirtualAddress();
-	vbv.StrideInBytes = sizeof(DirectX::VertexPositionNormalTexture);
-	vbv.SizeInBytes = static_cast<UINT>(sizeof(m_patchvertexbuffer));
+	vbv.BufferLocation = m_staticpatchvertexbuffer->GetGPUVirtualAddress();
+	vbv.StrideInBytes = sizeof(DirectX::VertexPositionTexture);
+	vbv.SizeInBytes = static_cast<UINT>(sizeof(m_staticpatchvertexbuffer));
 	
 	
 	D3D12_INDEX_BUFFER_VIEW ibv={};
 
-	ibv.BufferLocation = m_patchindexbuffer->GetGPUVirtualAddress();
+	ibv.BufferLocation = m_staticpatchindexbuffer->GetGPUVirtualAddress();
 	ibv.Format = DXGI_FORMAT_R16_UINT;
-	ibv.SizeInBytes = static_cast<UINT>(sizeof(m_patchindexbuffer));
+	ibv.SizeInBytes = static_cast<UINT>(sizeof(m_staticpatchindexbuffer));
 
 	ID3D12DescriptorHeap* heaps[] = { m_heightmapheap->Heap(),m_normalmapheap->Heap() };
 
@@ -337,5 +365,5 @@ void Terrein::DrawTerrein(ID3D12GraphicsCommandList* command,const Camera in_cam
 	command->IASetIndexBuffer(&ibv);
 	command->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 
-	command->DrawIndexedInstanced(indices.size(),1,0,0,0);
+	command->DrawIndexedInstanced(m_indices.size(),1,0,0,0);
 }
