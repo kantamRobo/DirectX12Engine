@@ -124,7 +124,6 @@
     <ClInclude Include="..\packages\stb\stb_c_lexer.h">
       <Filter>stb</Filter>
     </ClInclude>
-    <ClInclude Include="TesselationEffectPipelineDescription.h" />
     <ClInclude Include="DemmandCreate.h" />
     <ClInclude Include="Platformhelper.h" />
     <ClInclude Include="Src\AlignedNew.h" />
@@ -194,7 +193,6 @@
     <ClCompile Include="..\packages\stb\stb_vorbis.c">
       <Filter>stb</Filter>
     </ClCompile>
-    <ClCompile Include="TesselationEffectPipelineDescription.cpp" />
     <ClCompile Include="Src\DirectXHelpers.cpp" />
     <ClCompile Include="Src\Keyboard.cpp" />
     <ClCompile Include="Src\LinearAllocator.cpp" />
