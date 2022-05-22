@@ -172,7 +172,7 @@ void Game::Render()
     m_imguicore.RenderNodes(m_deviceResources.get());
     m_imguicore.Render_AllGUI(m_deviceResources.get());
     */
-    m_terrein->DrawTerrein(commandList, m_camera);
+    m_terrein->DrawTerrein(commandList, m_camera,m_effect);
 
     //m_imguicore.ImguiCore_Tick();
 	//m_animation.Apply(*m_skinnedcharacter->m_Model, nbones, m_drawBones.get());
@@ -316,6 +316,9 @@ void Game::GetDefaultSize(int& width, int& height) const noexcept
 // These are the resources that depend on the device.
 void Game::CreateDeviceDependentResources(HWND in_hwnd)
 {
+    //TODO(2022/06)レンダリング処理は、ここにべた書きせず、レンダリング→それぞれの（たとえばアニメーション、ジオメトリ、ライティング）クラス
+     //に書き、この三つのInitやRenderをここに書く。
+
     auto device = m_deviceResources->GetD3DDevice();
 
     // Check Shader Model 6 support
@@ -328,14 +331,25 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
 #endif
         throw std::runtime_error("Shader Model 6.0 is not supported!");
     }
+    RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(),
+        m_deviceResources->GetDepthBufferFormat());
 
     // If using the DirectX Tool Kit for DX12, uncomment this line:
      m_graphicsMemory = std::make_shared<GraphicsMemory>(device);
+     m_terrein = std::make_unique<Terrein>(m_deviceResources->GetD3DDevice(), rtState,
+         m_deviceResources);
 
+     m_terrein->Preparepatch(m_deviceResources->GetD3DDevice(), rtState, std::move(m_deviceResources), m_graphicsMemory);
     // TODO: Initialize device dependent objects here (independent of window size).
 	 m_states = std::make_unique<CommonStates>(device);
-
-	/*
+     m_effect = std::make_shared<DirectX::BasicEffect>(device, 0, m_terrein->terreinpipeline);
+     //ハイトマップとノーマルマップをセットする
+     m_effect->SetTexture(m_terrein->m_heightmapheap->GetGpuHandle(Descriptors::Count), m_states->LinearClamp());
+     m_effect->SetTexture(m_terrein->m_normalmapheap->GetGpuHandle(Descriptors::Count), m_states->LinearClamp());
+	
+     
+     
+     /*
      m_skinnedcharacter = std::make_unique<SkinnedCharacter>();
     
 	 m_skinnedcharacter->m_Model = Model::CreateFromSDKMESH(device, L"soldier.sdkmesh",
@@ -382,13 +396,8 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
 
 	 uploadResourcesFinished.wait();
 
-	 RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(),
-		 m_deviceResources->GetDepthBufferFormat());
-
-     m_terrein = std::make_unique<Terrein>(m_deviceResources->GetD3DDevice(), rtState,
-         m_deviceResources);
-
-     m_terrein->Preparepatch(m_deviceResources->GetD3DDevice(), rtState, std::move(m_deviceResources),m_graphicsMemory);
+	
+   
 
      /*
 	 EffectPipelineStateDescription pd(

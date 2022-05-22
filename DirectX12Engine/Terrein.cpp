@@ -18,9 +18,7 @@ Terrein::Terrein(ID3D12Device* device,
 {
 	//m_terreineditor = std::make_unique<TerreinEditor>();
 	
-	m_effect = std::make_unique<DirectX::BasicEffect>(device,0,terreinpipeline);
-
-  
+	
 }
 void Terrein::Preparegrayscale()
 {
@@ -148,9 +146,23 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	DX::ThrowIfFailed(
 		DirectX::CreateWICTextureFromFile(device, resourceUpload, L"heightmap.png",
 			m_heighttexture.ReleaseAndGetAddressOf()));
+	m_heightmapheap = std::make_unique<DirectX::DescriptorHeap>(device,
+		D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+		D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
+		Descriptors::Count);
+	m_normalmapheap = std::make_unique<DirectX::DescriptorHeap>(device,
+		D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+		D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
+		Descriptors::Count);
+	auto heightcpuhandle = m_heightmapheap->GetCpuHandle(Descriptors::Count);
+	auto normalcpuhandle = m_normalmapheap->GetCpuHandle(Descriptors::Count);
+	DirectX::CreateShaderResourceView(device, m_heighttexture.Get()
+		, heightcpuhandle);
+	DirectX::CreateShaderResourceView(device, m_normaltexture.Get()
+		, normalcpuhandle);
+	
 
-
-
+	
 	
 	
 	const int divide = 10;
@@ -194,14 +206,6 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 		
 	}
 	
-	m_heightmapheap = std::make_unique<DirectX::DescriptorHeap>(device,
-		D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-		D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
-		Descriptors::Count);
-	m_normalmapheap = std::make_unique<DirectX::DescriptorHeap>(device,
-		D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-		D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
-		Descriptors::Count);
 
 
 	//ここに頂点バッファとインデックスバッファのリソース作成処理を入れる
@@ -338,12 +342,13 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 }
 
 
-void Terrein::DrawTerrein(ID3D12GraphicsCommandList* command,const Camera in_camera)
+void Terrein::DrawTerrein(ID3D12GraphicsCommandList* command,const Camera in_camera,
+	std::shared_ptr<DirectX::BasicEffect> in_effect)
 {
 	
-	m_effect->SetWorld(world);
-	m_effect->SetView(in_camera.m_view);
-	m_effect->SetProjection(in_camera.m_proj);
+	in_effect->SetWorld(world);
+	in_effect->SetView(in_camera.m_view);
+	in_effect->SetProjection(in_camera.m_proj);
 	
 	D3D12_VERTEX_BUFFER_VIEW vbv={};
 	vbv.BufferLocation = m_staticpatchvertexbuffer->GetGPUVirtualAddress();
@@ -360,7 +365,7 @@ void Terrein::DrawTerrein(ID3D12GraphicsCommandList* command,const Camera in_cam
 	ID3D12DescriptorHeap* heaps[] = { m_heightmapheap->Heap(),m_normalmapheap->Heap() };
 
 	command->SetDescriptorHeaps(2,heaps);
-	m_effect->Apply_Any_RS_PSO(command, m_patchrootsignature.Get(), m_patchpipelinestate.Get());
+	in_effect->Apply_Any_RS_PSO(command, m_patchrootsignature.Get(), m_patchpipelinestate.Get());
 	command->IASetVertexBuffers(0, 1, &vbv);
 	command->IASetIndexBuffer(&ibv);
 	command->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);

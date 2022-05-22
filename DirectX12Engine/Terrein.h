@@ -48,7 +48,8 @@ public:
 	void Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate,
 		const std::shared_ptr<DX::DeviceResources> devicesresources,
 		std::shared_ptr<DirectX::GraphicsMemory> graphicsMemory);
-	void DrawTerrein(ID3D12GraphicsCommandList* command, const Camera in_camera);
+	void DrawTerrein(ID3D12GraphicsCommandList* command, const Camera in_camera,
+		std::shared_ptr<DirectX::BasicEffect> in_effect);
 	
 	DirectX::SharedGraphicsResource vertexBuffer;
 	DirectX::SharedGraphicsResource indexBuffer;
@@ -65,7 +66,7 @@ public:
 	TesselationEffectPipelineDescription terreinpipeline;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> m_patchpipelinestate=nullptr;
 	DirectX::SimpleMath::Matrix world;
-	std::unique_ptr<DirectX::BasicEffect> m_effect;
+	
 	std::unique_ptr<DirectX::DescriptorHeap> m_heightmapheap = nullptr;
 	std::unique_ptr<DirectX::DescriptorHeap> m_normalmapheap = nullptr;
 	

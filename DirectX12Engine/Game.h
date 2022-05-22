@@ -96,6 +96,7 @@ private:
     DX::StepTimer                               m_timer;
 
     std::unique_ptr<Terrein> m_terrein;
+    std::shared_ptr<DirectX::BasicEffect> m_effect;
     // If using the DirectX Tool Kit for DX12, uncomment this line:
     // std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
 };
