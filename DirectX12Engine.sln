@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectX12Engine", "DirectX12Engine\DirectX12Engine.vcxproj", "{B72FD6F1-02D6-4C14-8D73-222261A207AC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK12", "packages\DirectXTK12\DirectXTK_Windows10_2022.vcxproj", "{945B8F0E-AE5F-447C-933A-9D069532D3E4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK12", "DirectX12Engine\DirectXTK12\DirectXTK_Windows10_2022.vcxproj", "{945B8F0E-AE5F-447C-933A-9D069532D3E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +59,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B72FD6F1-02D6-4C14-8D73-222261A207AC} = {E38C446F-61CE-4248-B3AC-C5F5C684E37D}
+		{945B8F0E-AE5F-447C-933A-9D069532D3E4} = {E38C446F-61CE-4248-B3AC-C5F5C684E37D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EBE21C94-5AB2-445F-9045-288CA76C0256}
