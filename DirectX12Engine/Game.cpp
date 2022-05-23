@@ -28,7 +28,7 @@ enum Descriptors
 Game::Game() noexcept(false):m_retryAudio(false)
 {
     
-    m_deviceResources = std::make_shared<DX::DeviceResources>();
+    m_deviceResources = std::make_unique<DX::DeviceResources>();
     
     m_deviceResources->RegisterDeviceNotify(this);
     
@@ -336,10 +336,9 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
 
     // If using the DirectX Tool Kit for DX12, uncomment this line:
      m_graphicsMemory = std::make_shared<GraphicsMemory>(device);
-     m_terrein = std::make_unique<Terrein>(m_deviceResources->GetD3DDevice(), rtState,
-         m_deviceResources);
+     m_terrein = std::make_unique<Terrein>();
 
-     m_terrein->Preparepatch(m_deviceResources->GetD3DDevice(), rtState, std::move(m_deviceResources), m_graphicsMemory);
+     m_terrein->Preparepatch(device, rtState, std::move(m_deviceResources), m_graphicsMemory);
     // TODO: Initialize device dependent objects here (independent of window size).
 	 m_states = std::make_unique<CommonStates>(device);
      m_effect = std::make_shared<DirectX::BasicEffect>(device, 0, m_terrein->terreinpipeline);

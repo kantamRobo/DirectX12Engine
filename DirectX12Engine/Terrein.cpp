@@ -2,7 +2,7 @@
 #include "Terrein.h"
 #include <cmath>
 #include <d3dcompiler.h>
-
+#include <algorithm>
 using namespace std;
 enum Descriptors
 {
@@ -12,14 +12,7 @@ enum Descriptors
 	GamerPic,
 	Count
 };
-Terrein::Terrein(ID3D12Device* device,
-	const DirectX::RenderTargetState rtState,
-	const std::shared_ptr<DX::DeviceResources> devicesresources)
-{
-	//m_terreineditor = std::make_unique<TerreinEditor>();
-	
-	
-}
+
 void Terrein::Preparegrayscale()
 {
 	//
@@ -154,8 +147,8 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 		D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
 		D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
 		Descriptors::Count);
-	auto heightcpuhandle = m_heightmapheap->GetCpuHandle(Descriptors::Count);
-	auto normalcpuhandle = m_normalmapheap->GetCpuHandle(Descriptors::Count);
+	auto heightcpuhandle = m_heightmapheap->GetFirstCpuHandle();
+	auto normalcpuhandle = m_normalmapheap->GetFirstCpuHandle();
 	DirectX::CreateShaderResourceView(device, m_heighttexture.Get()
 		, heightcpuhandle);
 	DirectX::CreateShaderResourceView(device, m_normaltexture.Get()
@@ -210,7 +203,7 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 
 	//ここに頂点バッファとインデックスバッファのリソース作成処理を入れる
 
-	graphicsMemory = std::make_unique<DirectX::GraphicsMemory>(device);
+	
 
 	vertexBuffer =  graphicsMemory->Allocate(sizeof(DirectX::VertexPositionTexture));
 	memcpy(vertexBuffer.Memory(), m_vertices.data(), sizeof(DirectX::VertexPositionTexture));
@@ -256,6 +249,7 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	
 
 	DirectX::ResourceUploadBatch upload(device);
+	upload.Begin();
 	upload.Upload(m_staticpatchvertexbuffer.Get(), vertexBuffer);
 
 	upload.Transition(m_staticpatchvertexbuffer.Get(),
@@ -264,39 +258,14 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	
 	upload.Upload(m_staticpatchindexbuffer.Get(), indexBuffer);
 
-	upload.Transition(m_staticpatchvertexbuffer.Get(),
-		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
-
+	
 	
 	upload.Transition(m_staticpatchindexbuffer.Get(),
 		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_INDEX_BUFFER);
 
 	
 
-	Microsoft::WRL::ComPtr<ID3DBlob> hullshader = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> hullshadererror = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> domainshader = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> domainshadererror = nullptr;
-	auto hullresult = D3DCompileFromFile(L"HSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainHS", "hs_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
-		&hullshadererror);
-	auto domainresult = D3DCompileFromFile(L"DSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainDS", "ds_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
-		&hullshadererror);
-
-	Microsoft::WRL::ComPtr<ID3DBlob> vertexshader = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> vertexshadererror = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> pixelshader = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> pixelshadererror = nullptr;
-	auto vertexresult = D3DCompileFromFile(L"VSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainHS", "vs_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
-		&hullshadererror);
-	auto pixelresult = D3DCompileFromFile(L"PSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainDS", "ps_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
-		&hullshadererror);
-	CD3DX12_SHADER_BYTECODE patchDS(domainshader.Get());
-	CD3DX12_SHADER_BYTECODE patchHS(hullshader.Get());
-
-
-	CD3DX12_SHADER_BYTECODE patchVS(vertexshader.Get());
-	CD3DX12_SHADER_BYTECODE patchPS(pixelshader.Get());
-
+	
 
 	D3D12_INPUT_ELEMENT_DESC desc[2] = {};
 	desc[0].AlignedByteOffset = 0;
@@ -314,6 +283,70 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	desc[1].SemanticIndex = 0;
 	desc[1].SemanticName = "TEXCOORD0";
 	
+	
+	Microsoft::WRL::ComPtr<ID3DBlob> hullshader = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> hullshadererror = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> domainshader = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> domainshadererror = nullptr;
+	auto hullresult = D3DCompileFromFile(L"HSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainHS", "hs_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
+		&hullshadererror);
+	auto domainresult = D3DCompileFromFile(L"DSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainDS", "ds_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
+		&hullshadererror);
+	std::string errstrhull;
+	errstrhull.resize(hullshadererror->GetBufferSize());
+
+	std::copy_n(errstrhull
+		.data(),
+		hullshadererror->GetBufferPointer(),
+		hullshadererror->GetBufferSize());
+
+	OutputDebugStringA(errstrhull.c_str());
+
+	std::string errstrdomain;
+	errstrdomain.resize(domainshadererror->GetBufferSize());
+
+	std::copy_n(errstrhull
+		.data(),
+		domainshadererror->GetBufferPointer(),
+		domainshadererror->GetBufferSize());
+
+	OutputDebugStringA(errstrdomain.c_str());
+
+	Microsoft::WRL::ComPtr<ID3DBlob> vertexshader = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> vertexshadererror = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> pixelshader = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> pixelshadererror = nullptr;
+	auto vertexresult = D3DCompileFromFile(L"VSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainHS", "vs_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
+		&hullshadererror);
+	auto pixelresult = D3DCompileFromFile(L"PSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainDS", "ps_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
+		&hullshadererror);
+
+	std::string errstrpixel;
+	errstrhull.resize(pixelshadererror->GetBufferSize());
+
+	std::copy_n(errstrpixel
+		.data(),
+		pixelshadererror->GetBufferPointer(),
+		pixelshadererror->GetBufferSize());
+
+	OutputDebugStringA(errstrhull.c_str());
+
+	std::string errstrvertex;
+	errstrdomain.resize(vertexshadererror->GetBufferSize());
+
+	std::copy_n(errstrhull
+		.data(),
+		vertexshadererror->GetBufferPointer(),
+		vertexshadererror->GetBufferSize());
+
+	OutputDebugStringA(errstrvertex.c_str());
+	CD3DX12_SHADER_BYTECODE patchDS(domainshader.Get());
+	CD3DX12_SHADER_BYTECODE patchHS(hullshader.Get());
+
+
+	CD3DX12_SHADER_BYTECODE patchVS(vertexshader.Get());
+	CD3DX12_SHADER_BYTECODE patchPS(pixelshader.Get());
+
 
 	D3D12_INPUT_LAYOUT_DESC input = {};
 	input.NumElements = _countof(desc);

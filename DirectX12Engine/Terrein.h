@@ -32,7 +32,7 @@ class Terrein
 {
 public:
 	Terrein(){};
-	Terrein(ID3D12Device* device, const DirectX::RenderTargetState rtState, const std::shared_ptr<DX::DeviceResources> devicesresources);
+	
 	grayscale m_heightmap;
 	std::vector<DirectX::VertexPositionTexture> m_vertices;
 	//ハイトマップを作成、またはロード、どちらか
