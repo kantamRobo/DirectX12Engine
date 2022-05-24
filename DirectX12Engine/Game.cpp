@@ -5,7 +5,7 @@
 #include "pch.h"
 #include "Game.h"
 #include <memory>
-
+#include <Effects.h>
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -333,15 +333,15 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
     }
     RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(),
         m_deviceResources->GetDepthBufferFormat());
-
+    m_effect = std::make_shared<DirectX::BasicEffect>(device, 0, m_terrein->terreinpipeline);
+    
     // If using the DirectX Tool Kit for DX12, uncomment this line:
      m_graphicsMemory = std::make_shared<GraphicsMemory>(device);
-     m_terrein = std::make_unique<Terrein>();
+     m_terrein = std::make_unique<Terrein>(m_effect->m_basiceffectrootsignature);
 
      m_terrein->Preparepatch(device, rtState, std::move(m_deviceResources), m_graphicsMemory);
     // TODO: Initialize device dependent objects here (independent of window size).
 	 m_states = std::make_unique<CommonStates>(device);
-     m_effect = std::make_shared<DirectX::BasicEffect>(device, 0, m_terrein->terreinpipeline);
      //ハイトマップとノーマルマップをセットする
      m_effect->SetTexture(m_terrein->m_heightmapheap->GetGpuHandle(Descriptors::Count), m_states->LinearClamp());
      m_effect->SetTexture(m_terrein->m_normalmapheap->GetGpuHandle(Descriptors::Count), m_states->LinearClamp());

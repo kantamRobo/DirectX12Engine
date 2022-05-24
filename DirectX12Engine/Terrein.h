@@ -9,6 +9,7 @@
 #include "stb_image.h"
 #include <GraphicsMemory.h>
 #include "TesselationEffectPipelineDescription.h"
+#include "CustomIncludeHandler.h"
 #include "CommonStates.h"
 #include <wrl.h>
 #include "DeviceResources.h"
@@ -32,7 +33,7 @@ class Terrein
 {
 public:
 	Terrein(){};
-	
+	Terrein(ID3D12RootSignature* p_rootsignature) { m_patchrootsignature = p_rootsignature; };
 	grayscale m_heightmap;
 	std::vector<DirectX::VertexPositionTexture> m_vertices;
 	//ハイトマップを作成、またはロード、どちらか
@@ -45,6 +46,7 @@ public:
 	void PrepareNormalMap(const grayscale* heightMap, Normalmap* normalMap, unsigned int width,unsigned int height)
 		;
 public:
+	std::unique_ptr<CustomIncludeHandler> m_handler;
 	void Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate,
 		const std::shared_ptr<DX::DeviceResources> devicesresources,
 		std::shared_ptr<DirectX::GraphicsMemory> graphicsMemory);

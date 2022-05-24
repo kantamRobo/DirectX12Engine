@@ -156,6 +156,9 @@
     <ClInclude Include="ImguiCore.h">
       <Filter>DirectX12Engine</Filter>
     </ClInclude>
+    <ClInclude Include="CustomIncludeHandler.h">
+      <Filter>DirectX12Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -219,6 +222,9 @@
       <Filter>DirectX12Engine</Filter>
     </ClCompile>
     <ClCompile Include="ImguiCore.cpp">
+      <Filter>DirectX12Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomIncludeHandler .cpp">
       <Filter>DirectX12Engine</Filter>
     </ClCompile>
   </ItemGroup>
