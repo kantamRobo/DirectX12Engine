@@ -1,7 +1,14 @@
 #pragma once
 //#include <LinearMath/btVector3.h>
 #include "SimpleMath.h"
-namespace BULLETUtiliry
+#include <dxcapi.h>
+#include <wrl.h>
+#include <filesystem>
+#include <istream>
+#include <fstream>
+#include <d3dcommon.h>
+#pragma comment(lib, "dxcompiler")
+namespace Utility
 
 {
 
@@ -11,6 +18,9 @@ namespace BULLETUtiliry
 		//dst.y = src.y();
 		//dst.z  = src.z();
 	//}
+
+
+	
 
 }
 

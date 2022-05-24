@@ -3,6 +3,7 @@
 #include <cmath>
 #include <d3dcompiler.h>
 #include <algorithm>
+#include "Utility.h"
 using namespace std;
 enum Descriptors
 {
@@ -131,7 +132,6 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 {
 	DirectX::ResourceUploadBatch resourceUpload(device);
 	resourceUpload.Begin();
-	
 	DX::ThrowIfFailed(
 		DirectX::CreateWICTextureFromFile(device, resourceUpload, L"normalmap.png",
 			m_normaltexture.ReleaseAndGetAddressOf()));
@@ -283,63 +283,63 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	desc[1].SemanticIndex = 0;
 	desc[1].SemanticName = "TEXCOORD0";
 	
-	
-	Microsoft::WRL::ComPtr<ID3DBlob> hullshader = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> hullshadererror = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> domainshader = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> domainshadererror = nullptr;
-	auto hullresult = D3DCompileFromFile(L"HSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainHS", "hs_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
-		&hullshadererror);
-	auto domainresult = D3DCompileFromFile(L"DSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainDS", "ds_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
-		&hullshadererror);
-	std::string errstrhull;
-	errstrhull.resize(hullshadererror->GetBufferSize());
-
-	std::copy_n(errstrhull
-		.data(),
-		hullshadererror->GetBufferPointer(),
-		hullshadererror->GetBufferSize());
-
-	OutputDebugStringA(errstrhull.c_str());
-
-	std::string errstrdomain;
-	errstrdomain.resize(domainshadererror->GetBufferSize());
-
-	std::copy_n(errstrhull
-		.data(),
-		domainshadererror->GetBufferPointer(),
-		domainshadererror->GetBufferSize());
-
-	OutputDebugStringA(errstrdomain.c_str());
 
 	Microsoft::WRL::ComPtr<ID3DBlob> vertexshader = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> vertexshadererror = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> pixelshader = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> pixelshadererror = nullptr;
-	auto vertexresult = D3DCompileFromFile(L"VSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainHS", "vs_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
-		&hullshadererror);
-	auto pixelresult = D3DCompileFromFile(L"PSterrein.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "mainDS", "ps_6_0", D3DCOMPILE_DEBUG, 0, &hullshader,
-		&hullshadererror);
 
+	auto vertexresult = m_handler->CompileShaderFromFile(L"VSterrein.hlsl", L"vs_6_0", vertexshader, vertexshadererror);
+	auto pixelresult = m_handler->CompileShaderFromFile(L"PSterrein.hlsl", L"ps_6_0", pixelshader, pixelshadererror);
+	
+
+	std::string errstrvertex;
+	errstrvertex.resize(vertexshadererror->GetBufferSize());
+
+
+	std::memcpy(errstrvertex.data(), vertexshadererror->GetBufferPointer(), vertexshadererror->GetBufferSize());
+
+	OutputDebugStringA(errstrvertex.c_str());
 	std::string errstrpixel;
-	errstrhull.resize(pixelshadererror->GetBufferSize());
+	errstrpixel.resize(vertexshadererror->GetBufferSize());
 
-	std::copy_n(errstrpixel
-		.data(),
-		pixelshadererror->GetBufferPointer(),
-		pixelshadererror->GetBufferSize());
+
+	std::memcpy(errstrpixel.data(), pixelshadererror->GetBufferPointer(), pixelshadererror->GetBufferSize());
+
+	OutputDebugStringA(errstrpixel.c_str());
+
+	
+	
+	Microsoft::WRL::ComPtr<ID3DBlob> hullshader = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> hullshadererror = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> domainshader = nullptr;
+	Microsoft::WRL::ComPtr<ID3DBlob> domainshadererror = nullptr;
+	
+	
+	auto hullresult = m_handler->CompileShaderFromFile(L"HSterrein.hlsl", L"hs_6_0", hullshader, hullshadererror);
+
+	auto domainresult = m_handler->CompileShaderFromFile(L"DSterrein.hlsl", L"DSterrein.hlsl", domainshader, domainshadererror);
+	
+	
+	
+	std::string errstrhull;
+	errstrhull.resize(domainshadererror->GetBufferSize());
+
+	
+	std::memcpy(errstrhull.data(), hullshadererror->GetBufferPointer(), hullshadererror->GetBufferSize());
+	
 
 	OutputDebugStringA(errstrhull.c_str());
 
-	std::string errstrvertex;
-	errstrdomain.resize(vertexshadererror->GetBufferSize());
+	std::string errstrdomain;
+	errstrdomain.resize(domainshadererror->GetBufferSize());
+	std::memcpy(errstrdomain.data(), domainshadererror->GetBufferPointer(), domainshadererror->GetBufferSize());
 
-	std::copy_n(errstrhull
-		.data(),
-		vertexshadererror->GetBufferPointer(),
-		vertexshadererror->GetBufferSize());
 
-	OutputDebugStringA(errstrvertex.c_str());
+
+	OutputDebugStringA(errstrdomain.c_str());
+
+	
 	CD3DX12_SHADER_BYTECODE patchDS(domainshader.Get());
 	CD3DX12_SHADER_BYTECODE patchHS(hullshader.Get());
 
