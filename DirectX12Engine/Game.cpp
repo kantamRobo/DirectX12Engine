@@ -337,7 +337,7 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
     
     // If using the DirectX Tool Kit for DX12, uncomment this line:
      m_graphicsMemory = std::make_shared<GraphicsMemory>(device);
-     m_terrein = std::make_unique<Terrein>(m_effect->m_basiceffectrootsignature);
+     m_terrein = std::make_unique<Terrein>(m_effect->m_basicffectrootsignature);
 
      m_terrein->Preparepatch(device, rtState, std::move(m_deviceResources), m_graphicsMemory);
     // TODO: Initialize device dependent objects here (independent of window size).
