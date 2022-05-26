@@ -241,6 +241,7 @@
     <ClInclude Include="PlanePolygon.h" />
     <ClInclude Include="Platformhelper.h" />
     <ClInclude Include="Rigidshape.h" />
+    <ClInclude Include="ShaderCompiler.h" />
     <ClInclude Include="Src\AlignedNew.h" />
     <ClInclude Include="Src\d3dx12.h" />
     <ClInclude Include="Src\LinearAllocator.h" />
@@ -249,6 +250,7 @@
     <ClInclude Include="Src\vbo.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="DeviceResources.h" />
+    <ClInclude Include="Structures.h" />
     <ClInclude Include="Terrein.h" />
     <ClInclude Include="TerreinEditor.h" />
     <ClInclude Include="Transform.h" />
@@ -282,6 +284,7 @@
     </ClCompile>
     <ClCompile Include="PlanePolygon.cpp" />
     <ClCompile Include="Rigidshape.cpp" />
+    <ClCompile Include="ShaderCompiler.cpp" />
     <ClCompile Include="Src\DirectXHelpers.cpp" />
     <ClCompile Include="Src\Keyboard.cpp" />
     <ClCompile Include="Src\LinearAllocator.cpp" />

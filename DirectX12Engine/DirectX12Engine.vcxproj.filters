@@ -159,6 +159,8 @@
     <ClInclude Include="CustomIncludeHandler.h">
       <Filter>DirectX12Engine</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderCompiler.h" />
+    <ClInclude Include="Structures.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -227,6 +229,7 @@
     <ClCompile Include="CustomIncludeHandler .cpp">
       <Filter>DirectX12Engine</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderCompiler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
