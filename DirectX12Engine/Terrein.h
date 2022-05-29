@@ -9,7 +9,7 @@
 #include "stb_image.h"
 #include <GraphicsMemory.h>
 #include "TesselationEffectPipelineDescription.h"
-#include "CustomIncludeHandler.h"
+#include "ShaderCompiler.h"
 #include "CommonStates.h"
 #include <wrl.h>
 #include "DeviceResources.h"
@@ -46,7 +46,7 @@ public:
 	void PrepareNormalMap(const grayscale* heightMap, Normalmap* normalMap, unsigned int width,unsigned int height)
 		;
 public:
-	std::unique_ptr<CustomIncludeHandler> m_handler;
+	std::unique_ptr<ShaderCompiler> m_handler;
 	void Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate,
 		const std::shared_ptr<DX::DeviceResources> devicesresources,
 		std::shared_ptr<DirectX::GraphicsMemory> graphicsMemory);

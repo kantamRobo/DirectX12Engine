@@ -156,9 +156,6 @@
     <ClInclude Include="ImguiCore.h">
       <Filter>DirectX12Engine</Filter>
     </ClInclude>
-    <ClInclude Include="CustomIncludeHandler.h">
-      <Filter>DirectX12Engine</Filter>
-    </ClInclude>
     <ClInclude Include="ShaderCompiler.h" />
     <ClInclude Include="Structures.h" />
   </ItemGroup>
@@ -226,9 +223,6 @@
     <ClCompile Include="ImguiCore.cpp">
       <Filter>DirectX12Engine</Filter>
     </ClCompile>
-    <ClCompile Include="CustomIncludeHandler .cpp">
-      <Filter>DirectX12Engine</Filter>
-    </ClCompile>
     <ClCompile Include="ShaderCompiler.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -278,6 +272,7 @@
     <None Include="TestTerrein.hlsli">
       <Filter>terreinshader</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="HSterrein.hlsl">

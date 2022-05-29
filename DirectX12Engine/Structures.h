@@ -29,6 +29,7 @@
 #include <d3dx12.h>
 #include <DirectXMath.h>
 #include <dxcapi.h>
+#include "dxc/include/dxc/Support/dxcapi.use.h"
 #include <dxgi1_6.h>
 
  //--------------------------------------------------------------------------------------
@@ -153,10 +154,12 @@ struct D3D12BufferCreateInfo
 
 struct D3D12ShaderCompilerInfo
 {
-	//dxc::DxcDllSupport		DxcDllHelper;
+	dxc::DxcDllSupport		DxcDllHelper;
 	IDxcCompiler* compiler = nullptr;
 	IDxcLibrary* library = nullptr;
 };
+
+
 
 struct D3D12ShaderInfo
 {
@@ -167,13 +170,14 @@ struct D3D12ShaderInfo
 	DxcDefine* defines = nullptr;
 	UINT32		argCount = 0;
 	UINT32		defineCount = 0;
-
+	IDxcBlob** blob;
 	D3D12ShaderInfo() {}
 	D3D12ShaderInfo(LPCWSTR inFilename, LPCWSTR inEntryPoint, LPCWSTR inProfile)
 	{
 		filename = inFilename;
 		entryPoint = inEntryPoint;
 		targetProfile = inProfile;
+
 	}
 };
 
