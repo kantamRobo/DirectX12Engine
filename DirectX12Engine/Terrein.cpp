@@ -4,6 +4,7 @@
 #include <d3dcompiler.h>
 #include <algorithm>
 #include "Utility.h"
+#include "ShaderCompiler.h"
 using namespace std;
 enum Descriptors
 {
@@ -283,32 +284,23 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	desc[1].SemanticIndex = 0;
 	desc[1].SemanticName = "TEXCOORD0";
 	
+	ShaderCompiler hullShader;
+	hullShader.LoadRaytracing(L"HSterrein.hlsl");
 
-	Microsoft::WRL::ComPtr<ID3DBlob> vertexshader = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> vertexshadererror = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> pixelshader = nullptr;
-	Microsoft::WRL::ComPtr<ID3DBlob> pixelshadererror = nullptr;
+	ShaderCompiler DoaminShader;
+	hullShader.LoadRaytracing(L"DSterrein.hlsl");
 
-	auto vertexresult = m_handler->CompileShaderFromFile(L"VSterrein.hlsl", L"vs_6_0", vertexshader, vertexshadererror);
-	auto pixelresult = m_handler->CompileShaderFromFile(L"PSterrein.hlsl", L"ps_6_0", pixelshader, pixelshadererror);
-	
+	ShaderCompiler vertexShader;
+	hullShader.LoadRaytracing(L"VSterrein.hlsl");
+
+	ShaderCompiler pixelshader;
+	hullShader.LoadRaytracing(L"PSterrein.hlsl");
+
 
 	std::string errstrvertex;
-	errstrvertex.resize(vertexshadererror->GetBufferSize());
+	errstrvertex.resize(hullshadererror->GetBufferSize());
 
 
-	std::memcpy(errstrvertex.data(), vertexshadererror->GetBufferPointer(), vertexshadererror->GetBufferSize());
-
-	OutputDebugStringA(errstrvertex.c_str());
-	std::string errstrpixel;
-	errstrpixel.resize(vertexshadererror->GetBufferSize());
-
-
-	std::memcpy(errstrpixel.data(), pixelshadererror->GetBufferPointer(), pixelshadererror->GetBufferSize());
-
-	OutputDebugStringA(errstrpixel.c_str());
-
-	
 	
 	Microsoft::WRL::ComPtr<ID3DBlob> hullshader = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> hullshadererror = nullptr;
