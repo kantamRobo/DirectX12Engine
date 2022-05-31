@@ -1,13 +1,7 @@
-#include "ShaderCompiler.h"
-#include <string>
-#include <vector>
-#include <stierr.h>
-#include <sstream>
-#include <fstream>
-#include <atlbase.h>
-using namespace Microsoft::WRL;
+#include "Shader.h"
 
-void ShaderCompiler::LoadRaytracing(const wchar_t* filePath)
+
+void Shader::LoadRaytracing(const wchar_t* filePath)
 {
 	std::ifstream shaderFile(filePath);
 	if (shaderFile.good() == false) {
@@ -90,3 +84,4 @@ void ShaderCompiler::LoadRaytracing(const wchar_t* filePath)
 		result->GetResult(&m_dxcBlob);
 	}
 }
+

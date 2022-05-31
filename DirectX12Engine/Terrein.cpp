@@ -1,10 +1,7 @@
 
 #include "Terrein.h"
-#include <cmath>
-#include <d3dcompiler.h>
-#include <algorithm>
-#include "Utility.h"
-#include "ShaderCompiler.h"
+
+
 using namespace std;
 enum Descriptors
 {
@@ -284,33 +281,26 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	desc[1].SemanticIndex = 0;
 	desc[1].SemanticName = "TEXCOORD0";
 	
-	ShaderCompiler hullShader;
+	Shader hullShader;
 	hullShader.LoadRaytracing(L"HSterrein.hlsl");
 
-	ShaderCompiler DoaminShader;
+	Shader DomainShader;
 	hullShader.LoadRaytracing(L"DSterrein.hlsl");
 
-	ShaderCompiler vertexShader;
+	Shader VertexShader;
 	hullShader.LoadRaytracing(L"VSterrein.hlsl");
 
-	ShaderCompiler pixelshader;
+	Shader Pixelshader;
 	hullShader.LoadRaytracing(L"PSterrein.hlsl");
 
 
-	std::string errstrvertex;
-	errstrvertex.resize(hullshadererror->GetBufferSize());
-
+	
 
 	
 	Microsoft::WRL::ComPtr<ID3DBlob> hullshader = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> hullshadererror = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> domainshader = nullptr;
 	Microsoft::WRL::ComPtr<ID3DBlob> domainshadererror = nullptr;
-	
-	
-	auto hullresult = m_handler->CompileShaderFromFile(L"HSterrein.hlsl", L"hs_6_0", hullshader, hullshadererror);
-
-	auto domainresult = m_handler->CompileShaderFromFile(L"DSterrein.hlsl", L"DSterrein.hlsl", domainshader, domainshadererror);
 	
 	
 	
@@ -331,14 +321,42 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 
 	OutputDebugStringA(errstrdomain.c_str());
 
-	
-	CD3DX12_SHADER_BYTECODE patchDS(domainshader.Get());
-	CD3DX12_SHADER_BYTECODE patchHS(hullshader.Get());
+	D3D12_EXPORT_DESC libExport[4];
+	for (int i = 0; i < 4; i++) {
+		libExport[i].Name = shaderDatas[i].entryPointName;
+		libExport[i].ExportToRename = nullptr;
+		libExport[i].Flags = D3D12_EXPORT_FLAG_NONE;
+	};
+
+	D3D12_DXIL_LIBRARY_DESC dxLibhulldesc;
+	IDxcBlob* pBlobhull = hullShader.GetCompiledDxcBlob();
+	dxLibhulldesc.DXILLibrary.pShaderBytecode = pBlobhull->GetBufferPointer();
+	dxLibhulldesc.DXILLibrary.BytecodeLength = pBlobhull->GetBufferSize();
+	dxLibhulldesc.NumExports = ARRAYSIZE(libExport);
+	dxLibhulldesc.pExports = libExport;
 
 
-	CD3DX12_SHADER_BYTECODE patchVS(vertexshader.Get());
-	CD3DX12_SHADER_BYTECODE patchPS(pixelshader.Get());
+	D3D12_DXIL_LIBRARY_DESC dxLibdomaindesc;
+	IDxcBlob* pBlobdomain = DomainShader.GetCompiledDxcBlob();
+	dxLibdomaindesc.DXILLibrary.pShaderBytecode = pBlobdomain->GetBufferPointer();
+	dxLibdomaindesc.DXILLibrary.BytecodeLength = pBlobdomain->GetBufferSize();
+	dxLibdomaindesc.NumExports = ARRAYSIZE(libExport);
+	dxLibdomaindesc.pExports = libExport;
 
+	D3D12_DXIL_LIBRARY_DESC dxLibvertexdesc;
+	IDxcBlob* pBlobvertex = VertexShader.GetCompiledDxcBlob();
+	dxLibhulldesc.DXILLibrary.pShaderBytecode = pBlobvertex->GetBufferPointer();
+	dxLibhulldesc.DXILLibrary.BytecodeLength = pBlobvertex->GetBufferSize();
+	dxLibhulldesc.NumExports = ARRAYSIZE(libExport);
+	dxLibhulldesc.pExports = libExport;
+
+
+	D3D12_DXIL_LIBRARY_DESC dxLibpixeldesc;
+	IDxcBlob*  pBlobpixel = Pixelshader.GetCompiledDxcBlob();
+	dxLibdomaindesc.DXILLibrary.pShaderBytecode = pBlobpixel->GetBufferPointer();
+	dxLibdomaindesc.DXILLibrary.BytecodeLength = pBlobpixel->GetBufferSize();
+	dxLibdomaindesc.NumExports = ARRAYSIZE(libExport);
+	dxLibdomaindesc.pExports = libExport;
 
 	D3D12_INPUT_LAYOUT_DESC input = {};
 	input.NumElements = _countof(desc);
@@ -354,6 +372,23 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 		IID_PPV_ARGS(m_patchrootsignature.GetAddressOf()));
 	
 	
+	
+	D3D12_SHADER_BYTECODE patchVS = {};
+	D3D12_SHADER_BYTECODE patchPS = {};
+	D3D12_SHADER_BYTECODE patchHS = {};
+	D3D12_SHADER_BYTECODE patchDS = {};
+
+	patchVS.BytecodeLength = dxLibvertexdesc.DXILLibrary.BytecodeLength;
+	patchVS.pShaderBytecode = dxLibvertexdesc.DXILLibrary.pShaderBytecode;
+
+	patchPS.BytecodeLength = dxLibpixeldesc.DXILLibrary.BytecodeLength;
+	patchPS.pShaderBytecode = dxLibpixeldesc.DXILLibrary.pShaderBytecode;
+
+	patchHS.BytecodeLength = dxLibhulldesc.DXILLibrary.BytecodeLength;
+	patchHS.pShaderBytecode = dxLibhulldesc.DXILLibrary.pShaderBytecode;
+
+	patchDS.BytecodeLength = dxLibdomaindesc.DXILLibrary.BytecodeLength;
+	patchDS.pShaderBytecode = dxLibdomaindesc.DXILLibrary.pShaderBytecode;
 
 	TesselationEffectPipelineDescription pipeline(&input, DirectX::CommonStates::Opaque,
 		DirectX::CommonStates::DepthDefault,

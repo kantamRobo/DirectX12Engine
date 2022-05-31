@@ -9,11 +9,16 @@
 #include "stb_image.h"
 #include <GraphicsMemory.h>
 #include "TesselationEffectPipelineDescription.h"
-#include "ShaderCompiler.h"
+
 #include "CommonStates.h"
 #include <wrl.h>
 #include "DeviceResources.h"
 #include "Camera.h"
+#include "Shader.h"
+#include <cmath>
+#include <d3dcompiler.h>
+#include <algorithm>
+#include "Utility.h"
 struct grayscale
 {
 	unsigned int width=0;
@@ -43,10 +48,9 @@ public:
 	//行う
 	//GUI側からAddlineに使ったImvec2インスタンス配列の全ての要素を使い、grayscaleの要素に代入する
 	void SetGrayScale();
-	void PrepareNormalMap(const grayscale* heightMap, Normalmap* normalMap, unsigned int width,unsigned int height)
-		;
+	void PrepareNormalMap(const grayscale* heightMap, Normalmap* normalMap, unsigned int width, unsigned int height);
 public:
-	std::unique_ptr<ShaderCompiler> m_handler;
+	
 	void Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate,
 		const std::shared_ptr<DX::DeviceResources> devicesresources,
 		std::shared_ptr<DirectX::GraphicsMemory> graphicsMemory);

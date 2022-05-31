@@ -156,8 +156,8 @@
     <ClInclude Include="ImguiCore.h">
       <Filter>DirectX12Engine</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderCompiler.h" />
     <ClInclude Include="Structures.h" />
+    <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -223,7 +223,7 @@
     <ClCompile Include="ImguiCore.cpp">
       <Filter>DirectX12Engine</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderCompiler.cpp" />
+    <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
