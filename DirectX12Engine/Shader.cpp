@@ -84,7 +84,7 @@ void Shader::LoadRaytracing(const wchar_t* filePath)
 		result->GetResult(&m_dxcBlob);
 	}
 }
-
+a
 void Shader::CreateTesslelationShader(ID3D12Device* device,
     Microsoft::WRL::ComPtr<ID3D12RootSignature> in_patchrootsignature,
     Microsoft::WRL::ComPtr<ID3D12PipelineState> in_patchpipelinestate,
