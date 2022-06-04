@@ -9,6 +9,8 @@
 #include <dxcapi.h>
 #include <Windows.h>
 #include "dxc/include/dxc/Support/dxcapi.use.h"
+#include <wrl.h>
+#include "TesselationEffectPipelineDescription.h"
 //シェーダー
 enum EShader {
 	eShader_Raygeneration,		//カメラレイを生成するシェーダー。
@@ -27,6 +29,10 @@ struct ShaderData {
 
 class Shader {
 public:
+	void CreateTesslelationShader(ID3D12Device* device,
+		Microsoft::WRL::ComPtr<ID3D12RootSignature> in_patchrootsignature,
+		Microsoft::WRL::ComPtr<ID3D12PipelineState> in_patchpipelinestate,
+		DirectX::RenderTargetState targetstate);
 	
 	void LoadRaytracing(const wchar_t* filePath);
 	/// <summary>
