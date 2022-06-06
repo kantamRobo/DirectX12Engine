@@ -280,18 +280,7 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	desc[1].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
 	desc[1].SemanticIndex = 0;
 	desc[1].SemanticName = "TEXCOORD0";
-	
-	Shader hullShader;
-	hullShader.LoadRaytracing(L"HSterrein.hlsl");
 
-	Shader DomainShader;
-	hullShader.LoadRaytracing(L"DSterrein.hlsl");
-
-	Shader VertexShader;
-	hullShader.LoadRaytracing(L"VSterrein.hlsl");
-
-	Shader Pixelshader;
-	hullShader.LoadRaytracing(L"PSterrein.hlsl");
 
 
 	
@@ -304,63 +293,14 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	
 	
 	
-	std::string errstrhull;
-	errstrhull.resize(domainshadererror->GetBufferSize());
 
 	
-	std::memcpy(errstrhull.data(), hullshadererror->GetBufferPointer(), hullshadererror->GetBufferSize());
+
 	
 
-	OutputDebugStringA(errstrhull.c_str());
-
-	std::string errstrdomain;
-	errstrdomain.resize(domainshadererror->GetBufferSize());
-	std::memcpy(errstrdomain.data(), domainshadererror->GetBufferPointer(), domainshadererror->GetBufferSize());
-
-
-
-	OutputDebugStringA(errstrdomain.c_str());
-
-	D3D12_EXPORT_DESC libExport[4];
-	for (int i = 0; i < 4; i++) {
-		libExport[i].Name = shaderDatas[i].entryPointName;
-		libExport[i].ExportToRename = nullptr;
-		libExport[i].Flags = D3D12_EXPORT_FLAG_NONE;
-	};
-
-	D3D12_DXIL_LIBRARY_DESC dxLibhulldesc;
-	IDxcBlob* pBlobhull = hullShader.GetCompiledDxcBlob();
-	dxLibhulldesc.DXILLibrary.pShaderBytecode = pBlobhull->GetBufferPointer();
-	dxLibhulldesc.DXILLibrary.BytecodeLength = pBlobhull->GetBufferSize();
-	dxLibhulldesc.NumExports = ARRAYSIZE(libExport);
-	dxLibhulldesc.pExports = libExport;
-
-
-	D3D12_DXIL_LIBRARY_DESC dxLibdomaindesc;
-	IDxcBlob* pBlobdomain = DomainShader.GetCompiledDxcBlob();
-	dxLibdomaindesc.DXILLibrary.pShaderBytecode = pBlobdomain->GetBufferPointer();
-	dxLibdomaindesc.DXILLibrary.BytecodeLength = pBlobdomain->GetBufferSize();
-	dxLibdomaindesc.NumExports = ARRAYSIZE(libExport);
-	dxLibdomaindesc.pExports = libExport;
-
-	D3D12_DXIL_LIBRARY_DESC dxLibvertexdesc;
-	IDxcBlob* pBlobvertex = VertexShader.GetCompiledDxcBlob();
-	dxLibhulldesc.DXILLibrary.pShaderBytecode = pBlobvertex->GetBufferPointer();
-	dxLibhulldesc.DXILLibrary.BytecodeLength = pBlobvertex->GetBufferSize();
-	dxLibhulldesc.NumExports = ARRAYSIZE(libExport);
-	dxLibhulldesc.pExports = libExport;
-
-
-	D3D12_DXIL_LIBRARY_DESC dxLibpixeldesc;
-	IDxcBlob*  pBlobpixel = Pixelshader.GetCompiledDxcBlob();
-	dxLibdomaindesc.DXILLibrary.pShaderBytecode = pBlobpixel->GetBufferPointer();
-	dxLibdomaindesc.DXILLibrary.BytecodeLength = pBlobpixel->GetBufferSize();
-	dxLibdomaindesc.NumExports = ARRAYSIZE(libExport);
-	dxLibdomaindesc.pExports = libExport;
-
-	D3D12_INPUT_LAYOUT_DESC input = {};
-	input.NumElements = _countof(desc);
-	input.pInputElementDescs = desc;
+	
+	m_input.NumElements = _countof(desc);
+	m_input.pInputElementDescs = desc;
 	D3D12_ROOT_SIGNATURE_DESC rootsignatureDesc = {};
 	Microsoft::WRL::ComPtr<ID3DBlob> error;
 	rootsignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
@@ -373,31 +313,8 @@ void Terrein::Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targ
 	
 	
 	
-	D3D12_SHADER_BYTECODE patchVS = {};
-	D3D12_SHADER_BYTECODE patchPS = {};
-	D3D12_SHADER_BYTECODE patchHS = {};
-	D3D12_SHADER_BYTECODE patchDS = {};
-
-	patchVS.BytecodeLength = dxLibvertexdesc.DXILLibrary.BytecodeLength;
-	patchVS.pShaderBytecode = dxLibvertexdesc.DXILLibrary.pShaderBytecode;
-
-	patchPS.BytecodeLength = dxLibpixeldesc.DXILLibrary.BytecodeLength;
-	patchPS.pShaderBytecode = dxLibpixeldesc.DXILLibrary.pShaderBytecode;
-
-	patchHS.BytecodeLength = dxLibhulldesc.DXILLibrary.BytecodeLength;
-	patchHS.pShaderBytecode = dxLibhulldesc.DXILLibrary.pShaderBytecode;
-
-	patchDS.BytecodeLength = dxLibdomaindesc.DXILLibrary.BytecodeLength;
-	patchDS.pShaderBytecode = dxLibdomaindesc.DXILLibrary.pShaderBytecode;
-
-	TesselationEffectPipelineDescription pipeline(&input, DirectX::CommonStates::Opaque,
-		DirectX::CommonStates::DepthDefault,
-		DirectX::CommonStates::CullCounterClockwise,
-		targetstate);
-	terreinpipeline = pipeline;
-	terreinpipeline.CreatePipelineState(device,m_patchrootsignature.Get()
-		, patchVS,patchPS,patchDS,patchHS,m_patchpipelinestate.GetAddressOf());
-
+	
+	
 	
 }
 

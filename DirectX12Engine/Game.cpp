@@ -331,17 +331,89 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
 #endif
         throw std::runtime_error("Shader Model 6.0 is not supported!");
     }
+    // If using the DirectX Tool Kit for DX12, uncomment this line:
     RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(),
         m_deviceResources->GetDepthBufferFormat());
-    m_effect = std::make_shared<DirectX::BasicEffect>(device, 0, m_terrein->terreinpipeline);
-    
-    // If using the DirectX Tool Kit for DX12, uncomment this line:
-     m_graphicsMemory = std::make_shared<GraphicsMemory>(device);
-     m_terrein = std::make_unique<Terrein>(m_effect->m_basicffectrootsignature);
+    m_graphicsMemory = std::make_shared<GraphicsMemory>(device);
+    m_terrein = std::make_unique<Terrein>(m_effect->m_basicffectrootsignature);
+    m_terrein->Preparepatch(device, rtState, std::move(m_deviceResources), m_graphicsMemory);
+    TesselationEffectPipelineDescription pipeline(&m_terrein->m_input, DirectX::CommonStates::Opaque,
+        DirectX::CommonStates::DepthDefault,
+        DirectX::CommonStates::CullCounterClockwise,
+        rtState);
+    HullShader.LoadShader(L"HSterrein.hlsl",L"MainHS");
 
-     m_terrein->Preparepatch(device, rtState, std::move(m_deviceResources), m_graphicsMemory);
+
+    DomainShader.LoadShader(L"DSterrein.hlsl", L"MainDS");
+
+
+    VertexShader.LoadShader(L"VSterrein.hlsl", L"MainVS");
+
+
+    PixelShader.LoadShader(L"PSterrein.hlsl", L"MainPS");
+
+    D3D12_SHADER_BYTECODE patchVS = {};
+    D3D12_SHADER_BYTECODE patchPS = {};
+    D3D12_SHADER_BYTECODE patchHS = {};
+    D3D12_SHADER_BYTECODE patchDS = {};
+
+    patchVS.BytecodeLength = VertexShader.dxLibdesc.DXILLibrary.BytecodeLength;
+    patchVS.pShaderBytecode = VertexShader.dxLibdesc.DXILLibrary.pShaderBytecode;
+
+    patchPS.BytecodeLength = PixelShader.dxLibdesc.DXILLibrary.BytecodeLength;
+    patchPS.pShaderBytecode = PixelShader.dxLibdesc.DXILLibrary.pShaderBytecode;
+
+    patchHS.BytecodeLength = HullShader.dxLibdesc.DXILLibrary.BytecodeLength;
+    patchHS.pShaderBytecode = HullShader.dxLibdesc.DXILLibrary.pShaderBytecode;
+
+    patchDS.BytecodeLength = DomainShader.dxLibdesc.DXILLibrary.BytecodeLength;
+    patchDS.pShaderBytecode = DomainShader.dxLibdesc.DXILLibrary.pShaderBytecode;
+
+   
+    
+
+    D3D12_DXIL_LIBRARY_DESC dxLibhulldesc;
+    IDxcBlob* pBlobhull = HullShader.GetCompiledDxcBlob();
+    dxLibhulldesc.DXILLibrary.pShaderBytecode = pBlobhull->GetBufferPointer();
+    dxLibhulldesc.DXILLibrary.BytecodeLength = pBlobhull->GetBufferSize();
+    dxLibhulldesc.NumExports = 1;
+    dxLibhulldesc.pExports = &HullShader.libExport;
+
+
+    D3D12_DXIL_LIBRARY_DESC dxLibdomaindesc;
+    IDxcBlob* pBlobdomain = DomainShader.GetCompiledDxcBlob();
+    dxLibdomaindesc.DXILLibrary.pShaderBytecode = pBlobdomain->GetBufferPointer();
+    dxLibdomaindesc.DXILLibrary.BytecodeLength = pBlobdomain->GetBufferSize();
+    dxLibdomaindesc.NumExports = 1;
+    dxLibdomaindesc.pExports = &DomainShader.libExport;
+
+    D3D12_DXIL_LIBRARY_DESC dxLibvertexdesc;
+    IDxcBlob* pBlobvertex = VertexShader.GetCompiledDxcBlob();
+    dxLibhulldesc.DXILLibrary.pShaderBytecode = pBlobvertex->GetBufferPointer();
+    dxLibhulldesc.DXILLibrary.BytecodeLength = pBlobvertex->GetBufferSize();
+    dxLibhulldesc.NumExports = 1;
+    dxLibhulldesc.pExports = &VertexShader.libExport;
+
+
+    D3D12_DXIL_LIBRARY_DESC dxLibpixeldesc;
+    IDxcBlob* pBlobpixel = PixelShader.GetCompiledDxcBlob();
+    dxLibdomaindesc.DXILLibrary.pShaderBytecode = pBlobpixel->GetBufferPointer();
+    dxLibdomaindesc.DXILLibrary.BytecodeLength = pBlobpixel->GetBufferSize();
+    dxLibdomaindesc.NumExports = 1;
+    dxLibdomaindesc.pExports = &PixelShader.libExport;
+    
+    pipeline.CreatePipelineState(device, m_terrein->m_patchrootsignature.Get()
+        , patchVS, patchPS, patchDS, patchHS, m_terrein->m_patchpipelinestate.GetAddressOf());
+
+    
+    m_effect = std::make_shared<DirectX::BasicEffect>(device, 0,pipeline);
+    
+  
+  
     // TODO: Initialize device dependent objects here (independent of window size).
 	 m_states = std::make_unique<CommonStates>(device);
+     
+  
      //ハイトマップとノーマルマップをセットする
      m_effect->SetTexture(m_terrein->m_heightmapheap->GetGpuHandle(Descriptors::Count), m_states->LinearClamp());
      m_effect->SetTexture(m_terrein->m_normalmapheap->GetGpuHandle(Descriptors::Count), m_states->LinearClamp());

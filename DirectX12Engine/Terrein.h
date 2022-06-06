@@ -50,7 +50,7 @@ public:
 	void SetGrayScale();
 	void PrepareNormalMap(const grayscale* heightMap, Normalmap* normalMap, unsigned int width, unsigned int height);
 public:
-	
+	D3D12_INPUT_LAYOUT_DESC m_input = {};
 	void Preparepatch(ID3D12Device* device, DirectX::RenderTargetState targetstate,
 		const std::shared_ptr<DX::DeviceResources> devicesresources,
 		std::shared_ptr<DirectX::GraphicsMemory> graphicsMemory);

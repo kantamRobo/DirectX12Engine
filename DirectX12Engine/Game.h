@@ -16,7 +16,7 @@
 #include <DirectXMath.h>
 #include <Dbt.h>
 #include <ksmedia.h>
-
+#include "Shader.h"
 
 // A basic game implementation that creates a D3D12 device and
 // provides a game loop.
@@ -75,7 +75,20 @@ private:
 	DirectX::Model::EffectCollection m_modelNormal;
     DX::AnimationSDKMESH m_animation;
 	DirectX::ModelBone::TransformArray m_drawBones;
+    
+    Shader HullShader;
+  
 
+    Shader DomainShader;
+   
+
+    Shader VertexShader;
+  
+
+    Shader PixelShader;
+
+    
+  
     std::shared_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
     std::unique_ptr<DirectX::AudioEngine> m_audEngine;
    

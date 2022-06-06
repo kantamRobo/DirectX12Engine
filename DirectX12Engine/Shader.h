@@ -32,9 +32,11 @@ public:
 	void CreateTesslelationShader(ID3D12Device* device,
 		Microsoft::WRL::ComPtr<ID3D12RootSignature> in_patchrootsignature,
 		Microsoft::WRL::ComPtr<ID3D12PipelineState> in_patchpipelinestate,
-		DirectX::RenderTargetState targetstate);
-	
-	void LoadRaytracing(const wchar_t* filePath);
+		DirectX::RenderTargetState targetstate,
+		const ShaderData& shaderData);
+	D3D12_EXPORT_DESC libExport;
+	D3D12_DXIL_LIBRARY_DESC dxLibdesc;
+	void LoadShader(const wchar_t* filePath, const wchar_t* entrypoint);
 	/// <summary>
 	/// コンパイル済みシェーダーデータを取得。
 	/// </summary>
@@ -47,6 +49,7 @@ public:
 	{
 		return m_dxcBlob;
 	}
+	
 	/// <summary>
 	/// 初期化済み？
 	/// </summary>
