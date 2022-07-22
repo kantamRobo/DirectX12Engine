@@ -23,6 +23,18 @@
     <Filter Include="DirectX12Engine">
       <UniqueIdentifier>{15681c01-3568-473c-9fcf-846288196cb2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="chibicc">
+      <UniqueIdentifier>{e6183991-c8ea-4e29-a456-103288b41487}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="chibicc\include">
+      <UniqueIdentifier>{207b165c-0a4f-48fe-b4ea-064af5e700a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="chibicc\test">
+      <UniqueIdentifier>{3b1363e1-7c26-4f88-9767-b73924fae594}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="chibicc\test\thirdpirty">
+      <UniqueIdentifier>{44495784-5f64-4cec-81b1-43febcbfbf44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -158,6 +170,45 @@
     </ClInclude>
     <ClInclude Include="Structures.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="chibicc\chibicc.h">
+      <Filter>chibicc</Filter>
+    </ClInclude>
+    <ClInclude Include="chibicc\include\float.h">
+      <Filter>chibicc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="chibicc\include\stdalign.h">
+      <Filter>chibicc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="chibicc\include\stdarg.h">
+      <Filter>chibicc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="chibicc\include\stdatomic.h">
+      <Filter>chibicc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="chibicc\include\stdbool.h">
+      <Filter>chibicc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="chibicc\include\stddef.h">
+      <Filter>chibicc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="chibicc\include\stdnoreturn.h">
+      <Filter>chibicc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="chibicc\test\include1.h">
+      <Filter>chibicc\test</Filter>
+    </ClInclude>
+    <ClInclude Include="chibicc\test\include2.h">
+      <Filter>chibicc\test</Filter>
+    </ClInclude>
+    <ClInclude Include="chibicc\test\include3.h">
+      <Filter>chibicc\test</Filter>
+    </ClInclude>
+    <ClInclude Include="chibicc\test\include4.h">
+      <Filter>chibicc\test</Filter>
+    </ClInclude>
+    <ClInclude Include="chibicc\test\test.h">
+      <Filter>chibicc\test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -224,6 +275,156 @@
       <Filter>DirectX12Engine</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="chibicc\codegen.c">
+      <Filter>chibicc</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\hashmap.c">
+      <Filter>chibicc</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\main.c">
+      <Filter>chibicc</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\parse.c">
+      <Filter>chibicc</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\preprocess.c">
+      <Filter>chibicc</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\strings.c">
+      <Filter>chibicc</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\tokenize.c">
+      <Filter>chibicc</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\type.c">
+      <Filter>chibicc</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\unicode.c">
+      <Filter>chibicc</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\alignof.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\alloca.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\arith.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\asm.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\atomic.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\attribute.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\bitfield.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\builtin.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\cast.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\commonsym.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\compat.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\complit.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\const.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\constexpr.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\control.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\decl.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\enum.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\extern.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\float.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\function.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\generic.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\initializer.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\line.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\literal.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\macro.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\offsetof.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\pointer.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\pragma-once.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\sizeof.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\stdhdr.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\string.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\struct.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\tls.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\typedef.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\typeof.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\unicode.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\union.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\usualconv.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\varargs.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\variable.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
+    <ClCompile Include="chibicc\test\vla.c">
+      <Filter>chibicc\test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -273,6 +474,30 @@
       <Filter>terreinshader</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="chibicc\test\common">
+      <Filter>chibicc\test</Filter>
+    </None>
+    <None Include="chibicc\test\driver.sh">
+      <Filter>chibicc\test</Filter>
+    </None>
+    <None Include="chibicc\test\thirdparty\common">
+      <Filter>chibicc\test\thirdpirty</Filter>
+    </None>
+    <None Include="chibicc\test\thirdparty\cpython.sh">
+      <Filter>chibicc\test\thirdpirty</Filter>
+    </None>
+    <None Include="chibicc\test\thirdparty\git.sh">
+      <Filter>chibicc\test\thirdpirty</Filter>
+    </None>
+    <None Include="chibicc\test\thirdparty\libpng.sh">
+      <Filter>chibicc\test\thirdpirty</Filter>
+    </None>
+    <None Include="chibicc\test\thirdparty\sqlite.sh">
+      <Filter>chibicc\test\thirdpirty</Filter>
+    </None>
+    <None Include="chibicc\test\thirdparty\tinycc.sh">
+      <Filter>chibicc\test\thirdpirty</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="HSterrein.hlsl">
