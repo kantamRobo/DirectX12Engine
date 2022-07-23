@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\parsing\Lexer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\parsing\LexerFacts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\parsing\NumberParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\parsing\Parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\parsing\Parser_expressions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\parsing\Parser_members.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\parsing\Parser_statements.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\parsing\ParserBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\parsing\Preprocessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\parsing\Preprocessor_macros.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\parsing\Token.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\AllSyntax.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\TokenKind.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\syntax\SyntaxFacts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\syntax\SyntaxNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\syntax\SyntaxPrinter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\syntax\SyntaxTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\syntax\SyntaxVisitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\CMakeFiles\31b99fdc096d74301da8a164ddac422d\AllSyntax.h.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{7FFA2B7D-33C6-33B9-B030-B660D3E73458}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{D5854931-6F60-378A-8342-E351CCF7A632}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

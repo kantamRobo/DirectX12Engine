@@ -1,0 +1,415 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{040BD2A1-F788-3A95-B202-2630A239A5CD}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.22000.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>slangcore</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">slangcore.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">slangcore</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">slangcore.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">slangcore</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">slangcore.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">slangcore</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">slangcore.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">slangcore</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\external\fmt\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /utf-8 /experimental:external</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;NOMINMAX;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;NTDDI_VERSION=0x06010000;_WIN32_WINNT=0x0601;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;NOMINMAX;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;NTDDI_VERSION=0x06010000;_WIN32_WINNT=0x0601;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\external\fmt\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\external\fmt\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\external\fmt\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /utf-8 /experimental:external</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;NOMINMAX;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;NTDDI_VERSION=0x06010000;_WIN32_WINNT=0x0601;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;NOMINMAX;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;NTDDI_VERSION=0x06010000;_WIN32_WINNT=0x0601;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\external\fmt\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\external\fmt\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\external\fmt\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /utf-8 /experimental:external</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;NOMINMAX;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;NTDDI_VERSION=0x06010000;_WIN32_WINNT=0x0601;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;NOMINMAX;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;NTDDI_VERSION=0x06010000;_WIN32_WINNT=0x0601;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\external\fmt\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\external\fmt\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\external\fmt\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /utf-8 /experimental:external</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;NOMINMAX;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;NTDDI_VERSION=0x06010000;_WIN32_WINNT=0x0601;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;NOMINMAX;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;NTDDI_VERSION=0x06010000;_WIN32_WINNT=0x0601;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\external\fmt\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\external\fmt\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\..\external;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\CMakeFiles\8b43f50b0005d28fee348f7e3502bb80\AllDiags.h.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating diagnostics</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python39_64\python.exe" C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source/../scripts/diagnostic_gen.py --outDir C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/source --srcDir C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source --incDir C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source/../include/slang
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\scripts\diagnostic_gen.py;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\scripts\diagnostics.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\slang\diagnostics\AllDiags.h;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\DiagCode.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating diagnostics</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python39_64\python.exe" C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source/../scripts/diagnostic_gen.py --outDir C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/source --srcDir C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source --incDir C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source/../include/slang
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\scripts\diagnostic_gen.py;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\scripts\diagnostics.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\slang\diagnostics\AllDiags.h;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\DiagCode.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Generating diagnostics</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python39_64\python.exe" C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source/../scripts/diagnostic_gen.py --outDir C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/source --srcDir C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source --incDir C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source/../include/slang
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\scripts\diagnostic_gen.py;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\scripts\diagnostics.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\slang\diagnostics\AllDiags.h;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\DiagCode.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Generating diagnostics</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python39_64\python.exe" C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source/../scripts/diagnostic_gen.py --outDir C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/source --srcDir C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source --incDir C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source/../include/slang
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\scripts\diagnostic_gen.py;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\scripts\diagnostics.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\slang\diagnostics\AllDiags.h;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\DiagCode.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang -BC:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine --check-stamp-file C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/source/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.23\Modules\CheckCXXSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckIncludeFile.cxx.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\FindThreads.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang -BC:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine --check-stamp-file C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/source/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.23\Modules\CheckCXXSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckIncludeFile.cxx.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\FindThreads.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang -BC:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine --check-stamp-file C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/source/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.23\Modules\CheckCXXSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckIncludeFile.cxx.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\FindThreads.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/source/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang -BC:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine --check-stamp-file C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/source/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.23\Modules\CheckCXXSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckIncludeFile.cxx.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\FindThreads.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\DiagCode.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\diagnostics\DiagnosticClient.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\diagnostics\DiagnosticEngine.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\diagnostics\Diagnostics.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\diagnostics\TextDiagnosticClient.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\numeric\ConstantValue.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\numeric\SVInt.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\numeric\Time.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\text\Json.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\text\SFormat.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\text\SourceManager.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\Version.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\util\Assert.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\util\BumpAllocator.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\util\CommandLine.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\util\OS.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\util\String.cpp" />
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\external\xxHash\xxhash.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">CompileAsCpp</CompileAs>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\ZERO_CHECK.vcxproj">
+      <Project>{ADC71F24-E51A-3145-A024-C32468B3CF9C}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\external\fmt\fmt.vcxproj">
+      <Project>{40074DF5-EEA4-3DA3-BCBF-9542D314FD71}</Project>
+      <Name>fmt</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\source\gen_version.vcxproj">
+      <Project>{04B5F95F-BE06-39E8-89C6-584BCAC6D1FF}</Project>
+      <Name>gen_version</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

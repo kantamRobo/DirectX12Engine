@@ -115,7 +115,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir);(SolutionDir)\packages\stb;$(ProjectDir)\DirectXTK12\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);(SolutionDir)\packages\stb;$(ProjectDir)\DirectXTK12\Inc;$(ProjectDir)\slang\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level4</WarningLevel>
@@ -130,7 +130,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>DirectXTK12.lib;SimulationController_static_64.lib;SceneQuery_static_64.lib;PhysXVehicle_static_64.lib;PhysXTask_static_64.lib;PhysXPvdSDK_static_64.lib;PhysXFoundation_64.lib;PhysXExtensions_static_64.lib;PhysXCooking_64.lib;PhysXCommon_64.lib;PhysXCharacterKinematic_static_64.lib;PhysX_64.lib;LowLevelDynamics_static_64.lib;LowLevel_static_64.lib;LowLevelAABB_static_64.lib;d3d12.lib;dxgi.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\packages\vcpkg\packages\physx_x64-windows\lib;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\packages\vcpkg\packages\physx_x64-windows\bin;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\DirectXTK12\Bin\Windows10_2022\x64\Debug;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\x64\Debug;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\x64\Debug\dxc;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\vcpkg\packages\physx_x64-windows\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\packages\vcpkg\packages\physx_x64-windows\lib;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\packages\vcpkg\packages\physx_x64-windows\bin;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\DirectXTK12\Bin\Windows10_2022\x64\Debug;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\x64\Debug;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\x64\Debug\dxc;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\vcpkg\packages\physx_x64-windows\lib;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
@@ -223,19 +223,6 @@
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
-    <ClInclude Include="chibicc\chibicc.h" />
-    <ClInclude Include="chibicc\include\float.h" />
-    <ClInclude Include="chibicc\include\stdalign.h" />
-    <ClInclude Include="chibicc\include\stdarg.h" />
-    <ClInclude Include="chibicc\include\stdatomic.h" />
-    <ClInclude Include="chibicc\include\stdbool.h" />
-    <ClInclude Include="chibicc\include\stddef.h" />
-    <ClInclude Include="chibicc\include\stdnoreturn.h" />
-    <ClInclude Include="chibicc\test\include1.h" />
-    <ClInclude Include="chibicc\test\include2.h" />
-    <ClInclude Include="chibicc\test\include3.h" />
-    <ClInclude Include="chibicc\test\include4.h" />
-    <ClInclude Include="chibicc\test\test.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="imconfig.h" />
@@ -275,56 +262,6 @@
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="character.cpp" />
-    <ClCompile Include="chibicc\codegen.c" />
-    <ClCompile Include="chibicc\hashmap.c" />
-    <ClCompile Include="chibicc\main.c" />
-    <ClCompile Include="chibicc\parse.c" />
-    <ClCompile Include="chibicc\preprocess.c" />
-    <ClCompile Include="chibicc\strings.c" />
-    <ClCompile Include="chibicc\test\alignof.c" />
-    <ClCompile Include="chibicc\test\alloca.c" />
-    <ClCompile Include="chibicc\test\arith.c" />
-    <ClCompile Include="chibicc\test\asm.c" />
-    <ClCompile Include="chibicc\test\atomic.c" />
-    <ClCompile Include="chibicc\test\attribute.c" />
-    <ClCompile Include="chibicc\test\bitfield.c" />
-    <ClCompile Include="chibicc\test\builtin.c" />
-    <ClCompile Include="chibicc\test\cast.c" />
-    <ClCompile Include="chibicc\test\commonsym.c" />
-    <ClCompile Include="chibicc\test\compat.c" />
-    <ClCompile Include="chibicc\test\complit.c" />
-    <ClCompile Include="chibicc\test\const.c" />
-    <ClCompile Include="chibicc\test\constexpr.c" />
-    <ClCompile Include="chibicc\test\control.c" />
-    <ClCompile Include="chibicc\test\decl.c" />
-    <ClCompile Include="chibicc\test\enum.c" />
-    <ClCompile Include="chibicc\test\extern.c" />
-    <ClCompile Include="chibicc\test\float.c" />
-    <ClCompile Include="chibicc\test\function.c" />
-    <ClCompile Include="chibicc\test\generic.c" />
-    <ClCompile Include="chibicc\test\initializer.c" />
-    <ClCompile Include="chibicc\test\line.c" />
-    <ClCompile Include="chibicc\test\literal.c" />
-    <ClCompile Include="chibicc\test\macro.c" />
-    <ClCompile Include="chibicc\test\offsetof.c" />
-    <ClCompile Include="chibicc\test\pointer.c" />
-    <ClCompile Include="chibicc\test\pragma-once.c" />
-    <ClCompile Include="chibicc\test\sizeof.c" />
-    <ClCompile Include="chibicc\test\stdhdr.c" />
-    <ClCompile Include="chibicc\test\string.c" />
-    <ClCompile Include="chibicc\test\struct.c" />
-    <ClCompile Include="chibicc\test\tls.c" />
-    <ClCompile Include="chibicc\test\typedef.c" />
-    <ClCompile Include="chibicc\test\typeof.c" />
-    <ClCompile Include="chibicc\test\unicode.c" />
-    <ClCompile Include="chibicc\test\union.c" />
-    <ClCompile Include="chibicc\test\usualconv.c" />
-    <ClCompile Include="chibicc\test\varargs.c" />
-    <ClCompile Include="chibicc\test\variable.c" />
-    <ClCompile Include="chibicc\test\vla.c" />
-    <ClCompile Include="chibicc\tokenize.c" />
-    <ClCompile Include="chibicc\type.c" />
-    <ClCompile Include="chibicc\unicode.c" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="ImguiCore.cpp" />
@@ -372,14 +309,6 @@
     <Manifest Include="settings.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="chibicc\test\common" />
-    <None Include="chibicc\test\driver.sh" />
-    <None Include="chibicc\test\thirdparty\common" />
-    <None Include="chibicc\test\thirdparty\cpython.sh" />
-    <None Include="chibicc\test\thirdparty\git.sh" />
-    <None Include="chibicc\test\thirdparty\libpng.sh" />
-    <None Include="chibicc\test\thirdparty\sqlite.sh" />
-    <None Include="chibicc\test\thirdparty\tinycc.sh" />
     <None Include="imgui.ini" />
     <None Include="packages.config" />
     <None Include="planepoly.sdkmesh" />

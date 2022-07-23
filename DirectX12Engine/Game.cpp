@@ -335,13 +335,20 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
     RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(),
         m_deviceResources->GetDepthBufferFormat());
     m_graphicsMemory = std::make_shared<GraphicsMemory>(device);
+    m_effect = std::make_shared<DirectX::BasicEffect>(device, 0, pipeline);
+
     m_terrein = std::make_unique<Terrein>(m_effect->m_basicffectrootsignature);
     m_terrein->Preparepatch(device, rtState, std::move(m_deviceResources), m_graphicsMemory);
+
+   
+
+
     TesselationEffectPipelineDescription pipeline(&m_terrein->m_input, DirectX::CommonStates::Opaque,
         DirectX::CommonStates::DepthDefault,
         DirectX::CommonStates::CullCounterClockwise,
         rtState);
-    HullShader.LoadShader(L"HSterrein.hlsl",L"MainHS");
+    
+    HullShader.LoadShader(L"HSterrein.hlsl", L"MainHS");
 
 
     DomainShader.LoadShader(L"DSterrein.hlsl", L"MainDS");
@@ -369,8 +376,8 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
     patchDS.BytecodeLength = DomainShader.dxLibdesc.DXILLibrary.BytecodeLength;
     patchDS.pShaderBytecode = DomainShader.dxLibdesc.DXILLibrary.pShaderBytecode;
 
-   
-    
+
+
 
     D3D12_DXIL_LIBRARY_DESC dxLibhulldesc;
     IDxcBlob* pBlobhull = HullShader.GetCompiledDxcBlob();
@@ -401,13 +408,12 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
     dxLibdomaindesc.DXILLibrary.BytecodeLength = pBlobpixel->GetBufferSize();
     dxLibdomaindesc.NumExports = 1;
     dxLibdomaindesc.pExports = &PixelShader.libExport;
-    
+
     pipeline.CreatePipelineState(device, m_terrein->m_patchrootsignature.Get()
         , patchVS, patchPS, patchDS, patchHS, m_terrein->m_patchpipelinestate.GetAddressOf());
 
     
-    m_effect = std::make_shared<DirectX::BasicEffect>(device, 0,pipeline);
-    
+     
   
   
     // TODO: Initialize device dependent objects here (independent of window size).

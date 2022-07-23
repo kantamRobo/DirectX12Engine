@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\AssertionExpr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\AssignmentExpressions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\Bitstream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\CallExpression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\Constraints.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\BindContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\EvalContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\Expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\FormatHelpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\LiteralExpressions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\Lookup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\LValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\MiscExpressions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\OperatorExpressions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\Patterns.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\SelectExpressions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\Statements.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\SystemSubroutine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\binding\TimingControl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\builtins\ArrayMethods.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\builtins\ConversionFuncs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\builtins\CoverageFuncs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\builtins\EnumMethods.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\builtins\GateTypes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\builtins\MathFuncs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\builtins\MiscSystemFuncs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\builtins\NonConstFuncs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\builtins\QueryFuncs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\builtins\StdPackage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\builtins\StringMethods.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\builtins\SystemTasks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\Compilation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\Definition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\ScriptSession.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\compilation\SemanticModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\mir\Instr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\mir\MIRBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\mir\MIRPrinter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\mir\Procedure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\ASTSerializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\AttributeSymbol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\BlockSymbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\ClassSymbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\CompilationUnitSymbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\CoverSymbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\InstanceSymbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\MemberSymbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\ParameterBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\ParameterSymbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\PortSymbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\Scope.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\SemanticFacts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\SubroutineSymbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\Symbol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\SymbolBuilders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\ValueSymbol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\symbols\VariableSymbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\types\AllTypes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\types\DeclaredType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\types\NetType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\types\TypePrinter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\types\Type.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\source\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{D5854931-6F60-378A-8342-E351CCF7A632}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

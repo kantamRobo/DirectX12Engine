@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\AssertionTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\ClassTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\CoverTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\DiagnosticTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\EvalTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\ExpressionParsingTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\ExpressionTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\FileTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\HierarchyTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\LexerTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\LookupTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\MemberParsingTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\MemberTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\MIRTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\NumericTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\PortTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\PreprocessorTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\StatementParsingTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\StatementTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\SystemFuncTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\Test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\TypeTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\UtilTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\VisitorTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\tests\unittests\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{D5854931-6F60-378A-8342-E351CCF7A632}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

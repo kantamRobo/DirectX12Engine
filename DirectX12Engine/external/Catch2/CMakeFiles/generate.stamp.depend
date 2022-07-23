@@ -1,0 +1,7 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakeDependentOption.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/CMakePackageConfigHelpers.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/GNUInstallDirs.cmake
+C:/Program Files/CMake/share/cmake-3.23/Modules/WriteBasicConfigVersionFile.cmake
+C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/external/Catch2/CMake/CatchConfigOptions.cmake
+C:/Users/hatte/SELFGAMEENGINE/DirectX12Engine/DirectX12Engine/slang/external/Catch2/CMakeLists.txt
