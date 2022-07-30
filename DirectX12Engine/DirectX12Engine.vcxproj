@@ -115,7 +115,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir);(SolutionDir)\packages\stb;$(ProjectDir)\DirectXTK12\Inc;$(ProjectDir)\slang\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);(SolutionDir)\packages\stb;$(ProjectDir)\DirectXTK12\Inc;$(ProjectDir)\slang\include;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\lua-5.4.2_Win64_dllw6_lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level4</WarningLevel>
@@ -130,7 +130,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>DirectXTK12.lib;SimulationController_static_64.lib;SceneQuery_static_64.lib;PhysXVehicle_static_64.lib;PhysXTask_static_64.lib;PhysXPvdSDK_static_64.lib;PhysXFoundation_64.lib;PhysXExtensions_static_64.lib;PhysXCooking_64.lib;PhysXCommon_64.lib;PhysXCharacterKinematic_static_64.lib;PhysX_64.lib;LowLevelDynamics_static_64.lib;LowLevel_static_64.lib;LowLevelAABB_static_64.lib;d3d12.lib;dxgi.lib;dxguid.lib;uuid.lib;kernel32.lib;user32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\packages\vcpkg\packages\physx_x64-windows\lib;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\packages\vcpkg\packages\physx_x64-windows\bin;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\DirectXTK12\Bin\Windows10_2022\x64\Debug;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\x64\Debug;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\x64\Debug\dxc;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\vcpkg\packages\physx_x64-windows\lib;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\packages\vcpkg\packages\physx_x64-windows\lib;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\packages\vcpkg\packages\physx_x64-windows\bin;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\DirectXTK12\Bin\Windows10_2022\x64\Debug;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\x64\Debug;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\x64\Debug\dxc;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\vcpkg\packages\physx_x64-windows\lib;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\slang\lib;C:\Users\hatte\SELFGAMEENGINE\DirectX12Engine\DirectX12Engine\lua-5.4.2_Win64_dllw6_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Manifest>
       <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
@@ -255,6 +255,7 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="DemmandCreate.h" />
+    <ClInclude Include="VisualScriptFunction.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\packages\stb\stb_vorbis.c" />
@@ -290,6 +291,7 @@
     <ClCompile Include="Terrein.cpp" />
     <ClCompile Include="TerreinEditor.cpp" />
     <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="VisualScriptFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

@@ -335,7 +335,7 @@ void Game::CreateDeviceDependentResources(HWND in_hwnd)
     RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(),
         m_deviceResources->GetDepthBufferFormat());
     m_graphicsMemory = std::make_shared<GraphicsMemory>(device);
-    m_effect = std::make_shared<DirectX::BasicEffect>(device, 0, pipeline);
+   // m_effect = std::make_shared<DirectX::BasicEffect>(device, 0, pipeline);
 
     m_terrein = std::make_unique<Terrein>(m_effect->m_basicffectrootsignature);
     m_terrein->Preparepatch(device, rtState, std::move(m_deviceResources), m_graphicsMemory);

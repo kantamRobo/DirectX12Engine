@@ -26,6 +26,9 @@
     <Filter Include="DirectX12Engine\Slang">
       <UniqueIdentifier>{cb04504b-36a6-4a6e-a2d0-94f1212e32f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="VisualScript_exe_C++">
+      <UniqueIdentifier>{eb742ce4-6de7-46fa-88e8-48eab6749b47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -161,6 +164,7 @@
     </ClInclude>
     <ClInclude Include="Structures.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="VisualScriptFunction.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -227,6 +231,7 @@
       <Filter>DirectX12Engine</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="VisualScriptFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
