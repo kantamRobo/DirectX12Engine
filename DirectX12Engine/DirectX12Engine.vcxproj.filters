@@ -165,6 +165,14 @@
     <ClInclude Include="Structures.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="VisualScriptFunction.h" />
+    <ClInclude Include="imgui_node_editor.h" />
+    <ClInclude Include="imgui_node_editor_internal.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="imgui_bezier_math.h" />
+    <ClInclude Include="imgui_canvas.h" />
+    <ClInclude Include="imgui_extra_math.h" />
+    <ClInclude Include="ScopeGuard.h" />
+    <ClInclude Include="crude_json.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -232,6 +240,10 @@
     </ClCompile>
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="VisualScriptFunction.cpp" />
+    <ClCompile Include="imgui_node_editor.cpp" />
+    <ClCompile Include="imgui_node_editor_api.cpp" />
+    <ClCompile Include="imgui_canvas.cpp" />
+    <ClCompile Include="crude_json.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -281,6 +293,9 @@
       <Filter>terreinshader</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="imgui_node_editor_internal.inl" />
+    <None Include="imgui_bezier_math.inl" />
+    <None Include="imgui_extra_math.inl" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="HSterrein.hlsl">

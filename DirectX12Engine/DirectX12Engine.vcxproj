@@ -223,14 +223,20 @@
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="crude_json.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="ImguiCore.h" />
+    <ClInclude Include="imgui_bezier_math.h" />
+    <ClInclude Include="imgui_canvas.h" />
+    <ClInclude Include="imgui_extra_math.h" />
     <ClInclude Include="imgui_impl_dx12.h" />
     <ClInclude Include="imgui_impl_win32.h" />
     <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="imgui_node_editor.h" />
+    <ClInclude Include="imgui_node_editor_internal.h" />
     <ClInclude Include="imnodes.h" />
     <ClInclude Include="imnodes_internal.h" />
     <ClInclude Include="imstb_rectpack.h" />
@@ -240,6 +246,7 @@
     <ClInclude Include="PlanePolygon.h" />
     <ClInclude Include="Platformhelper.h" />
     <ClInclude Include="Rigidshape.h" />
+    <ClInclude Include="ScopeGuard.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Src\AlignedNew.h" />
     <ClInclude Include="Src\d3dx12.h" />
@@ -247,6 +254,7 @@
     <ClInclude Include="Src\pch.h" />
     <ClInclude Include="Src\PlatformHelpers.h" />
     <ClInclude Include="Src\vbo.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Structures.h" />
@@ -263,13 +271,17 @@
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="character.cpp" />
+    <ClCompile Include="crude_json.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="ImguiCore.cpp" />
+    <ClCompile Include="imgui_canvas.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_impl_dx12.cpp" />
     <ClCompile Include="imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui_node_editor.cpp" />
+    <ClCompile Include="imgui_node_editor_api.cpp" />
     <ClCompile Include="imgui_tables.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="imnodes.cpp" />
@@ -312,6 +324,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
+    <None Include="imgui_bezier_math.inl" />
+    <None Include="imgui_extra_math.inl" />
+    <None Include="imgui_node_editor_internal.inl" />
     <None Include="packages.config" />
     <None Include="planepoly.sdkmesh" />
     <None Include="soldier.sdkmesh" />
