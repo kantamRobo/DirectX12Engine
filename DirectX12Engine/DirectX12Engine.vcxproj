@@ -242,7 +242,9 @@
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="LoadingScreen_BindLua.h" />
     <ClInclude Include="LuaScript.h" />
+    <ClInclude Include="Luna.h" />
     <ClInclude Include="MainComponent_BindLua.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlanePolygon.h" />
@@ -287,7 +289,9 @@
     <ClCompile Include="imgui_tables.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="imnodes.cpp" />
+    <ClCompile Include="LoadingScreen_BindLua.cpp" />
     <ClCompile Include="LuaScript.cpp" />
+    <ClCompile Include="Luna.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="MainComponent_BindLua.cpp" />

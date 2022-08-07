@@ -175,6 +175,8 @@
     <ClInclude Include="crude_json.h" />
     <ClInclude Include="MainComponent_BindLua.h" />
     <ClInclude Include="LuaScript.h" />
+    <ClInclude Include="LoadingScreen_BindLua.h" />
+    <ClInclude Include="Luna.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -248,6 +250,8 @@
     <ClCompile Include="crude_json.cpp" />
     <ClCompile Include="MainComponent_BindLua.cpp" />
     <ClCompile Include="LuaScript.cpp" />
+    <ClCompile Include="LoadingScreen_BindLua.cpp" />
+    <ClCompile Include="Luna.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
