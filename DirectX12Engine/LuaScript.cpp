@@ -45,7 +45,7 @@ int Internal_DoFile(lua_State* L)
 						return 0;
 
 					stringstream ss("");
-					ss << WILUA_ERROR_PREFIX << str;
+					ss << LuaScript_ERROR_PREFIX << str;
 					wiBackLog::post(ss.str().c_str());
 					lua_pop(L, 1); // remove error message
 				}
@@ -65,7 +65,7 @@ int Internal_DoFile(lua_State* L)
 			luainternal.m_luaState = luaL_newstate();
 			luaL_openlibs(luainternal.m_luaState);
 			RegisterFunc("dofile", Internal_DoFile);
-			RunText(wiLua_Globals);
+			RunText(LuaScript_Globals);
 
 			MainComponent_BindLua::Bind();
 			RenderPath_BindLua::Bind();
@@ -74,7 +74,7 @@ int Internal_DoFile(lua_State* L)
 			RenderPath3D_BindLua::Bind();
 			Texture_BindLua::Bind();
 			wiRenderer_BindLua::Bind();
-			wiAudio_BindLua::Bind();
+			Audio_BindLua::Bind();
 			wiSprite_BindLua::Bind();
 			wiImageParams_BindLua::Bind();
 			SpriteAnim_BindLua::Bind();
@@ -87,7 +87,7 @@ int Internal_DoFile(lua_State* L)
 			wiNetwork_BindLua::Bind();
 			wiIntersect_BindLua::Bind();
 
-			wiBackLog::post("wiLua Initialized");
+			wiBackLog::post("LuaScript Initialized");
 		}
 
 
@@ -134,7 +134,7 @@ int Internal_DoFile(lua_State* L)
 			if (str == nullptr)
 				return;
 			stringstream ss("");
-			ss << WILUA_ERROR_PREFIX << str;
+			ss << LuaScript_ERROR_PREFIX << str;
 			wiBackLog::post(ss.str().c_str());
 			LuaScript::lock.lock();
 			lua_pop(luainternal.m_luaState, 1); // remove error message
@@ -425,7 +425,7 @@ int Internal_DoFile(lua_State* L)
 		int line = ar.currentline;
 
 		stringstream ss("");
-		ss << WILUA_ERROR_PREFIX << "Line " << line << ": ";
+		ss << LuaScript_ERROR_PREFIX << "Line " << line << ": ";
 		if (!error.empty())
 		{
 			ss << error;

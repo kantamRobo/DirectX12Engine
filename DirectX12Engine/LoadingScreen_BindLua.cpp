@@ -32,42 +32,42 @@ Luna<LoadingScreen_BindLua>::PropertyType LoadingScreen_BindLua::properties[] = 
 
 int LoadingScreen_BindLua::AddLoadingTask(lua_State* L)
 {
-	int argc = wiLua::SGetArgCount(L);
+	int argc = LuaScript::SGetArgCount(L);
 	if (argc > 0)
 	{
-		string task = wiLua::SGetString(L, 1);
+		string task = LuaScript::SGetString(L, 1);
 		LoadingScreen* loading = dynamic_cast<LoadingScreen*>(component);
 		if (loading != nullptr)
 		{
 			loading->addLoadingFunction([=](wiJobArgs args) {
-				wiLua::RunText(task);
+				LuaScript::RunText(task);
 				});
 		}
 		else
-			wiLua::SError(L, "AddLoader(string taskScript) component is not a LoadingScreen!");
+			LuaScript::SError(L, "AddLoader(string taskScript) component is not a LoadingScreen!");
 	}
 	else
-		wiLua::SError(L, "AddLoader(string taskScript) not enough arguments!");
+		LuaScript::SError(L, "AddLoader(string taskScript) not enough arguments!");
 	return 0;
 }
 int LoadingScreen_BindLua::OnFinished(lua_State* L)
 {
-	int argc = wiLua::SGetArgCount(L);
+	int argc = LuaScript::SGetArgCount(L);
 	if (argc > 0)
 	{
-		string task = wiLua::SGetString(L, 1);
+		string task = LuaScript::SGetString(L, 1);
 		LoadingScreen* loading = dynamic_cast<LoadingScreen*>(component);
 		if (loading != nullptr)
 		{
 			loading->onFinished([=] {
-				wiLua::RunText(task);
+				LuaScript::RunText(task);
 				});
 		}
 		else
-			wiLua::SError(L, "OnFinished(string taskScript) component is not a LoadingScreen!");
+			LuaScript::SError(L, "OnFinished(string taskScript) component is not a LoadingScreen!");
 	}
 	else
-		wiLua::SError(L, "OnFinished(string taskScript) not enough arguments!");
+		LuaScript::SError(L, "OnFinished(string taskScript) not enough arguments!");
 	return 0;
 }
 
@@ -77,6 +77,6 @@ void LoadingScreen_BindLua::Bind()
 	if (!initialized)
 	{
 		initialized = true;
-		Luna<LoadingScreen_BindLua>::Register(wiLua::GetLuaState());
+		Luna<LoadingScreen_BindLua>::Register(LuaScript::GetLuaState());
 	}
 }

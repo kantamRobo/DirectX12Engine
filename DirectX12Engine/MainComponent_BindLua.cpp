@@ -36,7 +36,7 @@ int MainComponent_BindLua::GetActivePath(lua_State* L)
 {
 	if (component == nullptr)
 	{
-		wiLua::SError(L, "GetActivePath() component is empty!");
+		LuaScript::SError(L, "GetActivePath() component is empty!");
 		return 0;
 	}
 
@@ -72,34 +72,34 @@ int MainComponent_BindLua::GetActivePath(lua_State* L)
 		return 1;
 	}
 
-	wiLua::SError(L, "GetActivePath() Warning: type of active component not registered!");
+	LuaScript::SError(L, "GetActivePath() Warning: type of active component not registered!");
 	return 0;
 }
 int MainComponent_BindLua::SetActivePath(lua_State* L)
 {
 	if (component == nullptr)
 	{
-		wiLua::SError(L, "SetActivePath(RenderPath component) component is empty!");
+		LuaScript::SError(L, "SetActivePath(RenderPath component) component is empty!");
 		return 0;
 	}
 
-	int argc = wiLua::SGetArgCount(L);
+	int argc = LuaScript::SGetArgCount(L);
 	if (argc > 0)
 	{
 		float fadeSeconds = 0;
 		wiColor fadeColor = wiColor(0, 0, 0, 255);
 		if (argc > 1)
 		{
-			fadeSeconds = wiLua::SGetFloat(L, 2);
+			fadeSeconds = LuaScript::SGetFloat(L, 2);
 			if (argc > 2)
 			{
-				fadeColor.setR((uint8_t)wiLua::SGetInt(L, 3));
+				fadeColor.setR((uint8_t)LuaScript::SGetInt(L, 3));
 				if (argc > 3)
 				{
-					fadeColor.setG((uint8_t)wiLua::SGetInt(L, 4));
+					fadeColor.setG((uint8_t)LuaScript::SGetInt(L, 4));
 					if (argc > 4)
 					{
-						fadeColor.setB((uint8_t)wiLua::SGetInt(L, 5));
+						fadeColor.setB((uint8_t)LuaScript::SGetInt(L, 5));
 					}
 				}
 			}
@@ -135,7 +135,7 @@ int MainComponent_BindLua::SetActivePath(lua_State* L)
 	}
 	else
 	{
-		wiLua::SError(L, "SetActivePath(RenderPath component, opt int fadeFrames,fadeColorR,fadeColorG,fadeColorB) not enought arguments!");
+		LuaScript::SError(L, "SetActivePath(RenderPath component, opt int fadeFrames,fadeColorR,fadeColorG,fadeColorB) not enought arguments!");
 		return 0;
 	}
 	return 0;
@@ -144,128 +144,128 @@ int MainComponent_BindLua::SetFrameSkip(lua_State* L)
 {
 	if (component == nullptr)
 	{
-		wiLua::SError(L, "SetFrameSkip(bool enabled) component is empty!");
+		LuaScript::SError(L, "SetFrameSkip(bool enabled) component is empty!");
 		return 0;
 	}
 
-	int argc = wiLua::SGetArgCount(L);
+	int argc = LuaScript::SGetArgCount(L);
 	if (argc > 0)
 	{
-		component->setFrameSkip(wiLua::SGetBool(L, 1));
+		component->setFrameSkip(LuaScript::SGetBool(L, 1));
 	}
 	else
-		wiLua::SError(L, "SetFrameSkip(bool enabled) not enought arguments!");
+		LuaScript::SError(L, "SetFrameSkip(bool enabled) not enought arguments!");
 	return 0;
 }
 int MainComponent_BindLua::SetTargetFrameRate(lua_State* L)
 {
 	if (component == nullptr)
 	{
-		wiLua::SError(L, "SetTargetFrameRate(float value) component is empty!");
+		LuaScript::SError(L, "SetTargetFrameRate(float value) component is empty!");
 		return 0;
 	}
 
-	int argc = wiLua::SGetArgCount(L);
+	int argc = LuaScript::SGetArgCount(L);
 	if (argc > 0)
 	{
-		component->setTargetFrameRate(wiLua::SGetFloat(L, 1));
+		component->setTargetFrameRate(LuaScript::SGetFloat(L, 1));
 	}
 	else
-		wiLua::SError(L, "SetTargetFrameRate(float value) not enought arguments!");
+		LuaScript::SError(L, "SetTargetFrameRate(float value) not enought arguments!");
 	return 0;
 }
 int MainComponent_BindLua::SetFrameRateLock(lua_State* L)
 {
 	if (component == nullptr)
 	{
-		wiLua::SError(L, "SetFrameRateLock(bool enabled) component is empty!");
+		LuaScript::SError(L, "SetFrameRateLock(bool enabled) component is empty!");
 		return 0;
 	}
 
-	int argc = wiLua::SGetArgCount(L);
+	int argc = LuaScript::SGetArgCount(L);
 	if (argc > 0)
 	{
-		component->setFrameRateLock(wiLua::SGetBool(L, 1));
+		component->setFrameRateLock(LuaScript::SGetBool(L, 1));
 	}
 	else
-		wiLua::SError(L, "SetFrameRateLock(bool enabled) not enought arguments!");
+		LuaScript::SError(L, "SetFrameRateLock(bool enabled) not enought arguments!");
 	return 0;
 }
 int MainComponent_BindLua::SetInfoDisplay(lua_State* L)
 {
 	if (component == nullptr)
 	{
-		wiLua::SError(L, "SetInfoDisplay() component is empty!");
+		LuaScript::SError(L, "SetInfoDisplay() component is empty!");
 		return 0;
 	}
-	int argc = wiLua::SGetArgCount(L);
+	int argc = LuaScript::SGetArgCount(L);
 	if (argc > 0)
 	{
-		component->infoDisplay.active = wiLua::SGetBool(L, 1);
+		component->infoDisplay.active = LuaScript::SGetBool(L, 1);
 	}
 	else
-		wiLua::SError(L, "SetInfoDisplay(bool active) not enough arguments!");
+		LuaScript::SError(L, "SetInfoDisplay(bool active) not enough arguments!");
 	return 0;
 }
 int MainComponent_BindLua::SetWatermarkDisplay(lua_State* L)
 {
 	if (component == nullptr)
 	{
-		wiLua::SError(L, "SetWatermarkDisplay() component is empty!");
+		LuaScript::SError(L, "SetWatermarkDisplay() component is empty!");
 		return 0;
 	}
-	int argc = wiLua::SGetArgCount(L);
+	int argc = LuaScript::SGetArgCount(L);
 	if (argc > 0)
 	{
-		component->infoDisplay.watermark = wiLua::SGetBool(L, 1);
+		component->infoDisplay.watermark = LuaScript::SGetBool(L, 1);
 	}
 	else
-		wiLua::SError(L, "SetWatermarkDisplay(bool active) not enough arguments!");
+		LuaScript::SError(L, "SetWatermarkDisplay(bool active) not enough arguments!");
 	return 0;
 }
 int MainComponent_BindLua::SetFPSDisplay(lua_State* L)
 {
 	if (component == nullptr)
 	{
-		wiLua::SError(L, "SetFPSDisplay() component is empty!");
+		LuaScript::SError(L, "SetFPSDisplay() component is empty!");
 		return 0;
 	}
-	int argc = wiLua::SGetArgCount(L);
+	int argc = LuaScript::SGetArgCount(L);
 	if (argc > 0)
 	{
-		component->infoDisplay.fpsinfo = wiLua::SGetBool(L, 1);
+		component->infoDisplay.fpsinfo = LuaScript::SGetBool(L, 1);
 	}
 	else
-		wiLua::SError(L, "SetFPSDisplay(bool active) not enough arguments!");
+		LuaScript::SError(L, "SetFPSDisplay(bool active) not enough arguments!");
 	return 0;
 }
 int MainComponent_BindLua::SetResolutionDisplay(lua_State* L)
 {
 	if (component == nullptr)
 	{
-		wiLua::SError(L, "SetResolutionDisplay() component is empty!");
+		LuaScript::SError(L, "SetResolutionDisplay() component is empty!");
 		return 0;
 	}
-	int argc = wiLua::SGetArgCount(L);
+	int argc = LuaScript::SGetArgCount(L);
 	if (argc > 0)
 	{
-		component->infoDisplay.resolution = wiLua::SGetBool(L, 1);
+		component->infoDisplay.resolution = LuaScript::SGetBool(L, 1);
 	}
 	else
-		wiLua::SError(L, "SetResolutionDisplay(bool active) not enough arguments!");
+		LuaScript::SError(L, "SetResolutionDisplay(bool active) not enough arguments!");
 	return 0;
 }
 
 
 int SetProfilerEnabled(lua_State* L)
 {
-	int argc = wiLua::SGetArgCount(L);
+	int argc = LuaScript::SGetArgCount(L);
 	if (argc > 0)
 	{
-		wiProfiler::SetEnabled(wiLua::SGetBool(L, 1));
+		wiProfiler::SetEnabled(LuaScript::SGetBool(L, 1));
 	}
 	else
-		wiLua::SError(L, "SetProfilerEnabled(bool active) not enough arguments!");
+		LuaScript::SError(L, "SetProfilerEnabled(bool active) not enough arguments!");
 
 	return 0;
 }
@@ -276,8 +276,8 @@ void MainComponent_BindLua::Bind()
 	if (!initialized)
 	{
 		initialized = true;
-		Luna<MainComponent_BindLua>::Register(wiLua::GetLuaState());
+		Luna<MainComponent_BindLua>::Register(LuaScript::GetLuaState());
 
-		wiLua::RegisterFunc("SetProfilerEnabled", SetProfilerEnabled);
+		LuaScript::RegisterFunc("SetProfilerEnabled", SetProfilerEnabled);
 	}
 }

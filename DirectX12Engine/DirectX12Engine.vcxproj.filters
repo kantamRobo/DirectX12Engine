@@ -29,6 +29,9 @@
     <Filter Include="VisualScript_exe_C++">
       <UniqueIdentifier>{eb742ce4-6de7-46fa-88e8-48eab6749b47}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LuaScript">
+      <UniqueIdentifier>{112e105e-2127-4f97-9547-ef446233df54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -164,7 +167,6 @@
     </ClInclude>
     <ClInclude Include="Structures.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="VisualScriptFunction.h" />
     <ClInclude Include="imgui_node_editor.h" />
     <ClInclude Include="imgui_node_editor_internal.h" />
     <ClInclude Include="stb_image.h" />
@@ -173,10 +175,48 @@
     <ClInclude Include="imgui_extra_math.h" />
     <ClInclude Include="ScopeGuard.h" />
     <ClInclude Include="crude_json.h" />
-    <ClInclude Include="MainComponent_BindLua.h" />
-    <ClInclude Include="LuaScript.h" />
-    <ClInclude Include="LoadingScreen_BindLua.h" />
-    <ClInclude Include="Luna.h" />
+    <ClInclude Include="Matrix_BindLua.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadingScreen_BindLua.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaScript.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Luna.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
+    <ClInclude Include="MainComponent_BindLua.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPath_BindLua.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPath2D_BindLua.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPath3D_BindLua.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteAnim_BindLua.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture_BindLua.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio_BindLua.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector_BindLua.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
+    <ClInclude Include="VisualScriptFunction.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
+    <ClInclude Include="BackLog_BIndLua.h">
+      <Filter>LuaScript</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -243,15 +283,52 @@
       <Filter>DirectX12Engine</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="VisualScriptFunction.cpp" />
     <ClCompile Include="imgui_node_editor.cpp" />
     <ClCompile Include="imgui_node_editor_api.cpp" />
     <ClCompile Include="imgui_canvas.cpp" />
     <ClCompile Include="crude_json.cpp" />
-    <ClCompile Include="MainComponent_BindLua.cpp" />
-    <ClCompile Include="LuaScript.cpp" />
-    <ClCompile Include="LoadingScreen_BindLua.cpp" />
-    <ClCompile Include="Luna.cpp" />
+    <ClCompile Include="Matrix_BindLua.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadingScreen_BindLua.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaScript.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Luna.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
+    <ClCompile Include="MainComponent_BindLua.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPath_BindLua.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPath2D_BindLua.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPath3D_BindLua.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteAnim_BindLua.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture_BindLua.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio_BindLua.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector_BindLua.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
+    <ClCompile Include="VisualScriptFunction.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
+    <ClCompile Include="BackLog_BIndLua.cpp">
+      <Filter>LuaScript</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
