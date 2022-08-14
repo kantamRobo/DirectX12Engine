@@ -244,6 +244,10 @@
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="Input_BindLua.h" />
+    <ClInclude Include="Intersect.h" />
+    <ClInclude Include="InterSect_BindLua.h" />
     <ClInclude Include="LoadingScreen_BindLua.h" />
     <ClInclude Include="LuaScript.h" />
     <ClInclude Include="Luna.h" />
@@ -256,6 +260,7 @@
     <ClInclude Include="RenderPath3D_BindLua.h" />
     <ClInclude Include="RenderPath_BindLua.h" />
     <ClInclude Include="Rigidshape.h" />
+    <ClInclude Include="Scene_bindLua.h" />
     <ClInclude Include="ScopeGuard.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SpriteAnim_BindLua.h" />
@@ -300,6 +305,10 @@
     <ClCompile Include="imgui_tables.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="imnodes.cpp" />
+    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Input_BindLua.cpp" />
+    <ClCompile Include="Intersect.cpp" />
+    <ClCompile Include="InterSect_BindLua.cpp" />
     <ClCompile Include="LoadingScreen_BindLua.cpp" />
     <ClCompile Include="LuaScript.cpp" />
     <ClCompile Include="Luna.cpp" />
@@ -318,6 +327,7 @@
     <ClCompile Include="RenderPath3D_BindLua.cpp" />
     <ClCompile Include="RenderPath_BindLua.cpp" />
     <ClCompile Include="Rigidshape.cpp" />
+    <ClCompile Include="Scene_bindLua.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SpriteAnim_BindLua.cpp" />
     <ClCompile Include="Src\DirectXHelpers.cpp" />
