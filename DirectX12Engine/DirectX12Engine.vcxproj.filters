@@ -226,6 +226,7 @@
     </ClInclude>
     <ClInclude Include="Intersect.h" />
     <ClInclude Include="Scene_bindLua.h" />
+    <ClInclude Include="Load_ReloadScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -347,6 +348,7 @@
     </ClCompile>
     <ClCompile Include="Intersect.cpp" />
     <ClCompile Include="Scene_bindLua.cpp" />
+    <ClCompile Include="Load_ReloadScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
