@@ -7,9 +7,8 @@ class Load_ReloadScript
 	
 
 
-	bool LoadScript(const std::string& filename);
-
+	bool RunVSCode(const std::string& filename);
 	bool LoadScript(const std::string& filename, std::vector<uint8_t>& data);
-
+	
 };
 
