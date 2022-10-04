@@ -9,21 +9,27 @@ bool Load_ReloadScript::RunVSCode(const std::string& filename)
     STARTUPINFO startInfo = { 0 };
     PROCESS_INFORMATION processInfo = { 0 };
 
-    //（まだ未完成)親プロセスを起動
-    
+    //VSCodeを起動
+    /*
     BOOL runvscode =CreateProcess(
-    (L"C:\\Users\\hatte\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Visual Studio Code\\Visual Studio Code.lnk"), NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &startInfo, &processInfo);
+    (L"C:\\Users\\hatte\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"), NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &startInfo, &processInfo);
+    */
 
-
-    //(まだ未完成)子プロセスを起動
-    std::wstring stemp = std::wstring(filename.begin(), filename.end());
-    LPCWSTR file = stemp.c_str();
-    std::wstring exe = TEXT(".sln");
-    std::wstring solution = stemp.append(exe);
-    LPCWSTR exeL = solution.c_str();
+    //ソリューションファイルの起動
+    std::wstring filenamefirst = TEXT("\\");
+    std::wstring filenamecore = std::wstring(filename.begin(), filename.end());
+    filenamefirst.append(filenamecore);
+    std::wstring filenamesecond = TEXT("\\");
+    filenamefirst.append(filenamesecond);
+    LPCWSTR file = filenamefirst.c_str();
+    std::wstring filenamecore2 = std::wstring(filename.begin(), filename.end());
+    
+    std::wstring sln = TEXT(".sln");
+    std::wstring solution = filenamecore2.append(sln);
+    std::wstring complete = filenamefirst.append(filenamecore2);
+    LPCWSTR exeL = complete .c_str();
     BOOL runsln = CreateProcess(exeL, NULL, NULL, NULL, FALSE, NULL, NULL, NULL, &startInfo, &processInfo);
-
-
+   
 
     return false;
 }
