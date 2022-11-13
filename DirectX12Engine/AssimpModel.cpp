@@ -26,9 +26,7 @@ HRESULT AssimpModel::Init(DX::DeviceResources* deviceresources,DirectX::Graphics
 
 			m_transformCBBuffer[i] = graphicsmemory->Allocate(sizeof(TransformConstantBufferData));
 
-			D3D12_CONSTANT_BUFFER_VIEW_DESC cbdesc[4] = {};
-			cbdesc[i].BufferLocation = m_transformCBBuffer[i].GpuAddress();
-			cbdesc[i].SizeInBytes = sizeof(TransformConstantBufferData);
+			
 		}
 
 		// Upload the resources to the GPU.
