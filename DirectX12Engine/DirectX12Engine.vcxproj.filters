@@ -11,9 +11,6 @@
     <Filter Include="Imgui">
       <UniqueIdentifier>{6f091185-8172-4c20-90d6-f4236ac9d7a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Imnodes">
-      <UniqueIdentifier>{eab9181c-ef7d-4e1a-965a-d7c2a9f17deb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="stb">
       <UniqueIdentifier>{885d90fa-187c-4557-8ee3-f73622236c04}</UniqueIdentifier>
     </Filter>
@@ -29,8 +26,11 @@
     <Filter Include="VisualScript_exe_C++">
       <UniqueIdentifier>{eb742ce4-6de7-46fa-88e8-48eab6749b47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LuaScript">
-      <UniqueIdentifier>{112e105e-2127-4f97-9547-ef446233df54}</UniqueIdentifier>
+    <Filter Include="DirectX12Engine\Graphics">
+      <UniqueIdentifier>{ce834f84-6732-46dc-85de-33bebed4a020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX12Engine\Graphics\Test">
+      <UniqueIdentifier>{b5b1b01c-fac1-4344-b4c7-dc70decf752f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -44,11 +44,9 @@
     <ClInclude Include="d3dx12.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="imconfig.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Rigidshape.h" />
-    <ClInclude Include="PlanePolygon.h" />
     <ClInclude Include="imgui.h">
       <Filter>Imgui</Filter>
     </ClInclude>
@@ -60,12 +58,6 @@
     </ClInclude>
     <ClInclude Include="imgui_internal.h">
       <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imnodes.h">
-      <Filter>Imnodes</Filter>
-    </ClInclude>
-    <ClInclude Include="imnodes_internal.h">
-      <Filter>Imnodes</Filter>
     </ClInclude>
     <ClInclude Include="imstb_rectpack.h">
       <Filter>Imgui</Filter>
@@ -137,7 +129,6 @@
     <ClInclude Include="Platformhelper.h" />
     <ClInclude Include="Src\AlignedNew.h" />
     <ClInclude Include="Src\d3dx12.h" />
-    <ClInclude Include="Src\LinearAllocator.h" />
     <ClInclude Include="Src\pch.h" />
     <ClInclude Include="Src\PlatformHelpers.h" />
     <ClInclude Include="Src\vbo.h" />
@@ -167,66 +158,33 @@
     </ClInclude>
     <ClInclude Include="Structures.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="imgui_node_editor.h" />
-    <ClInclude Include="imgui_node_editor_internal.h" />
     <ClInclude Include="stb_image.h" />
-    <ClInclude Include="imgui_bezier_math.h" />
-    <ClInclude Include="imgui_canvas.h" />
-    <ClInclude Include="imgui_extra_math.h" />
     <ClInclude Include="ScopeGuard.h" />
     <ClInclude Include="crude_json.h" />
-    <ClInclude Include="Matrix_BindLua.h">
-      <Filter>LuaScript</Filter>
+    <ClInclude Include="TransformConstantBufferData.h">
+      <Filter>DirectX12Engine\Graphics\Test</Filter>
     </ClInclude>
-    <ClInclude Include="LoadingScreen_BindLua.h">
-      <Filter>LuaScript</Filter>
+    <ClInclude Include="imgui_node_editor_internal.h">
+      <Filter>Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="LuaScript.h">
-      <Filter>LuaScript</Filter>
+    <ClInclude Include="imgui_node_editor.h">
+      <Filter>Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Luna.h">
-      <Filter>LuaScript</Filter>
+    <ClInclude Include="imgui_extra_math.h">
+      <Filter>Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="MainComponent_BindLua.h">
-      <Filter>LuaScript</Filter>
+    <ClInclude Include="imgui_canvas.h">
+      <Filter>Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="RenderPath_BindLua.h">
-      <Filter>LuaScript</Filter>
+    <ClInclude Include="imgui_bezier_math.h">
+      <Filter>Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="RenderPath2D_BindLua.h">
-      <Filter>LuaScript</Filter>
+    <ClInclude Include="imconfig.h">
+      <Filter>Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="RenderPath3D_BindLua.h">
-      <Filter>LuaScript</Filter>
+    <ClInclude Include="AssimpModel.h">
+      <Filter>DirectX12Engine\Graphics\Test</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteAnim_BindLua.h">
-      <Filter>LuaScript</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture_BindLua.h">
-      <Filter>LuaScript</Filter>
-    </ClInclude>
-    <ClInclude Include="Audio_BindLua.h">
-      <Filter>LuaScript</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector_BindLua.h">
-      <Filter>LuaScript</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualScriptFunction.h">
-      <Filter>LuaScript</Filter>
-    </ClInclude>
-    <ClInclude Include="BackLog_BIndLua.h">
-      <Filter>LuaScript</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="Input_BindLua.h">
-      <Filter>LuaScript</Filter>
-    </ClInclude>
-    <ClInclude Include="InterSect_BindLua.h">
-      <Filter>LuaScript</Filter>
-    </ClInclude>
-    <ClInclude Include="Intersect.h" />
-    <ClInclude Include="Scene_bindLua.h" />
-    <ClInclude Include="Load_ReloadScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -236,7 +194,6 @@
     </ClCompile>
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Rigidshape.cpp" />
-    <ClCompile Include="PlanePolygon.cpp" />
     <ClCompile Include="imgui.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
@@ -258,15 +215,11 @@
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="imnodes.cpp">
-      <Filter>Imnodes</Filter>
-    </ClCompile>
     <ClCompile Include="..\packages\stb\stb_vorbis.c">
       <Filter>stb</Filter>
     </ClCompile>
     <ClCompile Include="Src\DirectXHelpers.cpp" />
     <ClCompile Include="Src\Keyboard.cpp" />
-    <ClCompile Include="Src\LinearAllocator.cpp" />
     <ClCompile Include="Src\PrimitiveBatch.cpp" />
     <ClCompile Include="Animation.cpp">
       <Filter>DirectX12Engine</Filter>
@@ -293,62 +246,19 @@
       <Filter>DirectX12Engine</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="imgui_node_editor.cpp" />
-    <ClCompile Include="imgui_node_editor_api.cpp" />
-    <ClCompile Include="imgui_canvas.cpp" />
     <ClCompile Include="crude_json.cpp" />
-    <ClCompile Include="Matrix_BindLua.cpp">
-      <Filter>LuaScript</Filter>
+    <ClCompile Include="imgui_node_editor_api.cpp">
+      <Filter>Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="LoadingScreen_BindLua.cpp">
-      <Filter>LuaScript</Filter>
+    <ClCompile Include="imgui_node_editor.cpp">
+      <Filter>Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="LuaScript.cpp">
-      <Filter>LuaScript</Filter>
+    <ClCompile Include="imgui_canvas.cpp">
+      <Filter>Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Luna.cpp">
-      <Filter>LuaScript</Filter>
+    <ClCompile Include="AssimpModel.cpp">
+      <Filter>DirectX12Engine\Graphics\Test</Filter>
     </ClCompile>
-    <ClCompile Include="MainComponent_BindLua.cpp">
-      <Filter>LuaScript</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderPath_BindLua.cpp">
-      <Filter>LuaScript</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderPath2D_BindLua.cpp">
-      <Filter>LuaScript</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderPath3D_BindLua.cpp">
-      <Filter>LuaScript</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteAnim_BindLua.cpp">
-      <Filter>LuaScript</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture_BindLua.cpp">
-      <Filter>LuaScript</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio_BindLua.cpp">
-      <Filter>LuaScript</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector_BindLua.cpp">
-      <Filter>LuaScript</Filter>
-    </ClCompile>
-    <ClCompile Include="VisualScriptFunction.cpp">
-      <Filter>LuaScript</Filter>
-    </ClCompile>
-    <ClCompile Include="BackLog_BIndLua.cpp">
-      <Filter>LuaScript</Filter>
-    </ClCompile>
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Input_BindLua.cpp">
-      <Filter>LuaScript</Filter>
-    </ClCompile>
-    <ClCompile Include="InterSect_BindLua.cpp">
-      <Filter>LuaScript</Filter>
-    </ClCompile>
-    <ClCompile Include="Intersect.cpp" />
-    <ClCompile Include="Scene_bindLua.cpp" />
-    <ClCompile Include="Load_ReloadScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -398,9 +308,15 @@
       <Filter>terreinshader</Filter>
     </None>
     <None Include="packages.config" />
-    <None Include="imgui_node_editor_internal.inl" />
-    <None Include="imgui_bezier_math.inl" />
-    <None Include="imgui_extra_math.inl" />
+    <None Include="imgui_node_editor_internal.inl">
+      <Filter>Imgui</Filter>
+    </None>
+    <None Include="imgui_extra_math.inl">
+      <Filter>Imgui</Filter>
+    </None>
+    <None Include="imgui_bezier_math.inl">
+      <Filter>Imgui</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="HSterrein.hlsl">

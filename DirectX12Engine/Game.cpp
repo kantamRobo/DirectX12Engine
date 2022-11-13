@@ -155,8 +155,10 @@ void Game::Render()
    
 
     // TODO: Add your rendering code here.
-	size_t nbones = m_skinnedcharacter->m_Model->bones.size();
+	
+
 	/*
+    * size_t nbones = m_skinnedcharacter->m_Model->bones.size();
     //Imgui‚ÍV‚µ‚¢ƒtƒŒ[ƒ€‚Å‚Ì•`‰æ‚É”õ‚¦‚é
 	m_imguicore.ImguiCore_Tick();
 	ID3D12DescriptorHeap* imguiheap[] = { imguidescriptorheap->Heap() };
@@ -171,9 +173,9 @@ void Game::Render()
 		&m_skinnedcharacter->m_transform.position.z);
     m_imguicore.RenderNodes(m_deviceResources.get());
     m_imguicore.Render_AllGUI(m_deviceResources.get());
-    */
+    
     m_terrein->DrawTerrein(commandList, m_camera,m_effect);
-
+    */
     //m_imguicore.ImguiCore_Tick();
 	//m_animation.Apply(*m_skinnedcharacter->m_Model, nbones, m_drawBones.get());
     /*

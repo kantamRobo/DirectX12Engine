@@ -10,7 +10,7 @@
 #include "Camera.h"
 #include "ImguiCore.h"
 #include "Rigidshape.h"
-#include "PlanePolygon.h"
+
 #include "GraphicsMemory.h"
 #include "Terrein.h"
 #include <DirectXMath.h>
@@ -111,5 +111,5 @@ private:
     std::unique_ptr<Terrein> m_terrein;
     std::shared_ptr<DirectX::BasicEffect> m_effect;
     // If using the DirectX Tool Kit for DX12, uncomment this line:
-    // std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
+    
 };
