@@ -24,7 +24,7 @@ HRESULT AssimpModel::Init(DX::DeviceResources* deviceresources,DirectX::Graphics
 		{
 			m_CBDescriptorHeaps[i] = std::make_shared<DirectX::DescriptorHeap>(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-			m_transformCBBuffer[i] = graphicsmemory->Allocate(sizeof(TransformConstantBufferData));
+			m_transformCBBuffer[i] = graphicsmemory->AllocateConstant(sizeof(TransformConstantBufferData));
 
 			
 		}
@@ -34,6 +34,8 @@ HRESULT AssimpModel::Init(DX::DeviceResources* deviceresources,DirectX::Graphics
 
 		// Wait for the upload thread to terminate
 		finish.wait();
+
+		deviceresources->WaitForGpu();
 	}
 }
 
@@ -42,8 +44,15 @@ void AssimpModel::Render(DX::DeviceResources* deviceresources, DirectX::Graphics
 	auto commandlist = deviceresources->GetCommandList();
 	auto frameindex = deviceresources->GetCurrentFrameIndex();
 	//ˆê‘Ì–Ú‚Ì•`‰æ
+
+	commandlist->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	commandlist->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 	commandlist->SetComputeRootConstantBufferView(0,m_transformCBBuffer[frameindex * 2 + 0].GpuAddress());
+	commandlist->DrawIndexedInstanced(m_indexBuffer.Size(),1,0,0,0);
 	//“ñ‘Ì–Ú‚Ì•`‰æ
+	commandlist->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	commandlist->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 	commandlist->SetComputeRootConstantBufferView(0,m_transformCBBuffer[frameindex * 2 + 1].GpuAddress());
+	commandlist->DrawIndexedInstanced(m_indexBuffer.Size(), 1, 0, 0, 0);
 
 }
