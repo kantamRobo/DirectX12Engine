@@ -47,11 +47,13 @@ void AssimpModel::Render(DX::DeviceResources* deviceresources, DirectX::Graphics
 
 	commandlist->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	commandlist->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+	commandlist->IASetIndexBuffer(&m_indexBufferView);
 	commandlist->SetComputeRootConstantBufferView(0,m_transformCBBuffer[frameindex * 2 + 0].GpuAddress());
 	commandlist->DrawIndexedInstanced(m_indexBuffer.Size(),1,0,0,0);
 	//“ñ‘Ì–Ú‚Ì•`‰æ
 	commandlist->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	commandlist->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+	commandlist->IASetIndexBuffer(&m_indexBufferView);
 	commandlist->SetComputeRootConstantBufferView(0,m_transformCBBuffer[frameindex * 2 + 1].GpuAddress());
 	commandlist->DrawIndexedInstanced(m_indexBuffer.Size(), 1, 0, 0, 0);
 
