@@ -32,6 +32,9 @@
     <Filter Include="DirectX12Engine\Graphics\Test">
       <UniqueIdentifier>{b5b1b01c-fac1-4344-b4c7-dc70decf752f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX12Engine\Graphics\Test\Renderer">
+      <UniqueIdentifier>{2377a717-665d-4a0f-bd8f-51c63b2966ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -161,9 +164,6 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="ScopeGuard.h" />
     <ClInclude Include="crude_json.h" />
-    <ClInclude Include="TransformConstantBufferData.h">
-      <Filter>DirectX12Engine\Graphics\Test</Filter>
-    </ClInclude>
     <ClInclude Include="imgui_node_editor_internal.h">
       <Filter>Imgui</Filter>
     </ClInclude>
@@ -184,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="AssimpModel.h">
       <Filter>DirectX12Engine\Graphics\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>DirectX12Engine\Graphics\Test\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -258,6 +261,9 @@
     </ClCompile>
     <ClCompile Include="AssimpModel.cpp">
       <Filter>DirectX12Engine\Graphics\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>DirectX12Engine\Graphics\Test\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
