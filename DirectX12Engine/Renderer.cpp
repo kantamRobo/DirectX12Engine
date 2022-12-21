@@ -232,7 +232,7 @@ void Renderer::Render(DX::DeviceResources* deviceresources)
         
         commandlist->SetGraphicsRootSignature(m_rootSignature.Get());
         commandlist->SetDescriptorHeaps(1, descriptorheaps);
-        commandlist->SetGraphicsRootConstantBufferView(0, m_CBV[m_FrameIndex].Desc.BufferLocation);
+        commandlist->SetGraphicsRootConstantBufferView(0, m_transformCBBuffer[(frameIndex+0)+1].GpuAddress());
         commandlist->SetGraphicsRootDescriptorTable(1, m_Texture.HandleGPU);
         commandlist->SetPipelineState(m_pPSO.Get());
 

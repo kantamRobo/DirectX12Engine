@@ -12,7 +12,7 @@ class ImguiCore
 {
 	public:
 		
-
+	
 		ImguiCore() {};
 		
 		

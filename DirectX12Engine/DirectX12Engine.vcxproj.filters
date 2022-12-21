@@ -35,6 +35,9 @@
     <Filter Include="DirectX12Engine\Graphics\Test\Renderer">
       <UniqueIdentifier>{2377a717-665d-4a0f-bd8f-51c63b2966ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX12Engine\Core">
+      <UniqueIdentifier>{43cdb266-f6ac-4104-bef7-333efd079e2d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -47,7 +50,6 @@
     <ClInclude Include="d3dx12.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Rigidshape.h" />
     <ClInclude Include="imgui.h">
@@ -188,6 +190,19 @@
     <ClInclude Include="Renderer.h">
       <Filter>DirectX12Engine\Graphics\Test\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>DirectX12Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>DirectX12Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectUI.h">
+      <Filter>DirectX12Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="GameObjectUIManager.h">
+      <Filter>DirectX12Engine\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -264,6 +279,16 @@
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>DirectX12Engine\Graphics\Test\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>DirectX12Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectUI.cpp">
+      <Filter>DirectX12Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="GameObjectUIManager.cpp">
+      <Filter>DirectX12Engine\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
