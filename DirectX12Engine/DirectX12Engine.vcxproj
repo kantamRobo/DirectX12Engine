@@ -220,7 +220,6 @@
     <ClInclude Include="..\packages\stb\stb_truetype.h" />
     <ClInclude Include="..\packages\stb\stb_voxel_render.h" />
     <ClInclude Include="Animation.h" />
-    <ClInclude Include="AssimpModel.h" />
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
@@ -245,6 +244,7 @@
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshTest.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Platformhelper.h" />
     <ClInclude Include="Renderer.h" />
@@ -269,7 +269,6 @@
   <ItemGroup>
     <ClCompile Include="..\packages\stb\stb_vorbis.c" />
     <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="AssimpModel.cpp" />
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="character.cpp" />
@@ -292,6 +291,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshTest.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

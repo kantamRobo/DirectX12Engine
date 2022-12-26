@@ -184,9 +184,6 @@
     <ClInclude Include="imconfig.h">
       <Filter>Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="AssimpModel.h">
-      <Filter>DirectX12Engine\Graphics\Test</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>DirectX12Engine\Graphics\Test\Renderer</Filter>
     </ClInclude>
@@ -202,6 +199,9 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="GameObjectUIManager.h">
       <Filter>DirectX12Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshTest.h">
+      <Filter>DirectX12Engine\Graphics\Test\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -274,9 +274,6 @@
     <ClCompile Include="imgui_canvas.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="AssimpModel.cpp">
-      <Filter>DirectX12Engine\Graphics\Test</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>DirectX12Engine\Graphics\Test\Renderer</Filter>
     </ClCompile>
@@ -289,6 +286,9 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="GameObjectUIManager.cpp">
       <Filter>DirectX12Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshTest.cpp">
+      <Filter>DirectX12Engine\Graphics\Test\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
