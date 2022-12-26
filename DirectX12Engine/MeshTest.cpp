@@ -200,6 +200,131 @@ namespace {
             dstMesh.Indices[i * 3 + 1] = face.mIndices[1];
             dstMesh.Indices[i * 3 + 2] = face.mIndices[2];
         }
+
+
+
+        //頂点バッファの生成
+        {
+            auto size = sizeof(MeshVertex) * m_Meshes[0].Vertices.size();
+            auto vertices = m_Meshes[0].Vertices.data();
+
+            // ヒーププロパティ.
+            D3D12_HEAP_PROPERTIES prop = {};
+            prop.Type = D3D12_HEAP_TYPE_UPLOAD;
+            prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+            prop.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+            prop.CreationNodeMask = 1;
+            prop.VisibleNodeMask = 1;
+
+            //リソースの設定
+            D3D12_RESOURCE_DESC desc = {};
+            desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+            desc.Alignment = 0;
+            desc.Width = size;
+            desc.Height = 1;
+            desc.DepthOrArraySize = 1;
+            desc.MipLevels = 1;
+            desc.Format = DXGI_FORMAT_UNKNOWN;
+            desc.SampleDesc.Count = 1;
+            desc.SampleDesc.Quality = 0;
+            desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+            desc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+
+            // リソースを生成.
+            auto hr = m_pDevice->CreateCommittedResource(
+                &prop,
+                D3D12_HEAP_FLAG_NONE,
+                &desc,
+                D3D12_RESOURCE_STATE_GENERIC_READ,
+                nullptr,
+                IID_PPV_ARGS(dstMesh.m_pVB.GetAddressOf()));
+            if (FAILED(hr))
+            {
+                return false;
+            }
+
+            // マッピングする.
+            void* ptr = nullptr;
+            hr = dstMesh.m_pVB->Map(0, nullptr, &ptr);
+            if (FAILED(hr))
+            {
+                return false;
+            }
+
+            // 頂点データをマッピング先に設定.
+            memcpy(ptr, vertices, size);
+
+            // マッピング解除.
+            dstMesh.m_pVB->Unmap(0, nullptr);
+
+            // 頂点バッファビューの設定.
+            dstMesh.m_VBV.BufferLocation = m_pVB->GetGPUVirtualAddress();
+            dstMesh.m_VBV.SizeInBytes = static_cast<UINT>(size);
+            dstMesh.m_VBV.StrideInBytes = static_cast<UINT>(sizeof(MeshVertex));
+
+
+        }
+
+        // インデックスバッファの生成.
+        {
+            auto size = sizeof(uint32_t) * m_Meshes[0].Indices.size();
+            auto indices = m_Meshes[0].Indices.data();
+
+            // ヒーププロパティ.
+            D3D12_HEAP_PROPERTIES prop = {};
+            prop.Type = D3D12_HEAP_TYPE_UPLOAD;
+            prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+            prop.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+            prop.CreationNodeMask = 1;
+            prop.VisibleNodeMask = 1;
+
+            // リソースの設定.
+            D3D12_RESOURCE_DESC desc = {};
+            desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+            desc.Alignment = 0;
+            desc.Width = size;
+            desc.Height = 1;
+            desc.DepthOrArraySize = 1;
+            desc.MipLevels = 1;
+            desc.Format = DXGI_FORMAT_UNKNOWN;
+            desc.SampleDesc.Count = 1;
+            desc.SampleDesc.Quality = 0;
+            desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+            desc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+            // リソースを生成.
+            auto hr = m_pDevice->CreateCommittedResource(
+                &prop,
+                D3D12_HEAP_FLAG_NONE,
+                &desc,
+                D3D12_RESOURCE_STATE_GENERIC_READ,
+                nullptr,
+                IID_PPV_ARGS(dstMesh.m_pIB.GetAddressOf()));
+            if (FAILED(hr))
+            {
+                return false;
+            }
+
+            // マッピングする.
+            void* ptr = nullptr;
+            hr = dstMesh.m_pIB->Map(0, nullptr, &ptr);
+            if (FAILED(hr))
+            {
+                return false;
+            }
+
+            // インデックスデータをマッピング先に設定.
+            memcpy(ptr, indices, size);
+
+            // マッピング解除.
+            dstMesh.m_pIB->Unmap(0, nullptr);
+
+            // インデックスバッファビューの設定.
+            dstMesh.m_IBV.BufferLocation = dstMesh.m_pIB->GetGPUVirtualAddress();
+            dstMesh.m_IBV.Format = DXGI_FORMAT_R32_UINT;
+            dstMesh.m_IBV.SizeInBytes = static_cast<UINT>(size);
+        }
     }
 
     //---------------------------------------------------------------------------- -
@@ -282,12 +407,7 @@ namespace {
 #define APPEND          D3D12_APPEND_ALIGNED_ELEMENT
 #define IL_VERTEX       D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA
 
-const D3D12_INPUT_ELEMENT_DESC MeshVertex::InputElements[] = {
-    { "POSITION", 0, FMT_FLOAT3, 0, APPEND, IL_VERTEX, 0 },
-    { "NORMAL",   0, FMT_FLOAT3, 0, APPEND, IL_VERTEX, 0 },
-    { "TEXCOORD", 0, FMT_FLOAT2, 0, APPEND, IL_VERTEX, 0 },
-    { "TANGENT",  0, FMT_FLOAT3, 0, APPEND, IL_VERTEX, 0 }
-};
+
 const D3D12_INPUT_LAYOUT_DESC MeshVertex::InputLayout = {
     MeshVertex::InputElements,
     MeshVertex::InputElementCount

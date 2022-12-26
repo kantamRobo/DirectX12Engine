@@ -65,6 +65,10 @@ struct Mesh
     std::vector<MeshVertex>     Vertices;     //!< 頂点データです.
     std::vector<uint32_t>       Indices;      //!< 頂点インデックスです.
     uint32_t                    MaterialId;   //!< マテリアル番号です.
+    ComPtr<ID3D12Resource>                 m_pVB;                          // 頂点バッファです.
+    ComPtr<ID3D12Resource>                 m_pIB;
+    D3D12_VERTEX_BUFFER_VIEW        m_VBV;                          // 頂点バッファビューです.
+    D3D12_INDEX_BUFFER_VIEW         m_IBV;
 };
 
 //-----------------------------------------------------------------------------

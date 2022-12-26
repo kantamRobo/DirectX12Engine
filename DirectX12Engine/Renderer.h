@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 #include <wrl.h>
 #include "Shader.h"
+#include "MeshTest.h"
 ///////////////////////////////////////////////////////////////////////////////
 // Transform structure
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,7 +26,7 @@ public:
     void Render(DX::DeviceResources* deviceresources);
     
     Microsoft::WRL::ComPtr<ID3D12PipelineState>            m_pPSO;                         // パイプラインステートです.
-
+    std::vector<Mesh> m_meshes;
     Transform transform;
     Shader vertexshader;
     Shader pixelshader;

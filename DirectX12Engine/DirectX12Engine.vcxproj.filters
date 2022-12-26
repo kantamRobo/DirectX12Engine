@@ -20,12 +20,6 @@
     <Filter Include="DirectX12Engine">
       <UniqueIdentifier>{15681c01-3568-473c-9fcf-846288196cb2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX12Engine\Slang">
-      <UniqueIdentifier>{cb04504b-36a6-4a6e-a2d0-94f1212e32f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="VisualScript_exe_C++">
-      <UniqueIdentifier>{eb742ce4-6de7-46fa-88e8-48eab6749b47}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DirectX12Engine\Graphics">
       <UniqueIdentifier>{ce834f84-6732-46dc-85de-33bebed4a020}</UniqueIdentifier>
     </Filter>
@@ -361,6 +355,12 @@
     </FxCompile>
     <FxCompile Include="PSterrein.hlsl">
       <Filter>terreinshader</Filter>
+    </FxCompile>
+    <FxCompile Include="Modelassimpvertex.hlsl">
+      <Filter>DirectX12Engine\Graphics</Filter>
+    </FxCompile>
+    <FxCompile Include="Modelassimppixel.hlsl">
+      <Filter>DirectX12Engine\Graphics</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

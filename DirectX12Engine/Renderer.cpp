@@ -185,8 +185,8 @@ Renderer::Renderer(DX::DeviceResources* deviceresources,UINT width,UINT height) 
 
 
 
-        vertexshader.LoadShader(L"Modelassimpvertex.hlsl", L"main_VS");
-        pixelshader.LoadShader(L"Modelassimppixel.hlsl", L"main_PS");
+        vertexshader.LoadShader(L"Modelassimpvertex.hlsl", L"main");
+        pixelshader.LoadShader(L"Modelassimppixel.hlsl", L"main");
 
 
         // 頂点シェーダ読み込み.
@@ -233,7 +233,7 @@ void Renderer::Render(DX::DeviceResources* deviceresources)
         commandlist->SetGraphicsRootSignature(m_rootSignature.Get());
         commandlist->SetDescriptorHeaps(1, descriptorheaps);
         commandlist->SetGraphicsRootConstantBufferView(0, m_transformCBBuffer[(frameIndex+0)+1].GpuAddress());
-        commandlist->SetGraphicsRootDescriptorTable(1, m_Texture.HandleGPU);
+        commandlist->SetGraphicsRootDescriptorTable(1, );
         commandlist->SetPipelineState(m_pPSO.Get());
 
         commandlist->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
